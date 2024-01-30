@@ -8,6 +8,7 @@ The project is structured as follows, focusing on the main components that you w
 
 ```txt
 .
+├── 📄 404.html: 404 page (page not found)
 ├── 📂 assets/: contains the assets that are displayed in the website
 │   └── 📂 json/
     │   └── 📄 resume.json: CV in JSON format (https://jsonresume.org/)
@@ -18,11 +19,10 @@ The project is structured as follows, focusing on the main components that you w
 │   ├── 📄 cv.yml: CV in YAML format, used when assets/json/resume.json is not found
 │   └── 📄 repositories.yml: users and repositories info in YAML format
 ├── 📂 _includes/: contains code parts that are included in the main HTML file
-│   └── 📄 news.liquid: defines the news section layout in the about page
 ├── 📂 _layouts/: contains the layouts to choose from in the frontmatter of the Markdown files
 ├── 📂 _news/: the news that will appear in the news section in the about page
-├── 📂 _pages/: contains the pages of the website
-|   └── 📄 404.md: 404 page (page not found)
+├── 📄 news.html: defines the news section layout in the about page
+├── 📂 _pages/: contains the pages of the website that are shown in the header
 ├── 📂 _posts/: contains the blog posts
 ├── 📂 _projects/: contains the projects
 └── 📂 _sass/: contains the SASS files that define the style of the website
@@ -58,7 +58,7 @@ You can create new pages by adding new Markdown files in the [\_pages](_pages/) 
 
 ## Creating new blog posts
 
-To create a new blog post, you can add a new Markdown file in the [\_posts](_posts/) directory. The [name of the file must follow](https://jekyllrb.com/docs/posts/#creating-posts) the format `YYYY-MM-DD-title.md`. The easiest way to do this is to copy an existing blog post and modify it. Note that some blog posts have optional fields in the [frontmatter](https://jekyllrb.com/docs/front-matter/) that are used to enable specific behaviors or functions.
+To create a new blog post, you can add a new Markdown file in the [\_posts](_posts/) directory. The name of the file must follow the format `YYYY-MM-DD-title.md`. The easiest way to do this is to copy an existing blog post and modify it. Note that some blog posts have optional fields in the [frontmatter](https://jekyllrb.com/docs/front-matter/) that are used to enable specific behaviors or functions.
 
 If you want to create blog posts that are not ready to be published, but you want to track it with git, you can create a [\_drafts](https://jekyllrb.com/docs/posts/#drafts) directory and store them there.
 
@@ -136,7 +136,7 @@ There are several custom bibtex keywords that you can use to affect how the entr
 - `supp`: Adds a "Supp" button to a specified file (if a full link is not specified, the file will be assumed to be placed in the /assets/pdf/ directory)
 - `website`: Adds a "Website" button redirecting to the specified link
 
-You can implement your own buttons by editing the [\_layouts/bib.liquid](_layouts/bib.liquid) file.
+You can implement your own buttons by editing the [\_layouts/bib.html](_layouts/bib.html) file.
 
 ## Changing theme color
 

@@ -2,25 +2,39 @@
 layout: about
 title: about
 permalink: /
-subtitle: <a href='#'>Affiliations</a>. Address. Contacts. Moto. Etc.
+#subtitle: <a href='#'>Affiliations</a>. Address. Contacts. Moto. Etc.
+subtitle: Machine learning researcher. 
+email:
+#<p>Email: z.zhu@soton.ac.uk</p>
 
 profile:
   align: right
-  image: prof_pic.jpg
+  image: profile_pic.png
   image_circular: false # crops the image to make it circular
   more_info: >
-    <p>555 your office number</p>
-    <p>123 your address street</p>
-    <p>Your City, State 12345</p>
+    <p>ECS, University of Southampton</p>
+    <p>Southampton, SO17 1BJ, UK</p>
+    <p>Email: z.zhu@soton.ac.uk </p>
 
-news: true # includes a list of news items
-latest_posts: true # includes a list of the newest posts
+#news: true # includes a list of news items
+#latest_posts: false # includes a list of the newest posts
 selected_papers: true # includes a list of papers marked as "selected={true}"
 social: true # includes social icons at the bottom of the page
 ---
 
-Write your biography here. Tell the world about yourself. Link to your favorite [subreddit](http://reddit.com). You can put a picture in, too. The code is already in, just name your picture `prof_pic.jpg` and put it in the `img/` folder.
+I am an Associate Professor at Vision, Learning and Control Group ([VLC](https://www.southampton.ac.uk/research/groups/vision-learning-control)), School of Electrical and Computer Science ([ECS](https://www.southampton.ac.uk/)), [University of Southampton](https://www.southampton.ac.uk/), UK. Previously I obtained Ph.D on machine learning from School of Informatics, University of Edinburgh, UK.
 
-Put your address / P.O. box / other info right below your picture. You can also disable any of these elements by editing `profile` property of the YAML header of your `_pages/about.md`. Edit `_bibliography/papers.bib` and Jekyll will render your [publications page](/al-folio/publications/) automatically.
+I have been focusing on machine learning, particularly, deep learning, broadly covering its theory, methodology and application. Together with my students and collaborators, we attempt to **rigorously reveal the underlying mechanism of why deep learning works or not**, and inspired by our theoretical understanding and empirical observation, we develop **robust, fast and generalizable models and algorithms** to boost its applicability in various challenging scenarios and **interdisciplinary tasks**, e.g. ML4Science.  More information is shown in my [Google Scholar](https://scholar.google.com/citations?user=a2sHceIAAAAJ) profile. 
 
-Link to your social media connections, too. This theme is set up to use [Font Awesome icons](https://fontawesome.com/) and [Academicons](https://jpswalsh.github.io/academicons/), like the ones below. Add your Facebook, Twitter, LinkedIn, Google Scholar, or just disable all of them.
+
+
+### Research Interests:
+- Understanding deep learning theoretically ([SGD](http://proceedings.mlr.press/v97/zhu19e/zhu19e.pdf), [BN](https://proceedings.neurips.cc/paper_files/paper/2021/file/326a8c055c0d04f5b06544665d8bb3ea-Paper.pdf), [Implicit Bias](https://openreview.net/pdf?id=PjBEUTVzoe), [Knowledge Distillation](https://proceedings.neurips.cc/paper/2020/file/ef0d3930a7b6c95bd2b32ed45989c61f-Paper.pdf))
+- Robust deep learning models in adversarial and continual environments ([YOPO](https://proceedings.neurips.cc/paper_files/paper/2019/file/812b4ba287f5ee0bc9d43bbf5bbe87fb-Paper.pdf), [Learning dynamics of adversarial training](https://openreview.net/pdf?id=l8It-0lE5e7), [RCL](https://proceedings.neurips.cc/paper/2018/file/cee631121c2ec9232f3a2f028ad5c89b-Paper.pdf) and [BOCL](https://ieeexplore.ieee.org/document/9477031)) 
+- Lightweight and fast large language models (LLMs, *ongoing*)
+- Time series modeling and prediction ([STGCN](https://www.ijcai.org/proceedings/2018/0505.pdf), [STFGN](https://ojs.aaai.org/index.php/AAAI/article/download/16542/16349), [Neural Lad](https://openreview.net/pdf?id=bISkJSa5Td))
+- Machine learning for science (ML4Science), particularly biological problems.
+
+**<mark>I am always looking forward to working with well-motivated students and collaborators on various aspects of machine learning, ranging from theory, methodology and applications. Drop me an email if you are interested.</mark>**
+
+<!--Link to your social media connections, too. This theme is set up to use [Font Awesome icons](https://fontawesome.com/) and [Academicons](https://jpswalsh.github.io/academicons/), like the ones below. Add your Facebook, Twitter, LinkedIn, Google Scholar, or just disable all of them. -->

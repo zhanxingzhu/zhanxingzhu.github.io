@@ -1,22 +1,19 @@
 <header>
   <!-- Nav Bar -->
-  <nav id="navbar" class="navbar navbar-light navbar-expand-sm {% if site.navbar_fixed %}fixed-top{% else %}sticky-top{% endif %}" role="navigation">
+  <nav id="navbar" class="navbar navbar-light navbar-expand-sm {% if site.navbar_fixed %}fixed-top{% else %}sticky-top{% endif %}">
     <div class="container">
       {% if page.permalink != '/' %}
         <a class="navbar-brand title font-weight-lighter" href="{{ site.baseurl }}/">
           {% if site.title == 'blank' %}
             {% if site.first_name %}
-              <span class="font-weight-bold">
-                {{- site.first_name -}}
-                &nbsp;</span
-              >
+                {{- site.first_name -}} 
             {% endif %}
             {% if site.middle_name %}
               {{- site.middle_name -}}
               &nbsp;
             {% endif %}
             {% if site.last_name %}
-              {{- site.last_name -}}
+                {{- site.last_name -}}
             {% endif %}
           {% else %}
             {{- site.title -}}
