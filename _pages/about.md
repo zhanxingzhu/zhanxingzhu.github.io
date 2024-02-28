@@ -22,7 +22,7 @@ selected_papers: true # includes a list of papers marked as "selected={true}"
 social: true # includes social icons at the bottom of the page
 ---
 
-I am an Associate Professor at Vision, Learning and Control Group ([VLC](https://www.southampton.ac.uk/research/groups/vision-learning-control)), School of Electrical and Computer Science ([ECS](https://www.southampton.ac.uk/)), [University of Southampton](https://www.southampton.ac.uk/), UK. Previously I obtained Ph.D on machine learning from School of Informatics, University of Edinburgh, UK.
+I am an Associate Professor at Vision, Learning and Control Group ([VLC](https://www.southampton.ac.uk/research/groups/vision-learning-control)), School of Electrical and Computer Science ([ECS](https://www.southampton.ac.uk/)), [University of Southampton](https://www.southampton.ac.uk/), UK. I am now closely affiliated with [UKRI AI Centre for Doctoral Training in AI for Sustainability](https://sustai.info/). Previously I obtained Ph.D on machine learning from School of Informatics, University of Edinburgh, UK.
 
 I have been focusing on machine learning, particularly, deep learning, broadly covering its theory, methodology and application. Together with my students and collaborators, we attempt to **rigorously reveal the underlying mechanism of why deep learning works or not**, and inspired by our theoretical understanding and empirical observation, we develop **robust, fast and generalizable models and algorithms** to boost its applicability in various challenging scenarios and **interdisciplinary tasks**, e.g. ML4Science.  More information is shown in my [Google Scholar](https://scholar.google.com/citations?user=a2sHceIAAAAJ) profile. 
 
@@ -35,6 +35,10 @@ I have been focusing on machine learning, particularly, deep learning, broadly c
 - Time series modeling and prediction ([STGCN](https://www.ijcai.org/proceedings/2018/0505.pdf), [STFGN](https://ojs.aaai.org/index.php/AAAI/article/download/16542/16349), [Neural Lad](https://openreview.net/pdf?id=bISkJSa5Td))
 - Machine learning for science (ML4Science), particularly biological problems.
 
-**<mark>I am always looking forward to working with well-motivated students and collaborators on various aspects of machine learning, ranging from theory, methodology and applications. Drop me an email if you are interested.</mark>**
+<!--
+**<mark>I am always looking forward to working with well-motivated students and collaborators on various aspects of machine learning, ranging from theory, methodology and applications. Drop me an email if you are interested.</mark>** 
+-->
+
+**<mark>Ph.D Studentships.</mark>** I'm interested in supervising motivated students in the area of AI and machine learning, ranging from theory, algorithms and various applications. Please get in touch to discuss the options and potential topics. Check out the [UKRI AI Centre for Doctoral Training in AI for Sustainability](https://sustai.info/) which has opportunities for 70 PhD students in the area of AI and environmental sustainability.
 
 <!--Link to your social media connections, too. This theme is set up to use [Font Awesome icons](https://fontawesome.com/) and [Academicons](https://jpswalsh.github.io/academicons/), like the ones below. Add your Facebook, Twitter, LinkedIn, Google Scholar, or just disable all of them. -->
