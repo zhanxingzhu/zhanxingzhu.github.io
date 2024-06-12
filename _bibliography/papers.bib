@@ -250,7 +250,6 @@ abbr={NeurIPS},
   booktitle={Advances in Neural Information Processing Systems, 2019},
   year={2019},
   pdf={https://proceedings.neurips.cc/paper_files/paper/2019/file/812b4ba287f5ee0bc9d43bbf5bbe87fb-Paper.pdf},
-  selected={true},
   selected={true}
 }
 
@@ -589,11 +588,27 @@ abbr={NeurIPS},
   year={2023}
 }
 
+@inproceedings{sun2023patch,
+  title={Patch-level neighborhood interpolation: A general and effective graph-based regularization strategy},
+  author={Sun, Ke and Yu, Bing and Lin, Zhouchen and Zhu, Zhanxing},
+  booktitle={Asian Conference on Machine Learning},
+  pages={1276--1291},
+  year={2023},
+  organization={PMLR}
+}
+
+
 
 @article{li2024functional,
-  abbr={AI Journal},
-  title={Functional Relation Field: A Model-Agnostic Framework for Multivariate Time Series Forecasting},
-  author={Li, Ting and Yu, Bing and Li, Jianguo and Zhu, Zhanxing},
-  journal={Artificial Intelligence},
-  year={2024 in press}
+title = {Functional Relation Field: A Model-Agnostic Framework for Multivariate Time Series Forecasting},
+journal = {Artificial Intelligence},
+volume = {334},
+pages = {104158},
+year = {2024},
+issn = {0004-3702},
+doi = {https://doi.org/10.1016/j.artint.2024.104158},
+url = {https://www.sciencedirect.com/science/article/pii/S0004370224000948},
+author = {Ting Li and Bing Yu and Jianguo Li and Zhanxing Zhu},
+keywords = {Multi-variate time series prediction, Constrained optimization, Graph neural network},
+abstract = {In multivariate time series forecasting, the most popular strategy for modeling the relationship between multiple time series is the construction of graph, where each time series is represented as a node and related nodes are connected by edges. However, the relationship between multiple time series is typically complicated, e.g. the sum of outflows from upstream nodes may be equal to the inflows of downstream nodes. Such relations widely exist in many real-world scenarios for multivariate time series forecasting, yet are far from well studied. In these cases, graph might be insufficient for modeling the complex dependency between nodes. To this end, we explore a new framework to model the inter-node relationship in a more precise way based our proposed inductive bias, Functional Relation Field, where a group of functions parameterized by neural networks are learned to characterize the dependency between multiple time series. Essentially, these learned functions then form a “field”, i.e. a particular set of constraints, to regularize the training loss of the backbone prediction network and enforce the inference process to satisfy these constraints. Since our framework introduces the relationship bias in a data-driven manner, it is flexible and model-agnostic such that it can be applied to any existing multivariate time series prediction networks for boosting performance. The experiment is conducted on one toy dataset to show our approach can well recover the true constraint relationship between nodes. And various real-world datasets are also considered with different backbone prediction networks. Results show that the prediction error can be reduced remarkably with the aid of the proposed framework.}
 }
