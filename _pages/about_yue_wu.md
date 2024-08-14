@@ -1,0 +1,1 @@
+Yue Wu is an intern in the group, who is a Data Scientist at Baidu. Prior to that he recieved his Master degree from Department of Industrial and Systems Engineering, University of Southern California (USC) in 2023. More information is shown in his [personal website](hhttps://tyrionwuyue.github.io/) profile. 
