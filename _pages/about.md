@@ -20,6 +20,9 @@ profile:
 #latest_posts: false # includes a list of the newest posts
 selected_papers: true # includes a list of papers marked as "selected={true}"
 social: true # includes social icons at the bottom of the page
+scholar:
+  sort_by: year
+  order: descending  # can be either "ascending" or "descending"
 ---
 
 I am an Associate Professor at Vision, Learning and Control Group ([VLC](https://www.southampton.ac.uk/research/groups/vision-learning-control)), School of Electrical and Computer Science ([ECS](https://www.southampton.ac.uk/about/faculties-schools-departments/school-of-electronics-and-computer-science)), [University of Southampton](https://www.southampton.ac.uk/), UK. I am now closely affiliated with [UKRI AI Centre for Doctoral Training in AI for Sustainability](https://sustai.info/). Previously I obtained Ph.D on machine learning from School of Informatics, University of Edinburgh, UK.
