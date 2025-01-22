@@ -1,0 +1,1 @@
+Sam Hilton_Jones is an PhD student in AI at the University of Southampton, with a focus on a theoretical understanding of LLMs. His academic journey began with a degree in Mathematics, also from the University of Southampton. 
