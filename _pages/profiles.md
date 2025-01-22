@@ -20,7 +20,7 @@ profiles:
       #<p>Your City, State 12345</p>
   - align: left
     image: sam_hilton-jones.jpeg
-    content: about_sam_hilton-jones.md
+    content: about_sam_hilton_jone.md
     image_circular: false # crops the image to make it circular
     #more_info: >
       #<p>555 your office number</p>

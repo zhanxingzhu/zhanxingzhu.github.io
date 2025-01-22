@@ -116,6 +116,7 @@ abbr={IJCAI},
   doi = {https://dl.acm.org/doi/10.5555/3304222.3304273},
   dimensions={true},
   google_scholar_id={fEOibwPWpKIC},
+  abstract={Timely accurate traffic forecast is crucial for urban traffic control and guidance. Due to the high nonlinearity and complexity of traffic flow, traditional methods cannot satisfy the requirements of mid-and-long term prediction tasks and often neglect spatial and temporal dependencies. In this paper, we propose a novel deep learning framework, Spatio-Temporal Graph Convolutional Networks (STGCN), to tackle the time series prediction problem in traffic domain. Instead of applying regular convolutional and recurrent units, we formulate the problem on graphs and build the model with complete convolutional structures, which enable much faster training speed with fewer parameters. Experiments show that our model STGCN effectively captures comprehensive spatio-temporal correlations through modeling multi-scale traffic networks and consistently outperforms state-of-the-art baselines on various real-world traffic datasets.},
   award={2019-2024 IJCAI Most Cited Paper},
   selected={true},
 }
@@ -252,6 +253,7 @@ abbr={NeurIPS},
   booktitle={Advances in Neural Information Processing Systems (NeurIPS)},
   year={2019},
   pdf={https://proceedings.neurips.cc/paper_files/paper/2019/file/812b4ba287f5ee0bc9d43bbf5bbe87fb-Paper.pdf},
+  abstract={Deep learning achieves state-of-the-art results in many tasks in computer vision and natural language processing. However, recent works have shown that deep networks can be vulnerable to adversarial perturbations, which raised a serious robustness issue of deep networks. Adversarial training, typically formulated as a robust optimization problem, is an effective way of improving the robustness of deep networks. A major drawback of existing adversarial training algorithms is the computational overhead of the generation of adversarial examples, typically far greater than that of the network training. This leads to the unbearable overall computational cost of adversarial training. In this paper, we show that adversarial training can be cast as a discrete time differential game. Through analyzing the Pontryagin's Maximum Principle (PMP) of the problem, we observe that the adversary update is only coupled with the parameters of the first layer of the network. This inspires us to restrict most of the forward and back propagation within the first layer of the network during adversary updates. This effectively reduces the total number of full forward and backward propagation to only one for each group of adversary updates. Therefore, we refer to this algorithm YOPO (You Only Propagate Once). Numerical experiments demonstrate that YOPO can achieve comparable defense accuracy with approximately 1/5 ~ 1/4 GPU time of the projected gradient descent (PGD) algorithm.},
   selected={true}
 }
 
@@ -271,6 +273,7 @@ abbr={ICML},
   pages={7654--7663},
   year={2019},
   pdf={https://proceedings.mlr.press/v97/zhu19e/zhu19e.pdf},
+  abstract={Understanding the behavior of stochastic gradient descent (SGD) in the context of deep neural networks has raised lots of concerns recently. Along this line, we study a general form of gradient based optimization dynamics with unbiased noise, which unifies SGD and standard Langevin dynamics. Through investigating this general optimization dynamics, we analyze the behavior of SGD on escaping from minima and its regularization effects. A novel indicator is derived to characterize the efficiency of escaping from minima through measuring the alignment of noise covariance and the curvature of loss function. Based on this indicator, two conditions are established to show which type of noise structure is superior to isotropic noise in term of escaping efficiency. We further show that the anisotropic noise in SGD satisfies the two conditions, and thus helps to escape from sharp and poor minima effectively, towards more stable and flat minima that typically generalize well. We systematically design various experiments to verify the benefits of the anisotropic noise, compared with full gradient descent plus isotropic diffusion (i.e. Langevin dynamics).},
   selected={true}
 }
 
@@ -509,13 +512,15 @@ abbr={TNNLS},
 
 @article{wan2021spherical,
 abbr={NeurIPS},
-  title={Spherical motion dynamics: Learning dynamics of normalized neural network using sgd and weight decay},
+  title={{Spherical Motion Dynamics: Learning Dynamics of Normalized Neural Network using SGD and Weight Decay}},
   author={Wan, Ruosi and Zhu, Zhanxing and Zhang, Xiangyu and Sun, Jian},
   journal={Advances in Neural Information Processing Systems (NeurIPS)},
   volume={34},
   pages={6380--6391},
   year={2021},
   pdf={https://proceedings.neurips.cc/paper_files/paper/2021/file/326a8c055c0d04f5b06544665d8bb3ea-Paper.pdf},
+  abstract={In this paper, we comprehensively reveal the learning dynamics of normalized neural network using Stochastic Gradient Descent (with momentum) and Weight Decay (WD), named as Spherical Motion Dynamics (SMD). Most related works focus on studying behavior of effective learning rate "inequilibrium" state, i.e. assuming weight norm remains unchanged. However, their discussion on why this equilibrium can be reached is either absent or less convincing. Our work directly explores the cause of equilibrium, as a special state of SMD. Specifically, 1) we introduce the assumptions that can lead to equilibrium state in SMD, and prove equilibrium can be reached in a linear rate regime under given assumptions; 2) we propose 
+angular update" as a substitute for effective learning rate to depict the state of SMD, and derive the theoretical value of angular update in equilibrium state; 3) we verify our assumptions and theoretical results on various large-scale computer vision tasks including ImageNet and MSCOCO with standard settings. Experiment results show our theoretical findings agree well with empirical observations. We also show that the behavior of angular update in SMD can produce interesting effect to the optimization of neural network in practice.},
   selected={true}
 }
 
@@ -524,7 +529,7 @@ abbr={ICLR},
   title={Fine-grained differentiable physics: a yarn-level model for fabrics},
   author={Gong, Deshan and Zhu, Zhanxing and Bulpitt, Andrew J and Wang, He},
   booktitle={International Conference on Learning Representation (ICLR)},
-  pdf={hhttps://openreview.net/forum?id=KPEFXR1HdIo},
+  pdf={https://openreview.net/forum?id=KPEFXR1HdIo},
   year={2022}
 }
 
@@ -535,6 +540,11 @@ abbr={ICLR},
   booktitle={International Conference on Learning Representation (ICLR)},
   year={2022},
   pdf={https://openreview.net/pdf?id=l8It-0lE5e7},
+  abstract={We provide theoretical understandings of the implicit bias imposed by adversarial training for homogeneous deep neural networks without any explicit regularization. In particular, for deep linear networks adversarially trained by gradient descent on a linearly separable dataset, we prove that the direction of the product of weight matrices converges to the direction of the max-margin solution of the original dataset. Furthermore, we generalize this result to the case of adversarial training for non-linear homogeneous deep neural networks without the linear separability of the dataset. We show that, when the neural network is adversarially trained with  l2 or l-infinity In this paper, we comprehensively reveal the learning dynamics of normalized neural network using Stochastic Gradient Descent (with momentum) and Weight Decay (WD), named as Spherical Motion Dynamics (SMD). Most related works focus on studying behavior of effective learning rate" inequilibrium" state, i.e. assuming weight norm remains unchanged. However, their discussion on why this equilibrium can be reached is either absent or less convincing. Our work directly explores the cause of equilibrium, as a special state of SMD. Specifically, 1) we introduce the assumptions that can lead to equilibrium state in SMD, and prove equilibrium can be reached in a linear rate regime under given assumptions; 2) we propose 
+angular update" as a substitute for effective learning rate to depict the state of SMD, and derive the theoretical value of angular update in equilibrium state; 3) we verify our assumptions and theoretical results on various large-scale computer vision tasks including ImageNet and MSCOCO with standard settings. Experiment results show our theoretical findings agree well with empirical observations. We also show that the behavior of angular update in SMD can produce interesting effect to the optimization of neural network in practice.
+
+ 
+ FGSM, FGM and PGD perturbations, the direction of the limit point of normalized parameters of the network along the trajectory of the gradient flow converges to a KKT point of a constrained optimization problem that aims to maximize the margin for adversarial examples. Our results theoretically justify the longstanding conjecture that adversarial training modifies the decision boundary by utilizing adversarial examples to improve robustness, and potentially provides insights for designing new robust training strategies.},
   selected={true}
 }
 
@@ -578,6 +588,7 @@ abbr={NeurIPS},
   year={2023},
   pdf = {https://openreview.net/pdf?id=PjBEUTVzoe},
   dimensions={true},
+  abstract={Studying the implicit bias of gradient descent (GD) and stochastic gradient descent (SGD) is critical to unveil the underlying mechanism of deep learning. Unfortunately, even for standard linear networks in regression setting, a comprehensive characterization of the implicit bias is still an open problem. This paper proposes to investigate a new proxy model of standard linear network, rank-1 linear network, where each weight matrix is parameterized as a rank-1 form. For over-parameterized regression problem, we precisely analyze the implicit bias of GD and SGD---by identifying a “potential” function such that GD converges to its minimizer constrained by zero training error (i.e., interpolation solution), and further characterizing the role of the noise introduced by SGD in perturbing the form of this potential. Our results explicitly connect the depth of the network and the initialization with the implicit bias of GD and SGD. Furthermore, we emphasize a new implicit bias of SGD jointly induced by stochasticity and over-parameterization, which can reduce the dependence of the SGD's solution on the initialization. Our findings regarding the implicit bias are different from that of a recently popular model, the diagonal linear network. We highlight that the induced bias of our rank-1 model is more consistent with standard linear network while the diagonal one is not. This suggests that the proposed rank-1 linear network might be a plausible proxy for standard linear net.},
   selected={true}
 }
 
@@ -603,6 +614,15 @@ abbr={NeurIPS},
 }
 
 
+@inproceedings{shen2024memory,
+abbr={NeurIPS},
+  title={Memory-Efficient Gradient Unrolling for Large-Scale Bi-level Optimization},
+  author={Shen, Qianli and Wang, Yezhen and Yang, Zhouhao and Li, Xiang and Wang, Haonan and Zhang, Yang and Scarlett, Jonathan and Zhu, Zhanxing and Kawaguchi, Kenji},
+  booktitle={Thirty-eighth Conference on Neural Information Processing Systems (NeurIPS)},
+  year={2024},
+  pdf = {https://openreview.net/forum?id=MI8Z9gutIn&noteId=Lot1chBI53}
+}
+
 
 @article{li2024functional,
 abbr={AI Journal},
@@ -619,14 +639,7 @@ abstract = {In multivariate time series forecasting, the most popular strategy f
 }
 
 
-@inproceedings{shen2024memory,
-abbr={NeurIPS},
-  title={Memory-Efficient Gradient Unrolling for Large-Scale Bi-level Optimization},
-  author={Shen, Qianli and Wang, Yezhen and Yang, Zhouhao and Li, Xiang and Wang, Haonan and Zhang, Yang and Scarlett, Jonathan and Zhu, Zhanxing and Kawaguchi, Kenji},
-  booktitle={Thirty-eighth Conference on Neural Information Processing Systems (NeurIPS)},
-  year={2024},
-  pdf = {https://openreview.net/forum?id=MI8Z9gutIn&noteId=Lot1chBI53}
-}
+
 
 @article{he2024foodie,
 abbr={PNAS},
@@ -641,14 +654,41 @@ eprint = {https://www.pnas.org/doi/pdf/10.1073/pnas.2423270121},
 abstract = {An individual’s somatic cells have essentially the same genome, but each cell type is determined by combinations of transcription factors (TFs) bound to each gene’s regulatory regions, controlling the transcription of DNA into RNA. Investigations of TFs have come from either “bottom–up” or “top–down” approaches. Bottom–up approaches start at the molecular level, including atomic resolution structures and single-molecule imaging of protein–DNA complexes. “Top–down” approaches start at the whole-organism or whole-cell level, including classic genetic studies and molecular biology. Understanding functional genomics requires a holistic approach to combine molecular-, cellular-, and tissue-level studies of TFs. Here, we report a technique that allowes genome-wide studies of TF binding on a single-molecule and single-cell basis. Decades of research have established that mammalian transcription factors (TFs) bind to each gene’s regulatory regions and cooperatively control tissue specificity, timing, and intensity of gene transcription. Mapping the combination of TF binding sites genome wide is critically important for understanding functional genomics. Here, we report a technique to measure TFs’ binding sites on the human genome with a near single-base resolution by footprinting with deaminase (FOODIE) on a single-molecule and single-cell basis. Single-molecule sequencing reads after enzymatic deamination allow detection of the TF binding fraction on a particular footprint and the binding cooperativity of any two adjacent TFs, which can be either positive or negative. As a newcomer of single-cell genomics, single-cell FOODIE enables the detection of cell-type-specific TF footprints in a pure cell population in a heterogeneous tissue, such as the brain. We found that genes carrying out a certain biological function together in a housing-keeping correlated gene module (CGM) or a tissues-specific CGM are coordinated by shared TFs in the gene’s promoters and enhancers, respectively. Scalable and cost-effective, FOODIE allows us to create an open FOODIE database for cell lines, with applicability to human tissues and clinical samples.}
 }
 
+@inproceedings{lyu2025solvable,
+abbr={ICLR},
+  title={{A Solvable Attention for Neural Scaling Laws}},
+  author={Lyu, Bochen and Wang, Di and Zhu, Zhanxing},
+  booktitle={International Conference on Learning Representation (ICLR)},
+  pdf={https://openreview.net/forum?id=wYxOMEzpkl},
+  year={2025},
+  abstract = {Transformers and many other deep learning models are empirically shown to predictably enhance their performance as a power law in training time, model size, or the number of training data points, which is termed as the neural scaling law. This paper studies this intriguing phenomenon particularly for the transformer architecture in theoretical setups. Specifically, we propose a framework for self-attention, the underpinning block of transformer, to learn in an in-context manner, where the corresponding learning dynamics is modeled as a non-linear ordinary differential equation (ODE) system. Furthermore, we establish a procedure to derive a tractable solution for this ODE system by reformulating it as a Riccati equation, which allows us to precisely characterize neural scaling laws for self-attention with training time, model size, data size, and the optimal compute. In addition, we reveal that the self-attention shares similar neural scaling laws with several other architectures when the context sequence length of the in-context learning is fixed, otherwise it would exhibit a different scaling law of training time.},
+  selected={true}
+}
+
+
+
+@inproceedings{cheng2025dycast,
+abbr={ICLR},
+  title={{DyCAST: Learning Dynamic Causal Structure from Time Series}},
+  author={Cheng, Yue and Lyu, Bochen and Xing, Weiwei and Zhu, Zhanxing},
+  booktitle={International Conference on Learning Representation (ICLR)},
+  pdf={https://openreview.net/forum?id=WjDjem8mWE&referrer=%5BAuthor%20Console%5D(%2Fgroup%3Fid%3DICLR.cc%2F2025%2FConference%2FAuthors%23your-submissions)},
+  year={2025},
+   abstract = {Understanding the dynamics of causal structures is crucial for uncovering the underlying processes in time series data. Previous approaches rely on static assumptions, where contemporaneous and time-lagged dependencies are assumed to have invariant topological structures. However, these models fail to capture the evolving causal relationship between variables when the underlying process exhibits such dynamics. To address this limitation, we propose DyCAST, a novel framework designed to learn dynamic causal structures in time series using Neural Ordinary Differential Equations (Neural ODEs). The key innovation lies in modeling the temporal dynamics of the contemporaneous structure, drawing inspiration from recent advances in Neural ODEs on constrained manifolds. We reformulate the task of learning causal structures at each time step as solving the solution trajectory of a Neural ODE on the directed acyclic graph (DAG) manifold. To accommodate high-dimensional causal structures, we extend DyCAST by learning the temporal dynamics of the hidden state for contemporaneous causal structure. Experiments on both synthetic and real-world datasets demonstrate that DyCAST achieves superior or comparable performance compared to existing causal discovery models.},
+  selected={false}
+}
 
 @inproceedings{lyu2025effects,
 abbr={AAAI},
 title={Effects of Momentum in Implicit Bias of Gradient Flow for Diagonal Linear Networks},
-author={Bochen Lyu, He Wang, Zheng Wang and Zhanxing Zhu},
+author={Lyu, Bochen and Wang, He and Wang, Zheng and Zhu, Zhanxing},
 booktitle={The 39th Annual AAAI Conference on Artificial Intelligence},
 year={2025}
 }
+
+
+
+
 
 
 
