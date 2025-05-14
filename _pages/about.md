@@ -36,7 +36,7 @@ I have been focusing on machine learning, particularly, deep learning, broadly c
 - Robust deep learning models in adversarial and continual environments ([YOPO](https://proceedings.neurips.cc/paper_files/paper/2019/file/812b4ba287f5ee0bc9d43bbf5bbe87fb-Paper.pdf),  [Inversion Attack](http://proceedings.mlr.press/v119/chen20w/chen20w.pdf), [Adversarial Invariant Learning](https://ieeexplore.ieee.org/document/9577653), [RCL](https://proceedings.neurips.cc/paper/2018/file/cee631121c2ec9232f3a2f028ad5c89b-Paper.pdf) and [BOCL](https://ieeexplore.ieee.org/document/9477031)) 
 - New architectures for large language models (LLMs)
 - Learning from complex dynamics data ([STGCN](https://www.ijcai.org/proceedings/2018/0505.pdf), [STFGN](https://ojs.aaai.org/index.php/AAAI/article/download/16542/16349), [Neural Lad](https://openreview.net/pdf?id=bISkJSa5Td), [Functional Relation Field](https://www.sciencedirect.com/science/article/pii/S0004370224000948), [DyCAST](https://openreview.net/forum?id=WjDjem8mWE&referrer=%5BAuthor%20Console%5D(%2Fgroup%3Fid%3DICLR.cc%2F2025%2FConference%2FAuthors%23your-submissions)) **<mark>New!</mark>**)
-- Machine learning for science (ML4Science), including climate, material and healthcare problems.
+- AI for Science (AI4Science), including climate, material and healthcare problems ([Unisoma for Multi-Solid Simulation](https://openreview.net/forum?id=wYxOMEzpkl) **<mark>New!</mark>**).
 
 <!--
 **<mark>I am always looking forward to working with well-motivated students and collaborators on various aspects of machine learning, ranging from theory, methodology and applications. Drop me an email if you are interested.</mark>** 
