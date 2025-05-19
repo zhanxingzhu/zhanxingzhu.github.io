@@ -585,7 +585,6 @@ abbr={NeurIPS},
   pdf = {https://openreview.net/pdf?id=PjBEUTVzoe},
   dimensions={true},
   abstract={Studying the implicit bias of gradient descent (GD) and stochastic gradient descent (SGD) is critical to unveil the underlying mechanism of deep learning. Unfortunately, even for standard linear networks in regression setting, a comprehensive characterization of the implicit bias is still an open problem. This paper proposes to investigate a new proxy model of standard linear network, rank-1 linear network, where each weight matrix is parameterized as a rank-1 form. For over-parameterized regression problem, we precisely analyze the implicit bias of GD and SGD---by identifying a “potential” function such that GD converges to its minimizer constrained by zero training error (i.e., interpolation solution), and further characterizing the role of the noise introduced by SGD in perturbing the form of this potential. Our results explicitly connect the depth of the network and the initialization with the implicit bias of GD and SGD. Furthermore, we emphasize a new implicit bias of SGD jointly induced by stochasticity and over-parameterization, which can reduce the dependence of the SGD's solution on the initialization. Our findings regarding the implicit bias are different from that of a recently popular model, the diagonal linear network. We highlight that the induced bias of our rank-1 model is more consistent with standard linear network while the diagonal one is not. This suggests that the proposed rank-1 linear network might be a plausible proxy for standard linear net.},
-  selected={true}
 }
 
 
@@ -651,6 +650,26 @@ abstract = {An individual’s somatic cells have essentially the same genome, bu
 }
 
 
+@article{lyu2025adaptive,
+abbr={TPAMI},
+  title={Analyzing the implicit bias of adversarial training from a generalized margin perspective},
+  author={Lyu, Bochen and Zhu, Zhanxing},
+  journal={IEEE Transactions on Pattern Analysis and Machine Intelligence ({TPAMI})},
+  %volume={44},
+  %number={10},
+  %pages={6715--6728},
+  year={2025},
+  publisher={IEEE},
+  abstract = {Adversarial training has been empirically demonstrated as an effective strategy to improve the robustness of deep neural networks (DNNs) against adversarial examples. However, the underlying reason of its effectiveness is still non-transparent. In this paper we conduct both extensive theoretical and empirical analysis on the implicit bias induced by adversarial training from a generalized margin perspective. 
+
+Our results focus on adversarial training for homogeneous DNNs. In particular, (i). For deep linear networks with $\ell_p$-norm perturbation, we show that weight matrices of adjacent layers get aligned and the converged parameters maximize the margin of adversarial examples, which can be further viewed as a generalized margin of the original dataset that can be achieved by an interpolation solution between $\ell_2$-SVM and $\ell_q$-SVM where $1/p + 1/q=1$. 
+(ii). For general homogeneous DNNs, {\color{black} including both linear and nonlinear ones,} we investigate adversarial training with a variety of adversarial perturbations in a unified manner. Specifically, we show that the direction of the limit point of parameters converges to a KKT point of a constrained optimization problem that aims to maximize the margin for adversarial examples. {\color{black}Additionally, as an application of this general result for two special linear homogeneous DNNs, diagonal linear networks and linear convolutional networks, we show that adversarial training with $\ell_p$-norm perturbation equivalently minimizes an interpolation norm that depends on the depth, the architecture, and the value of $p$ in the predictor space. }
+
+Extensive experiments are conducted to verify theoretical claims. Our results theoretically provide the basis for the longstanding folklore \cite{AT} that adversarial training modifies the decision boundary by utilizing adversarial examples to improve robustness, and potentially provides insights for designing new robust training strategies.},
+selected={true}
+}
+
+
 @inproceedings{tao2025unisoma,
 abbr={ICML},
 title={Unisoma: A Unified Transformer-based Solver for Multi-Solid Systems},
@@ -661,6 +680,16 @@ abstract = {Multi-solid systems are foundational to a wide range of real-world a
 selected={false}
 }
 
+
+@inproceedings{tao2025ladeep,
+abbr={KDD},
+title={LaDEEP: A Deep Learning-based Surrogate Model for Large Deformation of Elastic-Plastic Solids},
+author={Tao, Shilong and Feng, Zhe and Sun, Haonan and Zhu, Zhanxing and Liu, Yunhuai},
+booktitle={31st SIGKDD Conference on Knowledge Discovery and Data Mining (KDD) - Applied Data Science Track},
+year={2025},
+abstract = {Scientific computing for large deformation of elastic-plastic solids is critical for numerous real-world applications. Classical numerical solvers rely primarily on local discrete linear approximation and are constrained by an inherent trade-off between accuracy and efficiency. Recently, deep learning models have achieved impressive progress in solving the continuum mechanism. While previous models have explored various architectures and constructed coefficient-solution mappings, they are designed for general instances without considering specific problem properties and hard to accurately handle with complex elastic-plastic solids involving contact, loading and unloading. In this work, we take stretch bending, a popular metal fabrication technique, as our case study and introduce LaDEEP, a deep learning-based surrogate model for \textbf{La}rge \textbf{De}formation of \textbf{E}lastic-\textbf{P}lastic Solids. We encode the partitioned regions of the involved slender solids into a token sequence to maintain their essential order property. To characterize the physical process of the solid deformation, a two-stage Transformer-based module is designed to predict the deformation with the sequence of tokens as input. Empirically, LaDEEP achieves five magnitudes faster speed than finite element methods with a comparable accuracy, and gains 20.47% relative improvement on average compared to other deep learning baselines. We have also deployed our model into a real-world industrial production system, and it has shown remarkable performance in both accuracy and efficiency.},
+selected={false}
+}
 
 @inproceedings{lyu2025solvable,
 abbr={ICLR},
@@ -692,7 +721,9 @@ abbr={AAAI},
 title={Effects of Momentum in Implicit Bias of Gradient Flow for Diagonal Linear Networks},
 author={Lyu, Bochen and Wang, He and Wang, Zheng and Zhu, Zhanxing},
 booktitle={The 39th Annual AAAI Conference on Artificial Intelligence (AAAI)},
+pdf ={https://ojs.aaai.org/index.php/AAAI/article/view/34118},
 year={2025},
+abstract = {This paper targets on the regularization effect of momentum-based methods in regression settings and analyzes the popular diagonal linear networks to precisely characterize the implicit bias of continuous versions of heavy-ball (HB) and Nesterov's method of accelerated gradients (NAG). We show that, HB and NAG exhibit different implicit bias compared to GD for diagonal linear networks, which is different from the one for classic linear regression problem where momentum-based methods share the same implicit bias with GD. Specifically, the role of momentum in the implicit bias of GD is twofold: (a) HB and NAG induce extra initialization mitigation effects similar to SGD that are beneficial for generalization of sparse regression; (b) the implicit regularization effects of HB and NAG also depend on the initialization of gradients explicitly, which may not be benign for generalization. As a result, whether HB and NAG have better generalization properties than GD jointly depends on the aforementioned twofold effects determined by various parameters such as learning rate, momentum factor, and integral of gradients. Our findings highlight the potential beneficial role of momentum and can help understand its advantages in practice such as when it will lead to better generalization performance.}, 
 selected={false}
 }
 
