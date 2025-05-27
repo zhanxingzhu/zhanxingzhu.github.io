@@ -35,7 +35,7 @@ profiles:
       #<p>123 your address street</p>
       #<p>Your City, State 12345</p>
   - align: left
-    image: prof_pic.jpg
+    image: shilong_tao.jpeg
     content: about_shilong_tao.md
     image_circular: false # crops the image to make it circular
     #more_info: >
