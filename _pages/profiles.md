@@ -27,6 +27,22 @@ profiles:
       #<p>123 your address street</p>
       #<p>Your City, State 12345</p>
   - align: left
+    image: zygy.png
+    content: about_zygy.md
+    image_circular: false # crops the image to make it circular
+    #more_info: >
+      #<p>555 your office number</p>
+      #<p>123 your address street</p>
+      #<p>Your City, State 12345</p>
+  - align: left
+    image: prof-pic.jpeg
+    content: about_shilong_tao.md
+    image_circular: false # crops the image to make it circular
+    #more_info: >
+      #<p>555 your office number</p>
+      #<p>123 your address street</p>
+      #<p>Your City, State 12345</p>
+  - align: left
     image: yue_wu.jpg
     content: about_yue_wu.md
     image_circular: false # crops the image to make it circular
