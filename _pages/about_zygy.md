@@ -1,0 +1,1 @@
+Zygimantas Jocys is currently an Ph.D student at U of Southampton, co-supervised by [Dr. Kate Farrahi](https://kfarrahi.github.io/) and me.  Currently he is working on AI4Science, 3D Generative Methods for Drug Discovery. More information is shown in his [Google Scholar](https://scholar.google.com/citations?user=tR_g0T0AAAAJ&hl=en) profile. 
