@@ -653,20 +653,17 @@ abstract = {An individual’s somatic cells have essentially the same genome, bu
 
 @article{lyu2025analyzing,
 abbr={TPAMI},
-  title={Analyzing the implicit bias of adversarial training from a generalized margin perspective},
+  title={{Analyzing the Implicit Bias of Adversarial Training from a Generalized Margin Perspective}},
   author={Lyu, Bochen and Zhu, Zhanxing},
   journal={IEEE Transactions on Pattern Analysis and Machine Intelligence ({TPAMI})},
   %volume={44},
   %number={10},
-  %pages={6715--6728},
+  pages={1--15},
   year={2025},
+  doi ={10.1109/TPAMI.2025.3575618},
+  pdf= {https://ieeexplore.ieee.org/document/11020710}, 
   publisher={IEEE},
-  abstract = {Adversarial training has been empirically demonstrated as an effective strategy to improve the robustness of deep neural networks (DNNs) against adversarial examples. However, the underlying reason of its effectiveness is still non-transparent. In this paper we conduct both extensive theoretical and empirical analysis on the implicit bias induced by adversarial training from a generalized margin perspective. 
-
-Our results focus on adversarial training for homogeneous DNNs. In particular, (i). For deep linear networks with $\ell_p$-norm perturbation, we show that weight matrices of adjacent layers get aligned and the converged parameters maximize the margin of adversarial examples, which can be further viewed as a generalized margin of the original dataset that can be achieved by an interpolation solution between $\ell_2$-SVM and $\ell_q$-SVM where $1/p + 1/q=1$. 
-(ii). For general homogeneous DNNs, {\color{black} including both linear and nonlinear ones,} we investigate adversarial training with a variety of adversarial perturbations in a unified manner. Specifically, we show that the direction of the limit point of parameters converges to a KKT point of a constrained optimization problem that aims to maximize the margin for adversarial examples. {\color{black}Additionally, as an application of this general result for two special linear homogeneous DNNs, diagonal linear networks and linear convolutional networks, we show that adversarial training with $\ell_p$-norm perturbation equivalently minimizes an interpolation norm that depends on the depth, the architecture, and the value of $p$ in the predictor space. }
-
-Extensive experiments are conducted to verify theoretical claims. Our results theoretically provide the basis for the longstanding folklore \cite{AT} that adversarial training modifies the decision boundary by utilizing adversarial examples to improve robustness, and potentially provides insights for designing new robust training strategies.},
+  abstract = {Adversarial training has been empirically demonstrated as an effective strategy to improve the robustness of deep neural networks (DNNs) against adversarial examples. However, the underlying reason of its effectiveness is still non-transparent. In this paper we conduct both extensive theoretical and empirical analysis on the implicit bias induced by adversarial training from a generalized margin perspective. Our results focus on adversarial training for homogeneous DNNs. In particular, (i). For deep linear networks with ℓp-norm perturbation, we show that weight matrices of adjacent layers get aligned and the converged parameters maximize the margin of adversarial examples, which can be further viewed as a generalized margin of the original dataset that can be achieved by an interpolation solution between ℓ2-SVM and ℓq-SVM where 1/p+1/q=1. (ii). For general homogeneous DNNs, including both linear and nonlinear ones, we investigate adversarial training with a variety of adversarial perturbations in a unified manner. Specifically, we show that the direction of the limit point of parameters converges to a KKT point of a constrained optimization problem that aims to maximize the margin for adversarial examples. Additionally, as an application of this general result for two special linear homogeneous DNNs, diagonal linear networks and linear convolutional networks, we show that adversarial training with ℓp-norm perturbation equivalently minimizes an interpolation norm that depends on the depth, the architecture, and the value of p in the predictor space. Extensive experiments are conducted to verify theoretical claims. Our results theoretically provide the basis for the longstanding folklore [1] that adversarial training modifies the decision boundary by utilizing adversarial examples to improve robustness, and potentially provide insights for designing new robust training strategies.},
 selected={true}
 }
 
