@@ -659,7 +659,7 @@ abbr={NeurIPS},
   year={2025},
   pdf = {https://arxiv.org/abs/2506.14806},
   abstract = {This paper establishes a continuous time approximation, a piece-wise continuous differential equation, for the discrete Heavy-Ball~(HB) momentum method with explicit discretization error. Investigating continuous differential equations has been a promising approach for studying the discrete optimization methods. Despite the crucial role of momentum in gradient-based optimization methods, the gap between the original dynamics and the continuous time approximations due to the discretization error has not been comprehensively bridged yet. In this work, we study the HB momentum method in continuous time while putting more focus on the discretization error to provide additional theoretical tools to this area. In particular, we design a first-order piece-wise continuous differential equation, where we add a number of counter terms to account for the discretization error explicitly. As a result, we provide a continuous time model for the HB momentum method that allows the control of discretization error to arbitrary order of the learning rate. As an application, we leverage it to find a new implicit regularization of the directional smoothness and investigate the implicit bias of HB for diagonal linear networks, indicating how our results can be used in deep learning. Our theoretical findings are further supported by numerical experiments.},
-selected={true},
+selected={false},
 }
 
 
@@ -751,7 +751,16 @@ abbr={TCSVT},
   }
 
 
-
+@inproceedings{li2026vite,
+abbr={AAAI},
+title={ViTE: Virtual Graph Trajectory Expert Router for Pedestrian Trajectory Prediction},
+author={Ruochen Li, Zhanxing Zhu, Tanqiu Qiao, Hubert P. H. Shum},
+booktitle={The 40th Annual AAAI Conference on Artificial Intelligence (AAAI)},
+pdf ={https://ojs.aaai.org/index.php/AAAI/article/view/34118},
+year={2026},
+abstract = {Pedestrian trajectory prediction is critical for ensuring safety in autonomous driving, surveillance systems, and urban planning applications. While early approaches primarily focus on one-hop pairwise relationships, recent studies attempt to capture high-order interactions by stacking multiple Graph Neural Network (GNN) layers. However, these approaches face a fundamental trade-off: insufficient layers may lead to under-reaching problems that limit the model's receptive field, while excessive depth can result in prohibitive computational costs. We argue that an effective model should be capable of adaptively modeling both explicit one-hop interactions and implicit high-order dependencies, rather than relying solely on architectural depth. To this end, we propose ViTE (Virtual graph Trajectory Expert router), a novel framework for pedestrian trajectory prediction. ViTE consists of two key modules: a Virtual Graph that introduces dynamic virtual nodes to model long-range and high-order interactions without deep GNN stacks, and an Expert Router that adaptively selects interaction experts based on social context using a Mixture-of-Experts design. This combination enables flexible and scalable reasoning across varying interaction patterns. Experiments on three benchmarks (ETH/UCY, NBA, and SDD) demonstrate that our method consistently achieves state-of-the-art performance, validating both its effectiveness and practical efficiency.}, 
+selected={false}
+}
 
 
 
