@@ -1,0 +1,1 @@
+Yaru Qian is a PhD student funded by the AI for Sustainability CDT at the University of Southampton, with a background in mathematics and statistics. Her research focuses on optimization, particularly bilevel optimization, with an emphasis on developing efficient and sustainable methods for large language models.. 

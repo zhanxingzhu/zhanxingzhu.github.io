@@ -752,6 +752,19 @@ abbr={TCSVT},
   }
 
 
+@inproceedings{tang2026ladeep,
+abbr={KDD},
+title={FilDeep: Learning Large Deformations of Elastic-Plastic Solids with Multi-Fidelity Data},
+author={Jianheng Tang and Shilong Tao and Zhe Feng and Haonan Sun and Menglu Wang and  Zhanxing Zhu and  Yunhuai Liu},
+booktitle={31st SIGKDD Conference on Knowledge Discovery and Data Mining (KDD) - Applied Data Science Track},
+%pdf= {https://dl.acm.org/doi/10.1145/3711896.3737238},
+year={2026},
+abstract = {The scientific computation of large deformations in elastic-plastic solids is crucial in various manufacturing applications. Traditional numerical methods exhibit several inherent limitations, prompting Deep Learning (DL) as a promising alternative. The effectiveness of current DL techniques typically depends on the availability of high-quantity and high-accuracy datasets, which are yet difficult to obtain in large deformation problems. During the dataset construction process, a dilemma stands between data quantity and data accuracy, leading to suboptimal performance in the DL models. To address this challenge, we focus on a representative application of large deformations, the stretch bending problem, and propose FilDeep, a Fidelity-based Deep Learning framework for large Deformation of elastic-plastic solids. Our FilDeep aims to resolve the quantity-accuracy dilemma by simultaneously training with both low-fidelity and high-fidelity data, where the former provides greater quantity but lower accuracy, while the latter offers higher accuracy but in less quantity. In FilDeep, we provide meticulous designs for the practical large deformation problem. Particularly, an attention-based cross-fidelity module is proposed to effectively capture long-range physical interactions across MF data. To our knowledge, our FilDeep presents the first DL framework for large deformation problems using MF data. Extensive experiments demonstrate that our FilDeep consistently achieves state-of-the-art performance and can be efficiently deployed in real-world manufacturing applications.},
+selected={false}
+}
+
+
+
 @inproceedings{li2026vite,
 abbr={AAAI},
 title={ViTE: Virtual Graph Trajectory Expert Router for Pedestrian Trajectory Prediction},
@@ -762,6 +775,8 @@ year={2026},
 abstract = {Pedestrian trajectory prediction is critical for ensuring safety in autonomous driving, surveillance systems, and urban planning applications. While early approaches primarily focus on one-hop pairwise relationships, recent studies attempt to capture high-order interactions by stacking multiple Graph Neural Network (GNN) layers. However, these approaches face a fundamental trade-off: insufficient layers may lead to under-reaching problems that limit the model's receptive field, while excessive depth can result in prohibitive computational costs. We argue that an effective model should be capable of adaptively modeling both explicit one-hop interactions and implicit high-order dependencies, rather than relying solely on architectural depth. To this end, we propose ViTE (Virtual graph Trajectory Expert router), a novel framework for pedestrian trajectory prediction. ViTE consists of two key modules: a Virtual Graph that introduces dynamic virtual nodes to model long-range and high-order interactions without deep GNN stacks, and an Expert Router that adaptively selects interaction experts based on social context using a Mixture-of-Experts design. This combination enables flexible and scalable reasoning across varying interaction patterns. Experiments on three benchmarks (ETH/UCY, NBA, and SDD) demonstrate that our method consistently achieves state-of-the-art performance, validating both its effectiveness and practical efficiency.}, 
 selected={false}
 }
+
+
 
 
 
