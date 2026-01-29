@@ -746,7 +746,6 @@ abbr={AILS},
   journal={Artificial Intelligence in the Life Sciences}, 
   title={SynthFormer: Equivariant pharmacophore-based generation of synthesizable molecules for ligand-based drug design}, 
   year={2025},
-  %pages={1-1},
   doi={https://doi.org/10.1016/j.ailsci.2025.100148},
   abstract = {Drug discovery is a complex, resource-intensive process requiring significant time and cost to bring new medicines to patients. Many generative models aim to accelerate drug discovery, but few produce synthetically accessible molecules. Conversely, synthesis-focused models do not leverage the 3D information crucial for effective drug design. We introduce SynthFormer, a novel machine learning model that generates fully synthesizable molecules, structured as synthetic trees, by introducing both 3D information and pharmacophores as input. SynthFormer features a 3D equivariant graph neural network to encode pharmacophores, followed by a Transformer-based synthesis-aware decoding mechanism for constructing synthetic trees as a sequence of tokens. This provides capabilities for designing active molecules based on pharmacophores, exploring the local synthesizable chemical space around hit molecules and optimizing their properties. We demonstrate its effectiveness through various challenging tasks, including designing active compounds for a range of proteins, performing hit expansion and optimizing molecular properties.},
   pdf ={https://www.sciencedirect.com/science/article/pii/S2667318525000248?via%3Dihub},
@@ -763,6 +762,57 @@ abbr={TCSVT},
   doi={10.1109/TCSVT.2025.3539522},
   selected={false}
   }
+
+
+@inproceedings{zhang2026modr,
+abbr={ICLR},
+  title={{MoDr: Mixture-of-Depth-Recurrent Transformers for Test-Time Reasoning}},
+  author={Xiaojing Zhang and Haifeng Wu and Gang He and Jiyang Shen and Bochen Lyu and Zhanxing Zhu},
+  booktitle={International Conference on Learning Representation (ICLR)},
+  pdf={https://openreview.net/forum?id=9Pba4rcQbE},
+  year={2026},
+  abstract = {Large Language Models have demonstrated superior reasoning capabilities by generating step-by-step reasoning in natural language before deriving the final answer. Recently, Geiping et al. introduced 3.5B-Huginn as an alternative to this paradigm, a depth-recurrent Transformer that increases computational depth per token by reusing a recurrent block in latent space. Despite its performance gains with increasing recurrences, this approach is inadequate for tasks demanding exploration and adaptivity, a limitation arising from its single, chain-like propagation mechanism. To address this, we propose a novel dynamic multi-branches routing approach for Huginn, termed as Mixture-of-Depth-Recurrent (MoDr) Transformer, which enables effective exploration of the solution space by shifting chain-like latent reasoning into a LoRA-based multi-branch dynamic relay mode with a learnable hard-gate routing. Meanwhile, we introduce an auxiliary-loss-free load balancing strategy to mitigate the potential routing collapse. Our empirical results reveal that MoDr achieves average accuracy improvements of +7.2% and +2.48% over the original Huginn model and its fine-tuned variant, respectively, across various mathematical reasoning benchmarks and improvements of +21.21% and +1.52% on commonsense reasoning benchmarks.},
+  selected={false}
+}
+
+@inproceedings{cheng2026learning,
+abbr={ICLR},
+  title={{Learning Dynamics of Logits Debiasing for Long-Tailed Semi-Supervised Learning}},
+  author={Yue Cheng and Jiajun Zhang and Xiaohui Gao and Weiwei Xing and Zhanxing Zhu },
+  booktitle={International Conference on Learning Representation (ICLR)},
+  pdf={https://openreview.net/forum?id=e15SYMcsTs},
+  year={2026},
+  abstract = {Long-tailed distributions are prevalent in real-world semi-supervised learning (SSL), where pseudo-labels tend to favor majority classes, leading to degraded generalization. Although numerous long-tailed SSL (LTSSL) methods have been proposed, the underlying mechanisms of class bias remain underexplored. In this work, we investigate LTSSL through the lens of learning dynamics and introduce the notion of baseline images to characterize accumulated bias during training. We provide a step-wise decomposition showing that baseline predictions are determined solely by shallow bias terms, making them reliable indicators of class priors. Building on this insight, we propose a novel framework, DyTrim, which leverages baseline images to guide data pruning. Specifically, we perform class-aware pruning on labeled data to balance class distribution and label-agnostic soft pruning with confidence filtering on unlabeled data to mitigate error accumulation. Theoretically, we show that our method implicitly realizes risk reweighting, effectively suppressing class bias. Extensive experiments on public benchmarks show that DyTrim consistently enhances the performance of existing LTSSL methods by improving representation quality and prediction accuracy.},
+  selected={false}
+}
+
+
+@inproceedings{tao2026neural,
+abbr={ICLR},
+  title={{Neural Latent Arbitrary Lagrangian-Eulerian Grids for Fluid-Solid Interaction}},
+  author={Shilong Tao and Zhe Feng and Shaohan Chen and Weichen Zhang and Zhanxing Zhu and Yunhuai Liu },
+  booktitle={International Conference on Learning Representation (ICLR)},
+  pdf={https://openreview.net/forum?id=jKeOsMdMe5},
+  year={2026},
+  abstract = {Fluid-solid interaction (FSI) problems are fundamental in many scientific and engineering applications, yet effectively capturing the highly nonlinear two-way interactions remains a significant challenge. Most existing deep learning methods are limited to simplified one-way FSI scenarios, often assuming rigid and static solid to reduce complexity. Even in two-way setups, prevailing approaches struggle to capture dynamic, heterogeneous interactions due to the lack of cross-domain awareness. In this paper, we introduce \textbf{Fisale}, a data-driven framework for handling complex two-way \textbf{FSI} problems. It is inspired by classical numerical methods, namely the Arbitrary Lagrangian–Eulerian (\textbf{ALE}) method and the partitioned coupling algorithm. Fisale explicitly models the coupling interface as a distinct component and leverages multiscale latent ALE grids to provide unified, geometry-aware embeddings across domains. A partitioned coupling module (PCM) further decomposes the problem into structured substeps, enabling progressive modeling of nonlinear interdependencies. Compared to existing models, Fisale introduces a more flexible framework that iteratively handles complex dynamics of solid, fluid and their coupling interface on a unified representation, and enables scalable learning of complex two-way FSI behaviors. Experimentally, Fisale excels in three reality-related challenging FSI scenarios, covering 2D, 3D and various tasks. The code is included in the supplementary material for reproductivity.},
+  selected={false}
+}
+
+
+@inproceedings{feng2026maven,
+abbr={ICLR},
+  title={{MAVEN: A Mesh-Aware Volumetric Encoding Network for Simulating 3D Flexible Deformation}},
+  author={Zhe Feng and Shilong Tao and Haonan Sun and Shaohan Chen and Zhanxing Zhu and Yunhuai Liu },
+  booktitle={International Conference on Learning Representation (ICLR)},
+  pdf={https://openreview.net/forum?id=XmULVr15E0},
+  year={2026},
+  abstract = {Deep learning-based approaches, particularly graph neural networks (GNNs), have gained prominence in simulating flexible deformations and contacts of solids, due to their ability to handle unstructured physical fields and nonlinear regression on graph structures. However, existing GNNs commonly represent meshes with graphs built solely from vertices and edges. These approaches tend to overlook higher-dimensional spatial features, e.g. 2D facets and 3D cells, from the original geometry. As a result, it is challenging to accurately capture boundary representations and volumetric characteristics, though this information is critically important for modeling contact interactions and internal physical quantity propagation, particularly under sparse mesh discretization. In this paper, we introduce MAVEN, a mesh-aware volumetric encoding network for simulating 3D flexible deformation, which explicitly models geometric mesh elements of higher dimension to achieve a more accurate and natural physical simulation. MAVEN establishes learnable mappings among 3D cells, 2D facets, and vertices, enabling flexible mutual transformations. Explicit geometric features are incorporated into the model to alleviate the burden of implicitly learning geometric patterns. Experimental results show that MAVEN consistently achieves state-of-the-art performance across established datasets and a novel metal stretch-bending task featuring large deformations and prolonged contacts.},
+  selected={false}
+}
+
+
+
+
 
 
 @inproceedings{tang2026ladeep,
@@ -788,6 +838,22 @@ booktitle={The 40th Annual AAAI Conference on Artificial Intelligence (AAAI)},
 year={2026},
 abstract = {Pedestrian trajectory prediction is critical for ensuring safety in autonomous driving, surveillance systems, and urban planning applications. While early approaches primarily focus on one-hop pairwise relationships, recent studies attempt to capture high-order interactions by stacking multiple Graph Neural Network (GNN) layers. However, these approaches face a fundamental trade-off: insufficient layers may lead to under-reaching problems that limit the model's receptive field, while excessive depth can result in prohibitive computational costs. We argue that an effective model should be capable of adaptively modeling both explicit one-hop interactions and implicit high-order dependencies, rather than relying solely on architectural depth. To this end, we propose ViTE (Virtual graph Trajectory Expert router), a novel framework for pedestrian trajectory prediction. ViTE consists of two key modules: a Virtual Graph that introduces dynamic virtual nodes to model long-range and high-order interactions without deep GNN stacks, and an Expert Router that adaptively selects interaction experts based on social context using a Mixture-of-Experts design. This combination enables flexible and scalable reasoning across varying interaction patterns. Experiments on three benchmarks (ETH/UCY, NBA, and SDD) demonstrate that our method consistently achieves state-of-the-art performance, validating both its effectiveness and practical efficiency.}, 
 selected={false}
+}
+
+
+@article{JOCYS2026100148,
+abbr={AI4LifeScience},
+title = {SynthFormer: Equivariant pharmacophore-based generation of synthesizable molecules for ligand-based drug design},
+journal = {Artificial Intelligence in the Life Sciences},
+volume = {9},
+pages = {100148},
+year = {2026},
+issn = {2667-3185},
+doi = {https://doi.org/10.1016/j.ailsci.2025.100148},
+url = {https://www.sciencedirect.com/science/article/pii/S2667318525000248},
+author = {Zygimantas Jocys and Zhanxing Zhu and Henriette M.G. Willems and Katayoun Farrahi},
+keywords = {Drug discovery, Generative models, Synthesizable molecules, Pharmacophore modeling, Equivariant neural networks, Transformer models, Reaction trees, Ligand-based design},
+abstract = {Drug discovery is a complex, resource-intensive process requiring significant time and cost to bring new medicines to patients. Many generative models aim to accelerate drug discovery, but few produce synthetically accessible molecules. Conversely, synthesis-focused models do not leverage the 3D information crucial for effective drug design. We introduce SynthFormer, a novel machine learning model that generates fully synthesizable molecules, structured as synthetic trees, by introducing both 3D information and pharmacophores as input. SynthFormer features a 3D equivariant graph neural network to encode pharmacophores, followed by a Transformer-based synthesis-aware decoding mechanism for constructing synthetic trees as a sequence of tokens. This provides capabilities for designing active molecules based on pharmacophores, exploring the local synthesizable chemical space around hit molecules and optimizing their properties. We demonstrate its effectiveness through various challenging tasks, including designing active compounds for a range of proteins, performing hit expansion and optimizing molecular properties.}
 }
 
 
