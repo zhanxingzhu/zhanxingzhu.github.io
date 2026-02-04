@@ -726,6 +726,7 @@ abbr={ICLR},
   pdf={https://openreview.net/forum?id=WjDjem8mWE&referrer=%5BAuthor%20Console%5D(%2Fgroup%3Fid%3DICLR.cc%2F2025%2FConference%2FAuthors%23your-submissions)},
   year={2025},
    abstract = {Understanding the dynamics of causal structures is crucial for uncovering the underlying processes in time series data. Previous approaches rely on static assumptions, where contemporaneous and time-lagged dependencies are assumed to have invariant topological structures. However, these models fail to capture the evolving causal relationship between variables when the underlying process exhibits such dynamics. To address this limitation, we propose DyCAST, a novel framework designed to learn dynamic causal structures in time series using Neural Ordinary Differential Equations (Neural ODEs). The key innovation lies in modeling the temporal dynamics of the contemporaneous structure, drawing inspiration from recent advances in Neural ODEs on constrained manifolds. We reformulate the task of learning causal structures at each time step as solving the solution trajectory of a Neural ODE on the directed acyclic graph (DAG) manifold. To accommodate high-dimensional causal structures, we extend DyCAST by learning the temporal dynamics of the hidden state for contemporaneous causal structure. Experiments on both synthetic and real-world datasets demonstrate that DyCAST achieves superior or comparable performance compared to existing causal discovery models.},
+  code={https://github.com/Cyue0316/DyCAST}, 
   selected={false}
 }
 
@@ -783,7 +784,8 @@ abbr={ICLR},
   pdf={https://openreview.net/forum?id=e15SYMcsTs},
   year={2026},
   abstract = {Long-tailed distributions are prevalent in real-world semi-supervised learning (SSL), where pseudo-labels tend to favor majority classes, leading to degraded generalization. Although numerous long-tailed SSL (LTSSL) methods have been proposed, the underlying mechanisms of class bias remain underexplored. In this work, we investigate LTSSL through the lens of learning dynamics and introduce the notion of baseline images to characterize accumulated bias during training. We provide a step-wise decomposition showing that baseline predictions are determined solely by shallow bias terms, making them reliable indicators of class priors. Building on this insight, we propose a novel framework, DyTrim, which leverages baseline images to guide data pruning. Specifically, we perform class-aware pruning on labeled data to balance class distribution and label-agnostic soft pruning with confidence filtering on unlabeled data to mitigate error accumulation. Theoretically, we show that our method implicitly realizes risk reweighting, effectively suppressing class bias. Extensive experiments on public benchmarks show that DyTrim consistently enhances the performance of existing LTSSL methods by improving representation quality and prediction accuracy.},
-  code={https://github.com/Cyue0316/DyCAST}, 
+  code = {https://github.com/Jiajun0425/DyTrim},
+  html={https://jiajun0425.github.io/DyTrim/},
   selected={false}
 }
 
