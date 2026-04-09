@@ -144,7 +144,8 @@ abbr={CCS},
   author={Ye, Guixin and Tang, Zhanyong and Fang, Dingyi and Zhu, Zhanxing and Feng, Yansong and Xu, Pengfei and Chen, Xiaojiang and Wang, Zheng},
   booktitle={Proceedings of the 2018 ACM SIGSAC conference on computer and communications security (ACM CCS)},
   pages={332--348},
-  year={2018}
+  year={2018},
+  award ={Best Paper Finalist}
 }
 
 @inproceedings{luo2017learning,
@@ -406,7 +407,8 @@ abbr={ICLR},
   title={Neural Approximate Sufficient Statistics for Implicit Models},
   author={Chen, Yanzhi and Zhang, Dinghuai and Gutmann, Michael and Courville, Aaron and Zhu, Zhanxing},
   booktitle={International Conference on Learning Representation (ICLR)},
-  year={2020}
+  year={2020},
+  award ={Spotlight}
 }
 
 @inproceedings{ji2020knowledge,
@@ -472,7 +474,7 @@ abbr={ICLR},
 
 @inproceedings{ye2021adversarial,
 abbr={CVPR},
-  title={Adversarial invariant learning},
+  title={Adversarial Invariant Learning},
   author={Ye, Nanyang and Tang, Jingxuan and Deng, Huayu and Zhou, Xiao-Yun and Li, Qianxiao and Li, Zhenguo and Yang, Guang-Zhong and Zhu, Zhanxing},
   booktitle={2021 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
   pages={12441--12449},
@@ -491,7 +493,7 @@ abbr={AAAI},
 
 @article{xu2021adaptive,
 abbr={TPAMI},
-  title={Adaptive progressive continual learning},
+  title={Adaptive Progressive Continual Learning},
   author={Xu, Ju and Ma, Jin and Gao, Xuesong and Zhu, Zhanxing},
   journal={IEEE transactions on pattern analysis and machine intelligence ({TPAMI})},
   volume={44},
@@ -521,7 +523,8 @@ abbr={NeurIPS},
   pdf={https://proceedings.neurips.cc/paper_files/paper/2021/file/326a8c055c0d04f5b06544665d8bb3ea-Paper.pdf},
   abstract={In this paper, we comprehensively reveal the learning dynamics of normalized neural network using Stochastic Gradient Descent (with momentum) and Weight Decay (WD), named as Spherical Motion Dynamics (SMD). Most related works focus on studying behavior of effective learning rate "inequilibrium" state, i.e. assuming weight norm remains unchanged. However, their discussion on why this equilibrium can be reached is either absent or less convincing. Our work directly explores the cause of equilibrium, as a special state of SMD. Specifically, 1) we introduce the assumptions that can lead to equilibrium state in SMD, and prove equilibrium can be reached in a linear rate regime under given assumptions; 2) we propose 
 angular update" as a substitute for effective learning rate to depict the state of SMD, and derive the theoretical value of angular update in equilibrium state; 3) we verify our assumptions and theoretical results on various large-scale computer vision tasks including ImageNet and MSCOCO with standard settings. Experiment results show our theoretical findings agree well with empirical observations. We also show that the behavior of angular update in SMD can produce interesting effect to the optimization of neural network in practice.},
-  selected={true}
+  selected={true},
+  award ={Spotlight}
 }
 
 @inproceedings{gong2022fine,
@@ -840,8 +843,51 @@ booktitle={The 40th Annual AAAI Conference on Artificial Intelligence (AAAI)},
 %pdf ={https://ojs.aaai.org/index.php/AAAI/article/view/34118},
 year={2026},
 abstract = {Pedestrian trajectory prediction is critical for ensuring safety in autonomous driving, surveillance systems, and urban planning applications. While early approaches primarily focus on one-hop pairwise relationships, recent studies attempt to capture high-order interactions by stacking multiple Graph Neural Network (GNN) layers. However, these approaches face a fundamental trade-off: insufficient layers may lead to under-reaching problems that limit the model's receptive field, while excessive depth can result in prohibitive computational costs. We argue that an effective model should be capable of adaptively modeling both explicit one-hop interactions and implicit high-order dependencies, rather than relying solely on architectural depth. To this end, we propose ViTE (Virtual graph Trajectory Expert router), a novel framework for pedestrian trajectory prediction. ViTE consists of two key modules: a Virtual Graph that introduces dynamic virtual nodes to model long-range and high-order interactions without deep GNN stacks, and an Expert Router that adaptively selects interaction experts based on social context using a Mixture-of-Experts design. This combination enables flexible and scalable reasoning across varying interaction patterns. Experiments on three benchmarks (ETH/UCY, NBA, and SDD) demonstrate that our method consistently achieves state-of-the-art performance, validating both its effectiveness and practical efficiency.}, 
-selected={false}
+selected={false},
+
 }
+
+@inproceedings{zhang2026diffusion,
+abbr={WWW},
+title={Diffusion-based Kriging Model with Graph-enhanced Attention},
+author={Mingtao Zhang and Guoli Yang and Zhanxing Zhu and Guangyin Jin and Mengzhu Wang and Xiaoying Bai},
+booktitle={The Web Conference (WWW)},
+%pdf ={https://ojs.aaai.org/index.php/AAAI/article/view/34118},
+year={2026},
+abstract = {In web-based systems, elements are commonly organized within a
+graph structure, with each node collecting essential spatio-temporal
+data. Examples include websites on the World Wide Web, traffic
+monitors in transportation networks, or sensors in the Internet
+of Things (IoT). However, sensors are typically deployed sparsely
+and unevenly, leaving the remaining nodes unobserved. The spatio-
+temporal kriging task, which infers values at unobserved nodes
+from observed ones, has thus attracted significant research interest.
+Due to limitations such as reliance on static graph structures and
+iterative Graph Convolution Network (GCN) frameworks, accurate
+kriging remains challenging. To address these issues, we propose
+a Diffusion-based Kriging Model with Graph-enhanced Attention
+(DKM-GA). Our approach first introduces a graph-enhanced at-
+tention mechanism that dynamically learns more accurate graph
+structures by combining predefined graph knowledge with global
+node value similarities. It is then integrated into a diffusion-based
+framework, which is tailored for the reliance of attention on known
+values. Therefore, the framework progressively refines the target
+values using correlated nodes, and the graph-enhanced attention
+selects more relevant neighbors based on the refined values. Fur-
+thermore, a node-based rescaling strategy is introduced to align the
+inference phase graphs to the training ones. Experiments on eight
+real-world datasets demonstrate that DKM-GA achieves superior
+performance, reducing estimation errors by up to 12.66%. Moreover,
+our analysis identifies three practical scenarios where the model
+delivers greater performance gains, even achieving 19.51% improve-
+ments on datasets that show minor gains under standard settings.
+These results highlight the effectiveness and potential of our model,
+while the scenarios provide settings for more comprehensive eval-
+uations in terms of performance and robustness.}, 
+selected={false},
+award ={Oral}
+}
+
 
 
 @article{JOCYS2026100148,
