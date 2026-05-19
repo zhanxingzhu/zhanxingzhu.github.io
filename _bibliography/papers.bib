@@ -255,7 +255,7 @@ abbr={NeurIPS},
   year={2019},
   pdf={https://proceedings.neurips.cc/paper_files/paper/2019/file/812b4ba287f5ee0bc9d43bbf5bbe87fb-Paper.pdf},
   abstract={Deep learning achieves state-of-the-art results in many tasks in computer vision and natural language processing. However, recent works have shown that deep networks can be vulnerable to adversarial perturbations, which raised a serious robustness issue of deep networks. Adversarial training, typically formulated as a robust optimization problem, is an effective way of improving the robustness of deep networks. A major drawback of existing adversarial training algorithms is the computational overhead of the generation of adversarial examples, typically far greater than that of the network training. This leads to the unbearable overall computational cost of adversarial training. In this paper, we show that adversarial training can be cast as a discrete time differential game. Through analyzing the Pontryagin's Maximum Principle (PMP) of the problem, we observe that the adversary update is only coupled with the parameters of the first layer of the network. This inspires us to restrict most of the forward and back propagation within the first layer of the network during adversary updates. This effectively reduces the total number of full forward and backward propagation to only one for each group of adversary updates. Therefore, we refer to this algorithm YOPO (You Only Propagate Once). Numerical experiments demonstrate that YOPO can achieve comparable defense accuracy with approximately 1/5 ~ 1/4 GPU time of the projected gradient descent (PGD) algorithm.},
-  selected={true}
+  selected={false}
 }
 
 @inproceedings{zhang2019interpreting,
@@ -588,7 +588,7 @@ abbr={NeurIPS},
   pdf = {https://openreview.net/pdf?id=PjBEUTVzoe},
   dimensions={true},
   abstract={Studying the implicit bias of gradient descent (GD) and stochastic gradient descent (SGD) is critical to unveil the underlying mechanism of deep learning. Unfortunately, even for standard linear networks in regression setting, a comprehensive characterization of the implicit bias is still an open problem. This paper proposes to investigate a new proxy model of standard linear network, rank-1 linear network, where each weight matrix is parameterized as a rank-1 form. For over-parameterized regression problem, we precisely analyze the implicit bias of GD and SGD---by identifying a “potential” function such that GD converges to its minimizer constrained by zero training error (i.e., interpolation solution), and further characterizing the role of the noise introduced by SGD in perturbing the form of this potential. Our results explicitly connect the depth of the network and the initialization with the implicit bias of GD and SGD. Furthermore, we emphasize a new implicit bias of SGD jointly induced by stochasticity and over-parameterization, which can reduce the dependence of the SGD's solution on the initialization. Our findings regarding the implicit bias are different from that of a recently popular model, the diagonal linear network. We highlight that the induced bias of our rank-1 model is more consistent with standard linear network while the diagonal one is not. This suggests that the proposed rank-1 linear network might be a plausible proxy for standard linear net.},
-  selected={true}
+  selected={false}
 }
 
 
@@ -768,6 +768,47 @@ abbr={TCSVT},
   }
 
 
+@inproceedings{lyu2026rlsft,
+abbr={ICML},
+title={{Transformers with RL or SFT Provably Learn Sparse Boolean Functions, But Differently}},
+author={Lyu, Bochen and Jia, Yiyang and Cai, Xiaohao and Zhu, Zhanxing},
+booktitle={International Conference for Machine Learning (ICML)},
+year={2026},
+%pdf = {https://openreview.net/forum?id=gy3l3r2JP9},
+abstract = {Transformers can acquire Chain-of-Thought (CoT) capabilities to solve complex reasoning tasks through fine-tuning. Reinforcement learning~(RL) and supervised fine-tuning~(SFT) are two primary approaches to this end.
+In this work, we specifically examine RL with process rewards and SFT for learning $k$-sparse Boolean functions with a one-layer transformer through intermediate reasoning steps akin to CoT. In particular, we consider $k$-sparse Boolean functions that can be recursively decomposed into fixed 2-sparse Boolean functions. We first analyze the learning dynamics of fine-tuning the transformer via either RL with process reward or SFT in a unified way. This allows us to identify sufficient conditions for the transformer to provably learn the general sparse Boolean functions. We then verify that these conditions hold for three basic examples, including $k$-\texttt{PARITY}, $k$-\texttt{AND}, and $k$-\texttt{OR}, thus demonstrating     their learnability via both RL with process reward and SFT. Notably, we reveal that RL and SFT exhibit distinct learning behaviors: RL learns the whole CoT chain simultaneously, whereas SFT naturally learns the CoT chain step by step. Overall, our findings provide theoretical insights into the mechanisms underlying RL with process reward and SFT and how they differ in triggering the CoT capabilities of transformers.},
+selected={true}
+}
+
+
+@inproceedings{hilton-jones2026,
+abbr={ICML},
+title={{Modelling Attention with Aitchison Geometry: Token Distinguishability and Temperature Scaling}},
+author={Hilton-Jones, Sam and Norman, Tim and Zhu, Zhanxing},
+booktitle={International Conference for Machine Learning (ICML)},
+year={2026},
+%pdf = {https://openreview.net/forum?id=gy3l3r2JP9},
+abstract = {The attention mechanism with softmax normalisation is a foundational component of  Transformer-based large language models. However, with very long contexts, attention scores are known to diminish, raising fundamental questions about token distinguishability and how it can be preserved. In this work, we provide a formal characterisation of token distinguishability in attention as a function of context length and embedding dimension. We introduce Aitchison distance to quantify relative differences among attention probabilities, and show that, with Gaussian queries and keys, even in the long-context regime, token distinguishability converges to a finite, non-zero limit rather than vanishing. Leveraging the linear relationship between temperature scaling and Aitchison distance, we derive a theoretical lower bound of $\Omega(\sqrt{\log L})$ on the logit scaling required to produce a sharp attention distribution. Finally, we demonstrate that Aitchison distance provides a principled and practical alternative to entropy for monitoring training and inference, as it captures the full compositional structure, including the smaller components of the attention probabilities.},
+selected={true}
+}
+
+
+@inproceedings{zou2026,
+abbr={ICML},
+title={{SlaClip: Gradient Norm Slacks can be Indicator for Adaptive Clipping in DP-SGD}},
+author={Shuyan Zou and Shaowei Wang and Zhanxing Zhu and Jin Li and Changyu Dong and Vladimiro Sassone and Han Wu},
+booktitle={International Conference for Machine Learning (ICML) Spotlight},
+year={2026},
+%pdf = {https://openreview.net/forum?id=gy3l3r2JP9},
+abstract = {Differentially private stochastic gradient descent (DP-SGD) achieves privacy by clipping per-sample gradients and injecting Gaussian noise, but its utility is highly sensitive to the choice of the clipping threshold $C$. A fixed $C$ often degrades performance and necessitates repeated empirical calibration. Existing adaptive clipping methods either modify the gradient update in vanilla DP-SGD, causing additional tuning or optimization overhead, or introduce separate query mechanisms to monitor gradient statistics. In contrast, we leverage the \emph{slack} information induced by the standard clipping operation, an overlooked signal in prior work, and show that it provides an effective indication for adapting $C$.
+In light of this, we propose \emph{SlaClip}, a privacy-preserving adaptive clipping strategy using a post-hoc \emph{Slack Indicator}. Under the same training configuration, both \emph{SlaClip}-DP-SGD and vanilla DP-SGD instantiate the identical Gaussian mechanism, and therefore incur equivalent privacy cost. Moreover, it requires minimal task-specific hyperparameter tuning and exhibits robust performance improvement across diverse datasets and model architectures.},
+selected={false}
+}
+
+
+
+
+
 @inproceedings{zhang2026modr,
 abbr={ICLR},
   title={{MoDr: Mixture-of-Depth-Recurrent Transformers for Test-Time Reasoning}},
@@ -903,7 +944,6 @@ author = {Zygimantas Jocys and Zhanxing Zhu and Henriette M.G. Willems and Katay
 keywords = {Drug discovery, Generative models, Synthesizable molecules, Pharmacophore modeling, Equivariant neural networks, Transformer models, Reaction trees, Ligand-based design},
 abstract = {Drug discovery is a complex, resource-intensive process requiring significant time and cost to bring new medicines to patients. Many generative models aim to accelerate drug discovery, but few produce synthetically accessible molecules. Conversely, synthesis-focused models do not leverage the 3D information crucial for effective drug design. We introduce SynthFormer, a novel machine learning model that generates fully synthesizable molecules, structured as synthetic trees, by introducing both 3D information and pharmacophores as input. SynthFormer features a 3D equivariant graph neural network to encode pharmacophores, followed by a Transformer-based synthesis-aware decoding mechanism for constructing synthetic trees as a sequence of tokens. This provides capabilities for designing active molecules based on pharmacophores, exploring the local synthesizable chemical space around hit molecules and optimizing their properties. We demonstrate its effectiveness through various challenging tasks, including designing active compounds for a range of proteins, performing hit expansion and optimizing molecular properties.}
 }
-
 
 
 
