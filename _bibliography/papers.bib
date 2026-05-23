@@ -829,7 +829,7 @@ title={{Transformers with RL or SFT Provably Learn Sparse Boolean Functions, But
 author={Lyu, Bochen and Jia, Yiyang and Cai, Xiaohao and Zhu, Zhanxing},
 booktitle={International Conference for Machine Learning (ICML)},
 year={2026},
-pdf={https://arxiv.org/pdf/2511.17852},
+pdf={https://icml.cc/virtual/2026/poster/63661},
 abstract = {Transformers can acquire Chain-of-Thought (CoT) capabilities to solve complex reasoning tasks through fine-tuning. Reinforcement learning~(RL) and supervised fine-tuning~(SFT) are two primary approaches to this end.
 In this work, we specifically examine RL with process rewards and SFT for learning $k$-sparse Boolean functions with a one-layer transformer through intermediate reasoning steps akin to CoT. In particular, we consider $k$-sparse Boolean functions that can be recursively decomposed into fixed 2-sparse Boolean functions. We first analyze the learning dynamics of fine-tuning the transformer via either RL with process reward or SFT in a unified way. This allows us to identify sufficient conditions for the transformer to provably learn the general sparse Boolean functions. We then verify that these conditions hold for three basic examples, including $k$-\texttt{PARITY}, $k$-\texttt{AND}, and $k$-\texttt{OR}, thus demonstrating     their learnability via both RL with process reward and SFT. Notably, we reveal that RL and SFT exhibit distinct learning behaviors: RL learns the whole CoT chain simultaneously, whereas SFT naturally learns the CoT chain step by step. Overall, our findings provide theoretical insights into the mechanisms underlying RL with process reward and SFT and how they differ in triggering the CoT capabilities of transformers.},
 selected={true}
@@ -841,6 +841,7 @@ abbr={ICML},
 title={{Modelling Attention with Aitchison Geometry: Token Distinguishability and Temperature Scaling}},
 author={Hilton-Jones, Sam and Norman, Tim and Zhu, Zhanxing},
 booktitle={International Conference for Machine Learning (ICML)},
+pdf={https://icml.cc/virtual/2026/poster/66654},
 year={2026},
 abstract = {The attention mechanism with softmax normalisation is a foundational component of  Transformer-based large language models. However, with very long contexts, attention scores are known to diminish, raising fundamental questions about token distinguishability and how it can be preserved. In this work, we provide a formal characterisation of token distinguishability in attention as a function of context length and embedding dimension. We introduce Aitchison distance to quantify relative differences among attention probabilities, and show that, with Gaussian queries and keys, even in the long-context regime, token distinguishability converges to a finite, non-zero limit rather than vanishing. Leveraging the linear relationship between temperature scaling and Aitchison distance, we derive a theoretical lower bound of $\Omega(\sqrt{\log L})$ on the logit scaling required to produce a sharp attention distribution. Finally, we demonstrate that Aitchison distance provides a principled and practical alternative to entropy for monitoring training and inference, as it captures the full compositional structure, including the smaller components of the attention probabilities.},
 selected={true}
@@ -853,6 +854,7 @@ title={{SlaClip: Gradient Norm Slacks can be Indicator for Adaptive Clipping in 
 author={Shuyan Zou and Shaowei Wang and Zhanxing Zhu and Jin Li and Changyu Dong and Vladimiro Sassone and Han Wu},
 booktitle={International Conference for Machine Learning (ICML) Spotlight},
 year={2026},
+pdf={https://icml.cc/virtual/2026/poster/66390},
 abstract = {Differentially private stochastic gradient descent (DP-SGD) achieves privacy by clipping per-sample gradients and injecting Gaussian noise, but its utility is highly sensitive to the choice of the clipping threshold $C$. A fixed $C$ often degrades performance and necessitates repeated empirical calibration. Existing adaptive clipping methods either modify the gradient update in vanilla DP-SGD, causing additional tuning or optimization overhead, or introduce separate query mechanisms to monitor gradient statistics. In contrast, we leverage the \emph{slack} information induced by the standard clipping operation, an overlooked signal in prior work, and show that it provides an effective indication for adapting $C$.
 In light of this, we propose \emph{SlaClip}, a privacy-preserving adaptive clipping strategy using a post-hoc \emph{Slack Indicator}. Under the same training configuration, both \emph{SlaClip}-DP-SGD and vanilla DP-SGD instantiate the identical Gaussian mechanism, and therefore incur equivalent privacy cost. Moreover, it requires minimal task-specific hyperparameter tuning and exhibits robust performance improvement across diverse datasets and model architectures.},
 selected={false}
