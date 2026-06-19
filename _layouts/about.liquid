@@ -49,6 +49,14 @@ layout: default
       {% include news.liquid limit=true %}
     {% endif %}
 
+    <!-- Service -->
+    {% if page.service %}
+      <h2>service</h2>
+      <div class="service">
+        <p>{{ page.service }}</p>
+      </div>
+    {% endif %}
+
     <!-- Latest posts -->
     {% if page.latest_posts %}
       <h2>
