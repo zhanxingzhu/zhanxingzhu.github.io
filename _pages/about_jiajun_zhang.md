@@ -1,0 +1,1 @@
+Jiajun Zhang is a Ph.D. student at the University of Southampton. His research interests lie in AI4Science and Verifiable LLMs, with a particular focus on investigating and verifying physical laws within neural networks. More information is shown in his [Google Scholar](https://scholar.google.com/citations?user=85REiQsAAAAJ) profile.

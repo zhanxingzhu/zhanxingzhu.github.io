@@ -51,6 +51,10 @@ profiles:
       #<p>123 your address street</p>
       #<p>Your City, State 12345</p>
   - align: left
+    image: jiajun_zhang.jpg
+    content: about_jiajun_zhang.md
+    image_circular: false
+  - align: left
     image: yue_wu.jpg
     content: about_yue_wu.md
     image_circular: false # crops the image to make it circular
