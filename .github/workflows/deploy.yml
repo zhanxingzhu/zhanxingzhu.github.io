@@ -33,6 +33,10 @@ jobs:
           valueFile: "_config.yml"
           propertyPath: "giscus.repo"
           value: ${{ github.repository }}
+      - name: Check citation parsing and analytics
+        run: |
+          bundle exec ruby tests/scholar_metrics_test.rb
+          node --test tests/analytics-events.test.cjs
       - name: Install and Build 🔧
         run: |
           pip3 install --upgrade jupyter

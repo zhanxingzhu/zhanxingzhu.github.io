@@ -1,0 +1,12 @@
+{% assign metrics = site.data.citations %}
+{% if metrics.summary and metrics.scholar_userid == site.scholar_userid %}
+  <div class="research-metrics">
+    <a href="{{ metrics.source_url | escape }}">Google Scholar</a>
+    <dl>
+      <div><dt>Citations</dt><dd>{{ metrics.summary.citations }}</dd></div>
+      <div><dt>h-index</dt><dd>{{ metrics.summary.h_index }}</dd></div>
+      <div><dt>i10-index</dt><dd>{{ metrics.summary.i10_index }}</dd></div>
+    </dl>
+    <small>Updated {{ metrics.updated_at | date: '%b %d, %Y' }}</small>
+  </div>
+{% endif %}

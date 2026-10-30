@@ -211,6 +211,59 @@ blockquote {
   }
 }
 
+.research-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 1.5rem;
+  padding: 0.75rem 0 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--global-divider-color);
+
+  dl {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    margin: 0;
+  }
+
+  dl div {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+  }
+
+  dt { font-weight: 400; }
+  dd { margin: 0; font-weight: 600; font-variant-numeric: tabular-nums; }
+  small { color: var(--global-text-color-light); }
+}
+
+.publications .scholar-badge {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  max-width: 100%;
+  padding: 0.2rem 0.45rem;
+  margin: 0.2rem 0.4rem 0.2rem 0;
+  border: 1px solid var(--global-divider-color);
+  border-radius: 4px;
+  color: var(--global-text-color);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  vertical-align: middle;
+
+  strong {
+    color: var(--global-theme-color);
+    font-variant-numeric: tabular-nums;
+  }
+
+  &:hover, &:focus-visible {
+    border-color: var(--global-theme-color);
+    text-decoration: none;
+  }
+}
+
 // People page
 
 .people-page {

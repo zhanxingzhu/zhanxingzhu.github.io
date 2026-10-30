@@ -1,4 +1,10 @@
-{% if site.enable_google_analytics %}
+{% assign google_analytics_id = site.google_analytics | default: '' | strip %}
+{% assign goatcounter_endpoint = site.goatcounter_endpoint | default: '' | strip %}
+{% assign cronitor_id = site.cronitor_analytics | default: '' | strip %}
+{% assign track_research_clicks = false %}
+{% if jekyll.environment == 'production' %}
+{% if site.enable_google_analytics and google_analytics_id != '' %}
+  {% assign track_research_clicks = true %}
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id={{ site.google_analytics }}"></script>
   <script>
@@ -10,7 +16,7 @@
     gtag('config', '{{ site.google_analytics }}');
   </script>
 {% endif %}
-{% if site.enable_cronitor_analytics %}
+{% if site.enable_cronitor_analytics and cronitor_id != '' %}
   <!-- Cronitor RUM -->
   <script async src="https://rum.cronitor.io/script.js"></script>
   <script>
@@ -21,4 +27,12 @@
       };
     cronitor('config', { clientKey: '{{site.cronitor_analytics}}' });
   </script>
+{% endif %}
+{% if site.enable_goatcounter and goatcounter_endpoint != '' %}
+  {% assign track_research_clicks = true %}
+  <script data-goatcounter="{{ goatcounter_endpoint | escape }}" async src="https://gc.zgo.at/count.js"></script>
+{% endif %}
+{% if track_research_clicks %}
+  <script defer src="{{ '/assets/js/analytics-events.js' | relative_url }}" data-scholar-userid="{{ site.scholar_userid | escape }}"></script>
+{% endif %}
 {% endif %}

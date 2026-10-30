@@ -1,0 +1,515 @@
+{
+  "scholar_userid": "a2sHceIAAAAJ",
+  "source_url": "https://scholar.google.com/citations?user=a2sHceIAAAAJ&hl=en",
+  "updated_at": "2026-10-30T16:09:00Z",
+  "profile_articles": 122,
+  "summary": {
+    "citations": 15804,
+    "h_index": 34,
+    "i10_index": 60
+  },
+  "unmatched": [
+    "shen2026zetaevolve",
+    "zou2026"
+  ],
+  "papers": {
+    "chen2020breaking": {
+      "scholar_id": "YohjEiUPhakC",
+      "title": "On breaking deep generative model-based defenses and beyond",
+      "citations": 7,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "chen2020neural": {
+      "scholar_id": "86PQX7AUzd4C",
+      "title": "Neural Approximate Sufficient Statistics for Implicit Models",
+      "citations": 124,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "cheng2025dycast": {
+      "scholar_id": "HtS1dXgVpQUC",
+      "title": "DyCAST: learning dynamic causal structure from time series",
+      "citations": 14,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "cheng2026learning": {
+      "scholar_id": "OP4eGU-M3BUC",
+      "title": "Learning Dynamics of Logits Debiasing for Long-Tailed Semi-Supervised Learning",
+      "citations": 2,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "feng2026maven": {
+      "scholar_id": "F9fV5C73w3QC",
+      "title": "Maven: A mesh-aware volumetric encoding network for simulating 3d flexible deformation",
+      "citations": 1,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "gong2022fine": {
+      "scholar_id": "4hFrxpcac9AC",
+      "title": "Fine-grained differentiable physics: a yarn-level model for fabrics",
+      "citations": 23,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "guo2020simplifying": {
+      "scholar_id": "q3CdL3IzO_QC",
+      "title": "Simplifying Graph Attention Networks with Source-Target Separation",
+      "citations": 5,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "he2024foodie": {
+      "scholar_id": "mNrWkgRL2YcC",
+      "title": "Genome-wide single-cell and single-molecule footprinting of transcription factors with deaminase",
+      "citations": 30,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "hilton-jones2026": {
+      "scholar_id": "fbc8zXXH2BUC",
+      "title": "Modelling Attention with Aitchison Geometry: Token Distinguishability and Temperature Scaling",
+      "citations": 2,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "hu2019question": {
+      "scholar_id": "k8Z6L05lTy4C",
+      "title": "How question generation can help question answering over knowledge base",
+      "citations": 8,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "ji2020knowledge": {
+      "scholar_id": "_axFR9aDTf0C",
+      "title": "Knowledge Distillation in Wide Neural Networks: Risk Bound, Data Efficiency and Imperfect Teacher",
+      "citations": 76,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "li2020spatial": {
+      "scholar_id": "LO7wyVUgiFcC",
+      "title": "Spatial-temporal fusion graph neural networks for traffic flow forecasting",
+      "citations": 1470,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "li2023neural": {
+      "scholar_id": "2VqYfGB8ITEC",
+      "title": "Neural Lad: A Neural Latent Dynamics Framework for Times Series Modeling",
+      "citations": 22,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "li2024functional": {
+      "scholar_id": "dBIO0h50nwkC",
+      "title": "Functional relation field: a model-agnostic framework for multivariate time series forecasting",
+      "citations": 7,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "li2025": {
+      "scholar_id": "cWzG1nlazyYC",
+      "title": "Unified spatial–temporal edge-enhanced graph networks for pedestrian trajectory prediction",
+      "citations": 42,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "li2026vite": {
+      "scholar_id": "yMeIxYmEMEAC",
+      "title": "ViTE: Virtual Graph Trajectory Expert Router for Pedestrian Trajectory Prediction",
+      "citations": 12,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "luo2017learning": {
+      "scholar_id": "uc_IGeMz5qoC",
+      "title": "Learning with noise: Enhance distantly supervised relation extraction with dynamic transition matrix",
+      "citations": 115,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "luo2018thermostat": {
+      "scholar_id": "zLWjf1WUPmwC",
+      "title": "Thermostat-assisted continuously-tempered Hamiltonian Monte Carlo for Bayesian learning",
+      "citations": 26,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "lv2022implicit": {
+      "scholar_id": "XvxMoLDsR5gC",
+      "title": "Implicit Bias of Adversarial Training for Deep Neural Networks",
+      "citations": 12,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "lyu2023implicit": {
+      "scholar_id": "WJVC3Jt7v1AC",
+      "title": "Implicit bias of (stochastic) gradient descent for rank-1 linear neural network",
+      "citations": 8,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "lyu2025analyzing": {
+      "scholar_id": "ODE9OILHJdcC",
+      "title": "Analyzing the implicit bias of adversarial training from a generalized margin perspective",
+      "citations": 3,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "lyu2025effects": {
+      "scholar_id": "bKqednn6t2AC",
+      "title": "Effects of momentum in implicit bias of gradient flow for diagonal linear networks",
+      "citations": 0,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "lyu2025heavy": {
+      "scholar_id": "3htObqc8RwsC",
+      "title": "Heavy-Ball Momentum Method in Continuous Time and Discretization Error Analysis",
+      "citations": 1,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "lyu2025solvable": {
+      "scholar_id": "DJbcl8HfkQkC",
+      "title": "A Solvable Attention for Neural Scaling Laws",
+      "citations": 8,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "lyu2026rlsft": {
+      "scholar_id": "HeT0ZceujKMC",
+      "title": "Transformers with RL or SFT Provably Learn Sparse Boolean Functions, But Differently",
+      "citations": 2,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "shang2015covariance": {
+      "scholar_id": "JoZmwDi-zQgC",
+      "title": "Covariance-controlled adaptive Langevin thermostat for large-scale Bayesian sampling",
+      "citations": 64,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "shen2024memory": {
+      "scholar_id": "IUKN3-7HHlwC",
+      "title": "Memory-Efficient Gradient Unrolling for Large-Scale Bi-level Optimization",
+      "citations": 18,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "shi2020informative": {
+      "scholar_id": "ClCfbGk0d_YC",
+      "title": "Informative Dropout for Robust Representation Learning: A Shape-bias Perspective",
+      "citations": 144,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "storkey2014continuum": {
+      "scholar_id": "q3oQSFYPqjQC",
+      "title": "A continuum from mixtures to products: Aggregation under bias",
+      "citations": 2,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "storkey2015aggregation": {
+      "scholar_id": "PELIpwtuRlgC",
+      "title": "Aggregation under bias: Rényi divergence aggregation and its implementation via machine learning markets",
+      "citations": 7,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "sun2019virtual": {
+      "scholar_id": "EYYDruWGBe4C",
+      "title": "Virtual adversarial training on graph convolutional networks in node classification",
+      "citations": 36,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "sun2020multi": {
+      "scholar_id": "e_rmSamDkqQC",
+      "title": "Multi-Stage Self-Supervised Learning for Graph Convolutional Networks on Graphs with Few Labeled Nodes.",
+      "citations": 352,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "sun2021adagcn": {
+      "scholar_id": "GtLg2Ama23sC",
+      "title": "AdaGCN: Adaboosting Graph Convolutional Networks into Deep Models",
+      "citations": 141,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "sun2023patch": {
+      "scholar_id": "oNZyr7d5Mn4C",
+      "title": "Patch-level neighborhood interpolation: A general and effective graph-based regularization strategy",
+      "citations": 10,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "tang2026ladeep": {
+      "scholar_id": "a3BOlSfXSfwC",
+      "title": "FilDeep: Learning Large Deformations of Elastic-Plastic Solids with Multi-Fidelity Data",
+      "citations": 2,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "tao2025ladeep": {
+      "scholar_id": "OR75R8vi5nAC",
+      "title": "LaDEEP: A Deep Learning-based Surrogate Model for Large Deformation of Elastic-Plastic Solids",
+      "citations": 7,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "tao2025unisoma": {
+      "scholar_id": "OcBU2YAGkTUC",
+      "title": "Unisoma: A Unified Transformer-based Solver for Multi-Solid Systems",
+      "citations": 6,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "tao2026neural": {
+      "scholar_id": "P7Ujq4OLJYoC",
+      "title": "Neural Latent Arbitrary Lagrangian-Eulerian Grids for Fluid-Solid Interaction",
+      "citations": 7,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "wan2019towards": {
+      "scholar_id": "M7yex6snE4oC",
+      "title": "Towards making deep transfer learning never hurt",
+      "citations": 24,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "wan2020neural": {
+      "scholar_id": "VaXvl8Fpj5cC",
+      "title": "Neural control variates for Monte Carlo variance reduction",
+      "citations": 40,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "wan2021spherical": {
+      "scholar_id": "HtEfBTGE9r8C",
+      "title": "Spherical motion dynamics: Learning dynamics of normalized neural network using sgd and weight decay",
+      "citations": 74,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "wang2021": {
+      "scholar_id": "Ug5p-4gJ2f0C",
+      "title": "Spatio-temporal manifold learning for human motions via long-horizon modeling",
+      "citations": 116,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "wang2021sampling": {
+      "scholar_id": "4fGpz3EwCPoC",
+      "title": "Sampling sparse representations with randomized measurement langevin dynamics",
+      "citations": 5,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "wu2017towards": {
+      "scholar_id": "2KloaMYe4IUC",
+      "title": "Towards Understanding Generalization of Deep Learning: Perspective of Loss Landscapes",
+      "citations": 284,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "wu2020noisy": {
+      "scholar_id": "Dip1O2bNi0gC",
+      "title": "On the Noisy Gradient Descent that Generalizes as SGD",
+      "citations": 153,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "wu2020towards": {
+      "scholar_id": "PVjk1bu6vJQC",
+      "title": "Towards understanding and improving the transferability of adversarial examples in deep neural networks",
+      "citations": 218,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "xie2021positive": {
+      "scholar_id": "9pM33mqn1YgC",
+      "title": "Positive-Negative Momentum: Manipulating Stochastic Gradient Noise to Improve Generalization",
+      "citations": 61,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "xiong2019sphmc": {
+      "scholar_id": "uWiczbcajpAC",
+      "title": "SpHMC: Spectral Hamiltonian Monte Carlo",
+      "citations": 8,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "xiong2022grod": {
+      "scholar_id": "umqufdRvDiIC",
+      "title": "GrOD: Deep Learning with Gradients Orthogonal Decomposition for Knowledge Transfer, Distillation, and Adversarial Training",
+      "citations": 21,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "xiong2023stochastic": {
+      "scholar_id": "IRz6iEL74y4C",
+      "title": "Stochastic gradient descent with random label noises: doubly stochastic models and inference stabilizer",
+      "citations": 1,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "xu2018reinforced": {
+      "scholar_id": "VLnqNzywnoUC",
+      "title": "Reinforced continual learning",
+      "citations": 560,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "xu2020automatic": {
+      "scholar_id": "5qfkUJPXOUwC",
+      "title": "Automatic data augmentation for 3D medical image segmentation",
+      "citations": 109,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "xu2021adaptive": {
+      "scholar_id": "anf4URPfarAC",
+      "title": "Adaptive progressive continual learning",
+      "citations": 53,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "yang2010automatic": {
+      "scholar_id": "u5HHmVD_uO8C",
+      "title": "Automatic rank determination in projective nonnegative matrix factorization",
+      "citations": 21,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "yao2020efficient": {
+      "scholar_id": "S16KYo8Pm5AC",
+      "title": "Efficient Neural Architecture Search via Proximal Iterations.",
+      "citations": 137,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "ye2017langevin": {
+      "scholar_id": "35r97b3x0nAC",
+      "title": "Langevin Dynamics with Continuous Tempering for Training Deep Neural Networks",
+      "citations": 31,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "ye2018bayesian": {
+      "scholar_id": "vDijr-p_gm4C",
+      "title": "Bayesian adversarial learning",
+      "citations": 71,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "ye2018stochastic": {
+      "scholar_id": "EkHepimYqZsC",
+      "title": "Stochastic Fractional Hamiltonian Monte Carlo.",
+      "citations": 25,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "ye2018yet": {
+      "scholar_id": "0KyAp5RtaNEC",
+      "title": "Yet another text captcha solver: A generative adversarial network based approach",
+      "citations": 214,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "ye2020amata": {
+      "scholar_id": "foquWX3nUaYC",
+      "title": "Amata: An Annealing Mechanism for Adversarial Training Acceleration",
+      "citations": 25,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "ye2020using": {
+      "scholar_id": "i2xiXl-TujoC",
+      "title": "Using generative adversarial networks to break and protect text captchas",
+      "citations": 33,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "ye2021adversarial": {
+      "scholar_id": "_FM0Bhl9EiAC",
+      "title": "Adversarial invariant learning",
+      "citations": 9,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "ye2021annealing": {
+      "scholar_id": "0izLItjtcgwC",
+      "title": "An annealing mechanism for adversarial training acceleration",
+      "citations": 15,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "yi2023monoflow": {
+      "scholar_id": "_5tno0g5mFcC",
+      "title": "MonoFlow: Rethinking Divergence GANs via the Perspective of Differential Equations",
+      "citations": 6,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "yocys2025": {
+      "scholar_id": "LhH-TYMQEocC",
+      "title": "Synthformer: Equivariant pharmacophore-based generation of synthesizable molecules for ligand-based drug design",
+      "citations": 9,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "yu2018spatio": {
+      "scholar_id": "fEOibwPWpKIC",
+      "title": "Spatio-temporal graph convolutional neural network: A deep learning framework for traffic forecasting",
+      "citations": 8437,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "yu2018tangent": {
+      "scholar_id": "nrtMV_XWKgEC",
+      "title": "Tangent-Normal Adversarial Regularization for Semi-supervised Learning",
+      "citations": 43,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "yu20193d": {
+      "scholar_id": "hMsQuOkrut0C",
+      "title": "3d graph convolutional networks with temporal graphs: A spatial information free framework for traffic forecasting",
+      "citations": 81,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "yu2019st": {
+      "scholar_id": "g3aElNc5_aQC",
+      "title": "St-unet: A spatio-temporal u-network for graph-structured time series modeling",
+      "citations": 109,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "yuan2018sipid": {
+      "scholar_id": "ipzZ9siozwsC",
+      "title": "SIPID: A deep learning framework for sinogram interpolation and image denoising in low-dose CT reconstruction",
+      "citations": 68,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "zhang2019interpreting": {
+      "scholar_id": "gsN89kCJA0AC",
+      "title": "Interpreting Adversarially Trained Convolutional Neural Networks",
+      "citations": 219,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "zhang2019you": {
+      "scholar_id": "KUbvn5osdkgC",
+      "title": "You only propagate once: Accelerating adversarial training via maximal principle",
+      "citations": 583,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "zhang2020black": {
+      "scholar_id": "ruyezt5ZtCIC",
+      "title": "Black-box certification with randomized smoothing: A functional optimization based framework",
+      "citations": 99,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "zhang2020learning": {
+      "scholar_id": "BUYA1_V_uYcC",
+      "title": "Learning to search efficient densenet with layer-wise pruning",
+      "citations": 15,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "zhang2026diffusion": {
+      "scholar_id": "GFxP56DSvIMC",
+      "title": "Diffusion-based Kriging Model with Graph-enhanced Attention",
+      "citations": 2,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "zhang2026modr": {
+      "scholar_id": "nZcligLrVowC",
+      "title": "MoDr: Mixture-of-Depth-Recurrent Transformers for Test-Time Reasoning",
+      "citations": 3,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "zhu2011local": {
+      "scholar_id": "Y0pCki6q_DkC",
+      "title": "Local linear regression for soft-sensor design with application to an industrial deethanizer",
+      "citations": 12,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "zhu2013multiplicative": {
+      "scholar_id": "W7OEmFMy1HYC",
+      "title": "Multiplicative updates for learning with stochastic matrices",
+      "citations": 10,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "zhu2013supervised": {
+      "scholar_id": "Tyk-4Ss8FVUC",
+      "title": "Supervised distance preserving projections",
+      "citations": 19,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "zhu2015adaptive": {
+      "scholar_id": "WA5NYHcadZ8C",
+      "title": "Adaptive stochastic primal-dual coordinate descent for separable saddle point problems",
+      "citations": 25,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "zhu2016stochastic": {
+      "scholar_id": "9vf0nzSNQJEC",
+      "title": "Stochastic parallel block coordinate descent for large-scale saddle point problems",
+      "citations": 7,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "zhu2019anisotropic": {
+      "scholar_id": "kuK5TVdYjLIC",
+      "title": "The Anisotropic Noise in Stochastic Gradient Descent: Its Behavior of Escaping from Sharp Minima and Regularization Effects",
+      "citations": 399,
+      "updated_at": "2026-10-30T16:09:00Z"
+    },
+    "zou2019novel": {
+      "scholar_id": "p__nRnzSRKYC",
+      "title": "Novel subgroups of patients with adult-onset diabetes in Chinese and US populations",
+      "citations": 324,
+      "updated_at": "2026-10-30T16:09:00Z"
+    }
+  }
+}
