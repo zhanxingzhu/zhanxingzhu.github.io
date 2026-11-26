@@ -6,12 +6,12 @@ paper_url: https://proceedings.mlr.press/v306/lyu26d.html
 ---
 
 <main>
-<div class="date">Nov 26, 2026 · Reading notes</div>
+<div class="date"><time datetime="2026-11-26">Nov 26, 2026</time></div>
 <h1>RL and SFT both teach a transformer to reason step by step, but not in the same order</h1>
-<p class="byline">A visual summary of Lyu, Jia, Cai and Zhu (ICML 2026)</p>
+<p class="byline">Zhanxing Zhu · Joint work with Bochen Lyu, Yiyang Jia and Xiaohao Cai</p>
 <div class="links"><a href="{{ page.paper_url }}">Read the ICML 2026 paper</a></div>
 
-<p>A model can be fine-tuned to write out intermediate steps, a chain of thought<a class="cite" href="#ref-1">[1]</a>, either with supervised fine-tuning (SFT) or with reinforcement learning (RL). This paper proves, for a one-layer transformer on a family of Boolean problems, that both work, and that they learn the chain in a different order: RL with a reward for every step learns all steps in one update, while SFT on its own outputs learns one step per update.</p>
+<p>Supervised fine-tuning (SFT) and reinforcement learning (RL) can both teach a model to write out intermediate steps, or a chain of thought<a class="cite" href="#ref-1">[1]</a>. In our ICML 2026 paper, we ask which steps the model learns first. For a one-layer transformer on a family of sparse Boolean problems, we prove that RL with a reward for every step learns the whole chain in one update. When we train the same model with SFT on its own outputs, it learns one step per update, starting with the first.</p>
 
 <p>Colour means the same thing in every figure:</p>
 
@@ -28,7 +28,7 @@ paper_url: https://proceedings.mlr.press/v306/lyu26d.html
 <h2>1. A task that needs intermediate steps</h2>
 <p class="ask">Why does learning parity need a chain of thought?</p>
 
-<p>The paper studies functions of a long bit string that depend on only a few hidden bits. Parity is the hardest of them to learn directly (<a href="#fig-task">Fig. 1</a>).</p>
+<p>We study functions of a long bit string that depend on only a few hidden bits. Parity is the hardest of them to learn directly (<a href="#fig-task">Fig. 1</a>).</p>
 
 <figure class="anim" id="fig-task">
 <div class="anim-stage"><svg viewBox="0 0 680 296" role="img" aria-label="Animation of a 12-bit input of which 8 hidden bits decide the answer, and of the answer being computed pair by pair in three steps"></svg></div>
@@ -141,7 +141,7 @@ paper_url: https://proceedings.mlr.press/v306/lyu26d.html
 <h2>6. The experiment shows the same pattern</h2>
 <p class="ask">Does a trained model actually behave this way?</p>
 
-<p>The paper checks the prediction numerically on parity with 20 input bits, 16 of them relevant, so the chain has four steps (<a href="#fig-exp">Fig. 6</a>).</p>
+<p>We tested this prediction on parity with 20 input bits, 16 of them relevant, so the chain has four steps (<a href="#fig-exp">Fig. 6</a>).</p>
 
 <figure class="anim" id="fig-exp">
 <div class="anim-stage"><svg viewBox="0 0 680 268" role="img" aria-label="Five grids from the paper with a guide on top: the attention pattern that solves the task, the sign of the RL policy gradient with signal in three blocks at once, and the sign of the SFT gradient at three updates with signal in one block each"><image href="{{ '/assets/blog/sparse-boolean/experiment.png' | relative_url }}" x="0" y="30" width="680" height="229"/></svg></div>
@@ -182,7 +182,7 @@ paper_url: https://proceedings.mlr.press/v306/lyu26d.html
 <figcaption><strong>Figure 7.</strong> The paper’s results by setting: Theorem 3.1, Proposition 3.2 (shown for parity), Theorem 3.3, and the teacher-forcing case from its Appendix B and from Kim and Suzuki<a class="cite" href="#ref-4">[4]</a>.</figcaption>
 </figure>
 
-<p>The authors’ advice for practice: an experiment that compares RL with SFT<a class="cite" href="#ref-6">[6]</a> also varies the reward and the use of teacher forcing, so it should control for whether each step is supervised and on whose earlier steps the model is trained.</p>
+<p>Our results suggest two questions to ask when comparing RL with SFT<a class="cite" href="#ref-6">[6]</a>. Which steps receive feedback? During training, does the model read its own earlier steps or the correct ones? Both choices affect how the model learns the chain.</p>
 
 <h2>References</h2>
 <ol class="refs">
@@ -194,6 +194,6 @@ paper_url: https://proceedings.mlr.press/v306/lyu26d.html
 <li id="ref-6">Chu et al. SFT memorizes, RL generalizes: A comparative study of foundation model post-training. ICML 2025.</li>
 </ol>
 
-<p class="note">Reading notes on “Transformers with RL or SFT Provably Learn Sparse Boolean Functions, But Differently” by Bochen Lyu, Yiyang Jia, Xiaohao Cai and Zhanxing Zhu. The bit strings are invented, and Figure 5 is a schematic of what the theorems predict. Figure 6 shows the paper’s own Figures 5 and 6 with a guide drawn on top; all other figures are reading notes, not the authors’ own figures.</p>
+<p class="note">Figure 5 illustrates the gradient pattern our theorems predict. Figure 6 shows the experimental heatmaps from Figures 5 and 6 of our paper, <a href="{{ page.paper_url }}">Transformers with RL or SFT Provably Learn Sparse Boolean Functions, But Differently</a>.</p>
 </main>
 <div class="speed" role="group" aria-label="Animation speed"><span class="speed-opts"><button type="button" data-v="0.7">0.7×</button><button type="button" data-v="1" aria-pressed="true">1×</button><button type="button" data-v="1.5">1.5×</button><button type="button" data-v="2">2×</button></span><button type="button" class="speed-now" aria-label="Animation speed">Speed 1×</button></div>
