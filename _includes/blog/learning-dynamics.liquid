@@ -1,0 +1,18 @@
+<figure id="training-signals" class="learning-dynamics walkthrough" data-walkthrough aria-labelledby="dynamics-title">
+  <figcaption id="dynamics-title">When does each level get a useful training signal?</figcaption>
+  <p class="dynamics-intro">Each circle represents a multiplication. Follow the first update that favours its two correct inputs. The squares show the sixteen relevant bits.</p>
+  {% include blog/learning-trees.liquid %}
+  <div class="dynamics-key" aria-hidden="true">
+    <span><i class="dynamics-signal"></i> Has received a signal</span>
+    <span><i></i> Awaiting signal</span>
+    <span><i class="dynamics-diamond"></i> Pair fixed by mask</span>
+  </div>
+  <p class="dynamics-note">The diamond at the root can see exactly two inputs. Its pairing is already fixed. The stages below track changes across training updates. Each individual calculation still runs from inputs to root.</p>
+  {% include blog/walkthrough-controls.liquid labels="Uniform attention|First signal|Second level|Third level" %}
+  <ol class="walkthrough-captions" aria-live="polite">
+    <li>Before the first update, both models give equal attention to every allowed input at each node.</li>
+    <li>The first RL update favours the right pairs on all three trainable levels. SFT gets this signal only at the eight level-1 nodes.</li>
+    <li>Once level 1 is learned, SFT gets a signal at the four nodes on level 2. Previously reached nodes stay filled.</li>
+    <li>With level 2 in place, SFT gets a signal at the two nodes on level 3. RL reached these in its first update.</li>
+  </ol>
+</figure>

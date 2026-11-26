@@ -1,0 +1,5 @@
+{%- assign minutes = include.body | strip_html | number_of_words | divided_by: 200.0 | ceil | at_least: 1 -%}
+<p class="research-post-meta">
+  <time datetime="{{ include.date | date_to_xmlschema }}">{{ include.date | date: '%B %-d, %Y' }}</time>
+  <span aria-hidden="true">·</span> {{ minutes }} min read
+</p>

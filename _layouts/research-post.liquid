@@ -1,0 +1,17 @@
+---
+layout: default
+---
+<article class="research-post">
+  <header class="research-post-header">
+    {% include research-post-meta.liquid date=page.date body=content %}
+    <h1>{{ page.title | escape }}</h1>
+    {% if page.paper_authors %}<p class="research-paper-authors">{{ page.paper_authors | escape }}</p>{% endif %}
+    <div class="research-post-byline">
+      {% if page.author %}<span>Post by {{ page.author | escape }}</span>{% endif %}
+      {% if page.paper_url %}<a href="{{ page.paper_url | escape }}">Read the {% if page.paper_venue %}{{ page.paper_venue | escape }} {% endif %}paper</a>{% endif %}
+    </div>
+  </header>
+  <div class="research-post-body">
+    {{ content }}
+  </div>
+</article>

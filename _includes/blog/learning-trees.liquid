@@ -1,0 +1,31 @@
+<div class="dynamics-panels" aria-hidden="true">
+  {% assign methods = 'RL with process rewards|SFT without teacher forcing' | split: '|' %}
+  {% if include.compact %}{% assign methods = 'RL|SFT' | split: '|' %}{% endif %}
+  {% assign row_sizes = '1,2,4,8,16' | split: ',' %}
+  {% assign row_names = 'Root,Level 3,Level 2,Level 1,Inputs' | split: ',' %}
+  {% for method in methods %}
+    {% assign is_rl = forloop.first %}
+    <div class="dynamics-panel">
+      <p class="dynamics-method">{{ method }}</p>
+      {% for row_size in row_sizes %}
+        {% assign count = row_size | plus: 0 %}
+        {% assign reveal = nil %}
+        {% if count > 1 and count < 16 %}
+          {% if is_rl %}
+            {% assign reveal = 2 %}
+          {% else %}
+            {% assign reveal = 6 | minus: forloop.index %}
+          {% endif %}
+        {% endif %}
+        <div class="dynamics-row{% if count == 1 %} dynamics-root{% elsif count == 16 %} dynamics-inputs{% endif %}"{% if reveal %} data-reveal-at="{{ reveal }}"{% endif %}>
+          <span class="dynamics-label">{{ row_names[forloop.index0] }}</span>
+          <div class="dynamics-branches">
+            {% for node in (1..count) %}
+              <span class="dynamics-branch"><i></i></span>
+            {% endfor %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endfor %}
+</div>

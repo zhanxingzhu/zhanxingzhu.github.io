@@ -1,0 +1,45 @@
+<figure class="parity-example walkthrough" data-walkthrough aria-labelledby="parity-example-title">
+  <figcaption id="parity-example-title">Four relevant bits in a six-bit input</figcaption>
+  <div class="parity-diagram" role="img" aria-label="Six signs: plus, minus, plus, minus, minus, plus. Positions one and two form the first pair. Positions four and five form the second pair. The stages below describe the calculation.">
+    <div class="parity-inputs" aria-hidden="true">
+      <div class="first-pair"><i>x<sub>1</sub></i><b>+1</b></div>
+      <div class="first-pair"><i>x<sub>2</sub></i><b>−1</b></div>
+      <div><i>x<sub>3</sub></i><b>+1</b></div>
+      <div class="second-pair"><i>x<sub>4</sub></i><b>−1</b></div>
+      <div class="second-pair"><i>x<sub>5</sub></i><b>−1</b></div>
+      <div><i>x<sub>6</sub></i><b>+1</b></div>
+    </div>
+    <div class="parity-wires" aria-hidden="true">
+      <div class="first-pair"><i></i><i></i></div>
+      <div class="second-pair"><i></i><i></i></div>
+    </div>
+    <div class="parity-products" aria-hidden="true">
+      <div class="first-pair">
+        <span class="parity-node-label">x<sub>1</sub> × x<sub>2</sub></span>
+        <span class="parity-trace"><b>−1</b><span class="parity-correction"> → <b>+1</b></span></span>
+      </div>
+      <div class="second-pair">
+        <span class="parity-node-label">x<sub>4</sub> × x<sub>5</sub></span>
+        <span class="parity-trace"><b>+1</b></span>
+      </div>
+    </div>
+    <div class="parity-targets" aria-hidden="true">
+      <div class="parity-process">
+        <span class="parity-target-name">Process reward</span>
+        <small>Model’s working</small>
+        <div class="parity-equation">(<span class="parity-clean">−1</span><span class="parity-slipped">+1</span>) × (+1) = <b><span class="parity-clean">−1</span><span class="parity-pending">?</span><span class="parity-resolved">+1</span></b></div>
+      </div>
+      <div class="parity-reference">
+        <span class="parity-target-name">Fixed SFT label</span>
+        <small>Reference working</small>
+        <div class="parity-equation">(−1) × (+1) = <b>−1</b></div>
+      </div>
+    </div>
+  </div>
+  {% include blog/walkthrough-controls.liquid labels="Pair the bits|Slip a sign|Check the targets" %}
+  <ol class="walkthrough-captions" aria-live="polite">
+    <li>Pair positions 1 and 2 to get −1, then 4 and 5 to get +1. Their product is −1.</li>
+    <li>The model writes +1 for the first pair. Both signs in its working are now positive.</li>
+    <li>The process verifier expects +1 from the model’s two signs. The fixed solution still expects −1.</li>
+  </ol>
+</figure>

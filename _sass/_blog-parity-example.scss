@@ -1,0 +1,258 @@
+.parity-example {
+  --pair-first: #305d9e;
+  --pair-second: #206d62;
+  --sign-slip: #a84913;
+  --pair-first-bg: #edf3fb;
+  --pair-second-bg: #ecf6f2;
+  --slip-bg: #fff0e3;
+
+  .parity-diagram {
+    padding-top: 0.55rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .first-pair {
+    --branch: var(--pair-first);
+    --branch-bg: var(--pair-first-bg);
+  }
+
+  .second-pair {
+    --branch: var(--pair-second);
+    --branch-bg: var(--pair-second-bg);
+  }
+
+  .parity-inputs {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    text-align: center;
+
+    i {
+      display: block;
+      margin: 0 0 0.3rem;
+      color: var(--research-muted);
+      font-family: Georgia, serif;
+      font-size: 1rem;
+      line-height: 1.15;
+    }
+
+    b {
+      display: inline-grid;
+      width: min(82%, 3.8rem);
+      min-height: 2.4rem;
+      place-items: center;
+      border: 1px dashed var(--global-divider-color);
+      border-radius: 0.4rem;
+      background: var(--global-bg-color);
+      color: var(--research-muted);
+      font-size: 1rem;
+      font-weight: 400;
+    }
+
+    .first-pair b,
+    .second-pair b {
+      border: 1.5px solid var(--branch);
+      background: var(--branch-bg);
+      color: var(--branch);
+      font-weight: 700;
+    }
+  }
+
+  .parity-wires {
+    position: relative;
+    height: 2.3rem;
+
+    > div {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 8.333333%;
+      width: 16.666667%;
+      border-right: 2px solid var(--branch);
+
+      &::before {
+        position: absolute;
+        inset: 0 0 50% 0;
+        border-bottom: 2px solid var(--branch);
+        border-left: 2px solid var(--branch);
+        border-radius: 0 0 0 0.3rem;
+        content: "";
+      }
+    }
+
+    .second-pair {
+      left: 58.333333%;
+    }
+
+    i {
+      position: absolute;
+      z-index: 1;
+      top: 0;
+      left: 0;
+      width: 0.55rem;
+      height: 0.55rem;
+      border-radius: 50%;
+      background: var(--branch);
+      opacity: 0;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  .parity-products {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    justify-items: center;
+
+    > div {
+      display: grid;
+      align-content: center;
+      min-width: min(90%, 7.5rem);
+      min-height: 3.4rem;
+      padding: 0.35rem;
+      border: 1.5px solid var(--branch);
+      border-radius: 0.45rem;
+      background: var(--branch-bg);
+      text-align: center;
+    }
+  }
+
+  .parity-node-label {
+    color: var(--branch);
+    font-family: Georgia, serif;
+    font-size: 0.95rem;
+    font-style: italic;
+    line-height: 1.1;
+  }
+
+  .parity-trace {
+    font-size: 1.2rem;
+    line-height: 1.3;
+  }
+
+  .parity-correction,
+  .parity-slipped {
+    color: var(--sign-slip);
+  }
+
+  .parity-correction {
+    display: inline-block;
+  }
+
+  .parity-targets {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.55rem;
+    margin-top: 1rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid var(--global-divider-color);
+
+    > div {
+      padding: 0.6rem 0;
+      text-align: center;
+    }
+
+    small {
+      display: block;
+      color: var(--research-muted);
+      font-size: 0.825rem;
+      line-height: 1.4;
+    }
+  }
+
+  .parity-target-name {
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+
+  .parity-equation {
+    margin-top: 0.4rem;
+    font-family: Georgia, serif;
+    font-size: clamp(0.82rem, 3.3vw, 1.21rem);
+    white-space: nowrap;
+
+    b {
+      display: inline-block;
+      min-width: 1.65em;
+      border-radius: 0.3rem;
+      background: var(--global-code-bg-color);
+      text-align: center;
+    }
+  }
+
+  .parity-clean,
+  .parity-pending,
+  &[data-active-step="1"] :is(.parity-slipped, .parity-correction, .parity-resolved),
+  &[data-active-step="2"] .parity-resolved {
+    display: none;
+  }
+
+  &[data-active-step="1"] .parity-clean,
+  &[data-active-step="2"] .parity-pending {
+    display: inline;
+  }
+
+  &:not([data-active-step="1"]) .parity-products .first-pair {
+    border-color: var(--sign-slip);
+    background: var(--slip-bg);
+
+    .parity-trace > b {
+      color: var(--research-muted);
+      text-decoration: line-through;
+    }
+  }
+
+  &:not([data-active-step="1"]) .parity-process .parity-equation b {
+    background: var(--slip-bg);
+    color: var(--sign-slip);
+  }
+}
+
+html[data-theme="dark"] .parity-example {
+  --pair-first: #a6c9ff;
+  --pair-second: #91ddcd;
+  --sign-slip: #ffbd8e;
+  --pair-first-bg: #253346;
+  --pair-second-bg: #203a35;
+  --slip-bg: #423027;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .parity-example[data-active-step="1"] .parity-wires i:first-child {
+    animation: parity-follow-elbow 1.15s ease-in-out both;
+    animation-play-state: paused;
+  }
+
+  .parity-example[data-active-step="1"] .parity-wires i:last-child {
+    left: 100%;
+    animation: parity-follow-wire 1.15s ease-in-out both;
+    animation-play-state: paused;
+  }
+
+  .parity-example[data-active-step="1"]:is([data-playing], :has([data-go-step="1"]:focus)) .parity-wires i {
+    animation-play-state: running;
+  }
+
+  .parity-example[data-active-step="2"] .parity-correction,
+  .parity-example[data-active-step="3"] .parity-equation b {
+    animation: parity-write-sign 0.55s ease-out both;
+  }
+}
+
+@keyframes parity-follow-elbow {
+  0% { top: 0; left: 0; opacity: 0; }
+  10% { opacity: 1; }
+  28% { top: 50%; left: 0; }
+  72% { top: 50%; left: 100%; }
+  90% { opacity: 1; }
+  100% { top: 100%; left: 100%; opacity: 0; }
+}
+
+@keyframes parity-follow-wire {
+  0% { top: 0; opacity: 0; }
+  10%, 90% { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+@keyframes parity-write-sign {
+  from { opacity: 0; transform: translateY(-0.4rem); }
+  to { opacity: 1; transform: translateY(0); }
+}

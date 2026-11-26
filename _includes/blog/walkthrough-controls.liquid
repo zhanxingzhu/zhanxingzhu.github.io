@@ -1,0 +1,9 @@
+{% assign step_labels = include.labels | split: '|' %}
+<div class="walkthrough-controls" data-walkthrough-controls hidden>
+  <button type="button" class="walkthrough-play" data-action="play">Play</button>
+  <div class="walkthrough-seek" role="group" aria-label="Choose a stage">
+    {% for label in step_labels %}
+      <button type="button" data-go-step="{{ forloop.index }}">{{ label | escape }}</button>
+    {% endfor %}
+  </div>
+</div>

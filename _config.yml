@@ -124,13 +124,9 @@ bing_site_verification: # out your bing-site-verification ID (Bing Webmaster)
 # Blog
 # -----------------------------------------------------------------------------
 
-blog_name: al-folio # blog_name will be displayed in your blog page
-blog_description: a simple whitespace theme for academics
+blog_name: Blog
+blog_description: A closer look at recent papers from my group and collaborators.
 permalink: /blog/:year/:title/
-
-# Pagination
-pagination:
-  enabled: true
 
 related_blog_posts:
   enabled: true
@@ -158,9 +154,7 @@ disqus_shortname: zhanxingzhu # put your disqus shortname
 # External sources.
 # If you have blog posts published on medium.com or other external sources,
 # you can display them in your blog by adding a link to the RSS feed.
-external_sources:
-  - name: medium.com
-    rss_url: https://medium.com/@al-folio/feed
+external_sources: []
 
 # -----------------------------------------------------------------------------
 # Collections
@@ -268,9 +262,6 @@ jekyll-archives:
     tag: "/blog/tag/:name/"
     category: "/blog/category/:name/"
 
-display_tags: ["formatting", "images", "links", "math", "code"] # these tags will be displayed on the front page of your blog
-display_categories: ["blockquotes"] # these categories will be displayed on the front page of your blog
-
 # -----------------------------------------------------------------------------
 # Jekyll Scholar
 # -----------------------------------------------------------------------------
@@ -321,6 +312,7 @@ filtered_bibtex_keywords:
     award_name,
     bibtex_show,
     blog,
+    blog_figure,
     code,
     dimensions,
     eprint,

@@ -49,6 +49,9 @@
     {% include scripts/masonry.liquid %}
     {% include scripts/mermaid.liquid %}
     {% include scripts/misc.liquid %}
+    {% if content contains 'data-walkthrough' or content contains 'data-training-cover' %}
+      <script defer src="{{ '/assets/js/blog-walkthrough.js' | relative_url | bust_file_cache }}"></script>
+    {% endif %}
     {% include scripts/badges.liquid %}
     {% include scripts/mathjax.liquid %}
     {% include scripts/analytics.liquid %}

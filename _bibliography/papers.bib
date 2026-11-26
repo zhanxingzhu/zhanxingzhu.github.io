@@ -844,6 +844,8 @@ author={Lyu, Bochen and Jia, Yiyang and Cai, Xiaohao and Zhu, Zhanxing},
 booktitle={International Conference for Machine Learning (ICML)},
 year={2026},
 pdf={https://icml.cc/virtual/2026/poster/63661},
+blog={/blog/2026/learning-sparse-boolean-functions/},
+blog_figure={training-signals},
 abstract = {Transformers can acquire Chain-of-Thought (CoT) capabilities to solve complex reasoning tasks through fine-tuning. Reinforcement learning~(RL) and supervised fine-tuning~(SFT) are two primary approaches to this end.
 In this work, we specifically examine RL with process rewards and SFT for learning $k$-sparse Boolean functions with a one-layer transformer through intermediate reasoning steps akin to CoT. In particular, we consider $k$-sparse Boolean functions that can be recursively decomposed into fixed 2-sparse Boolean functions. We first analyze the learning dynamics of fine-tuning the transformer via either RL with process reward or SFT in a unified way. This allows us to identify sufficient conditions for the transformer to provably learn the general sparse Boolean functions. We then verify that these conditions hold for three basic examples, including $k$-\texttt{PARITY}, $k$-\texttt{AND}, and $k$-\texttt{OR}, thus demonstrating     their learnability via both RL with process reward and SFT. Notably, we reveal that RL and SFT exhibit distinct learning behaviors: RL learns the whole CoT chain simultaneously, whereas SFT naturally learns the CoT chain step by step. Overall, our findings provide theoretical insights into the mechanisms underlying RL with process reward and SFT and how they differ in triggering the CoT capabilities of transformers.},
 selected={true}
