@@ -11,7 +11,7 @@ nav_order: 1
     <h1>{{ site.blog_name | escape }}</h1>
     <p>{{ site.blog_description | escape }}</p>
   </header>
-  {% assign research_posts = site.posts | where: 'layout', 'research-post' %}
+  {% assign research_posts = site.posts | where_exp: 'post', "post.layout == 'research-post' or post.layout == 'visual-summary'" %}
   <ul class="research-blog-list">
     {% for post in research_posts %}
       <li>

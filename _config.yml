@@ -243,7 +243,7 @@ sass:
 # -----------------------------------------------------------------------------
 
 jekyll-minifier:
-  exclude: ["robots.txt"]
+  exclude: ["robots.txt", "assets/blog/sparse-boolean/visual-summary.css", "assets/blog/sparse-boolean/visual-summary.js"]
   uglifier_args:
     harmony: true
 

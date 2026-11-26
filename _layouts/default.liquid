@@ -14,7 +14,7 @@
     {% include header.liquid %}
 
     <!-- Content -->
-    <div class="container mt-5">
+    <div{% unless page.layout == 'visual-summary' %} class="container mt-5"{% endunless %}>
       {% if page.toc and page.toc.sidebar %}
         {% if page.toc.sidebar == 'right' %}
           <div class="row">
