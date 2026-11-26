@@ -1,0 +1,517 @@
+@font-face {
+  font-family: "Visual Summary DM Sans";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("dm-sans-regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Visual Summary DM Sans";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("dm-sans-italic.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Visual Summary DM Sans";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("dm-sans-bold.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Visual Summary DM Serif Display";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("dm-serif-display.woff2") format("woff2");
+}
+
+.visual-summary {
+  --unit: clamp(17px, 11.5px + 0.52vw, 20px);
+  --accent: #b63629;
+  --accent-wash: #fbeae7;
+  --blue: #2468b0;
+  --text: #444;
+  --text-primary: #212121;
+  --text-secondary: #666;
+  --text-tertiary: #888;
+  --sans: "Visual Summary DM Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  --display: "Visual Summary DM Serif Display", "Iowan Old Style", Georgia, serif;
+  --col: calc(42 * var(--unit));
+  /* reading column: prose, step buttons, captions */
+  --stage: 1080px;
+  /* figures may grow wider than the reading column on large screens */
+  --gutter: 24px;
+  display: flow-root;
+  color-scheme: light;
+  -webkit-text-size-adjust: 100%;
+  font-weight: 400;
+  margin: 0;
+  background: #fff;
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: var(--unit);
+  line-height: 1.65;
+}
+
+.visual-summary * {
+  box-sizing: border-box;
+}
+
+.visual-summary main {
+  display: flow-root;
+  margin: 0 auto;
+  padding: 0 var(--gutter) calc(5 * var(--unit));
+  max-width: calc(var(--stage) + 2 * var(--gutter));
+}
+
+.visual-summary main > * {
+  max-width: var(--col);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.visual-summary .date {
+  margin-top: calc(3.4 * var(--unit));
+  margin-bottom: calc(0.8 * var(--unit));
+  color: var(--text-tertiary);
+  font-size: calc(0.78 * var(--unit));
+}
+
+.visual-summary h1 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: calc(2.1 * var(--unit));
+  line-height: 1.22;
+  color: var(--text-primary);
+  margin-top: 0;
+  margin-bottom: calc(1.1 * var(--unit));
+}
+
+.visual-summary .byline {
+  color: var(--text-secondary);
+  font-size: calc(0.9 * var(--unit));
+  margin-top: 0;
+  margin-bottom: calc(2.2 * var(--unit));
+}
+
+.visual-summary p {
+  margin-top: 0;
+  margin-bottom: calc(1.1 * var(--unit));
+}
+
+.visual-summary a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.visual-summary a:hover {
+  opacity: .75;
+}
+
+.visual-summary h2 {
+  font-weight: 700;
+  font-size: calc(1.35 * var(--unit));
+  line-height: 1.25;
+  color: var(--text-primary);
+  margin-top: calc(2.6 * var(--unit));
+  margin-bottom: calc(0.8 * var(--unit));
+}
+/* the question a section answers, in grey under its title */
+
+.visual-summary .ask {
+  margin-top: -calc(0.45 * var(--unit));
+  margin-bottom: calc(0.95 * var(--unit));
+  color: var(--text-tertiary);
+  font-size: calc(0.92 * var(--unit));
+  line-height: 1.4;
+}
+
+.visual-summary .key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(0.45 * var(--unit)) calc(1.25 * var(--unit));
+  margin-bottom: calc(0.6 * var(--unit));
+  font-size: calc(0.78 * var(--unit));
+  color: var(--text-secondary);
+}
+
+.visual-summary .key span {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(0.45 * var(--unit));
+}
+
+.visual-summary .key i {
+  width: calc(0.8 * var(--unit));
+  height: calc(0.8 * var(--unit));
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.visual-summary sub {
+  font-size: 0.72em;
+}
+
+.visual-summary main > figure {
+  max-width: var(--stage);
+  margin-top: calc(1.6 * var(--unit));
+  margin-bottom: calc(2 * var(--unit));
+}
+
+.visual-summary figure > .anim-bar,
+.visual-summary figure > .anim-cap,
+.visual-summary figure > figcaption {
+  max-width: var(--col);
+  margin-left: auto;
+  margin-right: auto;
+}
+/* a figure never grows taller than the window can show together with its controls */
+/* a figure taken unchanged from the source: real results are shown as the source shows them */
+
+.visual-summary figure.orig {
+  max-width: var(--stage);
+}
+
+.visual-summary figure.orig img {
+  display: block;
+  max-width: 100%;
+  max-height: calc(100vh - 9 * var(--unit));
+  margin: 0 auto;
+}
+
+.visual-summary .anim-stage svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: calc(100vh - 13 * var(--unit));
+  font-family: var(--sans);
+}
+
+.visual-summary .anim-bar {
+  display: flex;
+  align-items: center;
+  gap: calc(0.35 * var(--unit));
+  margin-top: calc(1.6 * var(--unit));
+  margin-bottom: var(--unit);
+  flex-wrap: wrap;
+}
+
+.visual-summary .anim-step {
+  --p: 0%;
+  font-family: inherit;
+  font-size: calc(0.72 * var(--unit));
+  line-height: 1;
+  padding: calc(0.28 * var(--unit)) calc(0.6 * var(--unit)) calc(0.28 * var(--unit)) calc(0.28 * var(--unit));
+  border: 1px solid #d5d9df;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: calc(0.4 * var(--unit));
+}
+
+.visual-summary .anim-step .n {
+  width: var(--unit);
+  height: var(--unit);
+  border-radius: 50%;
+  background: #eee;
+  color: var(--text-secondary);
+  font-size: calc(0.62 * var(--unit));
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+/* the active step fills from the left as its time runs out */
+
+.visual-summary .anim-step.on {
+  border-color: var(--accent);
+  color: var(--text-primary);
+  background: linear-gradient(to right, var(--accent-wash) var(--p), #fff var(--p));
+}
+
+.visual-summary .anim-step.on .n {
+  background: var(--accent);
+  color: #fff;
+}
+
+.visual-summary .anim-play {
+  margin-left: auto;
+  width: calc(1.8 * var(--unit));
+  height: calc(1.55 * var(--unit));
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #d5d9df;
+  border-radius: 6px;
+  background: #fff;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.visual-summary .anim-play:hover {
+  border-color: #b9bfc8;
+}
+
+.visual-summary .anim-step:focus-visible,
+.visual-summary .anim-play:focus-visible,
+.visual-summary .speed button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.visual-summary .anim-cap {
+  margin-top: calc(0.55 * var(--unit));
+  font-size: calc(0.8 * var(--unit));
+  line-height: 1.5;
+  color: var(--text);
+  min-height: 4.5em;
+}
+
+.visual-summary .anim-cap p {
+  margin: 0;
+}
+
+.visual-summary figcaption {
+  margin-top: calc(0.3 * var(--unit));
+  font-size: calc(0.78 * var(--unit));
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.visual-summary .note {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  margin-top: calc(2.8 * var(--unit));
+  padding-top: calc(1.1 * var(--unit));
+  border-top: 1px solid #e6e6e6;
+  font-size: calc(0.78 * var(--unit));
+  color: var(--text-tertiary);
+}
+/* speed control: folded to the current speed; opens on hover, focus or tap */
+
+.visual-summary .speed {
+  position: fixed;
+  right: 14px;
+  bottom: calc(3.25 * var(--unit) + env(safe-area-inset-bottom));
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  padding: 3px;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid #d5d9df;
+  border-radius: 999px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
+}
+
+.visual-summary .speed button {
+  font: inherit;
+  border: 0;
+  background: none;
+  color: var(--text-secondary);
+  padding: 4px 8px;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.visual-summary .speed-opts {
+  display: inline-flex;
+  gap: 2px;
+  max-width: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-width .26s ease, opacity .2s ease;
+}
+
+.visual-summary .speed:hover .speed-opts,
+.visual-summary .speed:focus-within .speed-opts,
+.visual-summary .speed.open .speed-opts {
+  max-width: calc(15 * var(--unit));
+  opacity: 1;
+}
+
+.visual-summary .speed-opts button[aria-pressed="true"] {
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+}
+
+.visual-summary .speed .speed-now {
+  color: var(--text-primary);
+}
+/* hover notes: a second layer of detail that is never needed to follow a figure */
+
+.visual-summary [data-note] {
+  cursor: help;
+}
+
+.visual-summary [data-note]:focus {
+  outline: none;
+}
+
+.visual-summary [data-note]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.visual-summary span[data-note] {
+  text-decoration: underline dotted #9aa1ab 1px;
+  text-underline-offset: 0.2em;
+}
+
+.visual-summary svg .note-mark {
+  fill: #a3aab5;
+  font-weight: 400;
+  font-style: normal;
+  transition: fill .12s ease;
+}
+
+.visual-summary svg .has-note:hover .note-mark,
+.visual-summary svg .has-note:focus-visible .note-mark {
+  fill: var(--accent);
+}
+
+.visual-summary .hint b {
+  color: #a3aab5;
+}
+
+.visual-summary svg rect.has-note,
+.visual-summary svg circle.has-note,
+.visual-summary svg path.has-note {
+  transition: filter .12s ease;
+}
+
+.visual-summary svg rect.has-note:hover,
+.visual-summary svg circle.has-note:hover,
+.visual-summary svg path.has-note:hover {
+  filter: brightness(0.9);
+}
+
+.visual-summary .note-card {
+  position: fixed;
+  z-index: 20;
+  left: 0;
+  top: 0;
+  width: max-content;
+  max-width: min(calc(20 * var(--unit)), calc(100vw - 16px));
+  padding: calc(0.6 * var(--unit)) calc(0.75 * var(--unit));
+  background: #fff;
+  border: 1px solid #d5d9df;
+  border-radius: 10px;
+  box-shadow: 0 6px 24px rgba(20, 24, 31, 0.1);
+  font-size: calc(0.74 * var(--unit));
+  line-height: 1.5;
+  color: var(--text);
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(4px);
+  transition: opacity .14s ease, transform .14s ease, visibility 0s .14s;
+}
+
+.visual-summary .note-card.on {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: opacity .14s ease, transform .14s ease;
+}
+
+.visual-summary .note-card b {
+  display: block;
+  color: var(--text-primary);
+  margin-bottom: calc(0.15 * var(--unit));
+}
+
+.visual-summary .note-card p {
+  margin: 0;
+  white-space: pre-line;
+}
+
+.visual-summary .note-card small {
+  display: block;
+  margin-top: calc(0.3 * var(--unit));
+  font-size: calc(0.66 * var(--unit));
+  color: var(--text-tertiary);
+}
+
+.visual-summary .hint {
+  font-size: calc(0.78 * var(--unit));
+  color: var(--text-tertiary);
+}
+/* references */
+
+.visual-summary .cite {
+  font-size: 0.72em;
+  vertical-align: super;
+  line-height: 0;
+  margin-left: 1px;
+}
+
+.visual-summary .refs {
+  font-size: calc(0.78 * var(--unit));
+  line-height: 1.5;
+  color: var(--text-secondary);
+  padding-left: calc(1.5 * var(--unit));
+}
+
+.visual-summary .refs li {
+  margin-bottom: calc(0.2 * var(--unit));
+  padding-left: calc(0.2 * var(--unit));
+}
+
+.visual-summary .refs li:target {
+  background: var(--accent-wash);
+}
+/* link buttons under the byline */
+
+.visual-summary .byline:has(+ .links) {
+  margin-bottom: calc(0.9 * var(--unit));
+}
+
+.visual-summary .links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(0.45 * var(--unit));
+  margin-top: 0;
+  margin-bottom: calc(2.2 * var(--unit));
+}
+
+.visual-summary .links a {
+  padding: calc(0.28 * var(--unit)) calc(0.75 * var(--unit));
+  border-radius: 8px;
+  background: #f3f3f3;
+  color: var(--text-secondary);
+  font-size: calc(0.78 * var(--unit));
+}
+
+.visual-summary .links a:hover {
+  background: #e8e8e8;
+  opacity: 1;
+}
+/* The site theme sets text colour on individual elements. Let the article’s colours inherit. */
+
+.visual-summary :where(div, p, span, li, em, strong) {
+  color: inherit;
+}
+
+.visual-summary :is(figure, .refs li, #training-signals) {
+  scroll-margin-top: 4.75rem;
+}
+
+@media (max-width: 575.98px) {
+  .visual-summary .speed {
+    bottom: calc(5.25rem + env(safe-area-inset-bottom));
+  }
+}
