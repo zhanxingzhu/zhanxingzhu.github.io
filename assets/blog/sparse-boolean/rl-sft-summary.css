@@ -1,0 +1,143 @@
+/* Page styles for the RL/SFT visual summary. The shared stylesheet (sparse-boolean/visual-summary.css) supplies
+   typography, figures and playback controls; this adds the theme button, night mode and the expert part. */
+.visual-summary {
+  --controls-bottom: calc(3.25 * var(--unit) + env(safe-area-inset-bottom));
+}
+
+.visual-summary .ask {
+  margin-top: calc(-0.45 * var(--unit));
+}
+
+.visual-summary .speed {
+  bottom: var(--controls-bottom);
+}
+
+.visual-summary .theme {
+  position: fixed;
+  right: 14px;
+  bottom: calc(var(--controls-bottom) + 38px);
+  z-index: 5;
+  padding: 7px 11px;
+  border: 1px solid #d5d9df;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 12px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.visual-summary .theme:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+/* Night: the drawn figures are inverted with their hues kept; pictures taken from the paper stay on a white card. */
+.visual-summary.night {
+  --accent: #e37d6e;
+  --accent-wash: #3b2420;
+  --text: #c6c9ce;
+  --text-primary: #ededee;
+  --text-secondary: #a4a8af;
+  --text-tertiary: #80858d;
+  color-scheme: dark;
+  background: #141414;
+}
+
+.visual-summary.night figure.anim:not(.pic) .anim-stage > svg,
+.visual-summary.night .key i {
+  filter: invert(0.92) hue-rotate(180deg);
+}
+
+.visual-summary.night figure.pic .anim-stage {
+  background: #fff;
+  border-radius: 8px;
+}
+
+.visual-summary.night .anim-step,
+.visual-summary.night .anim-play,
+.visual-summary.night .links a {
+  background: #1f2226;
+  border-color: #3a3f46;
+}
+
+.visual-summary.night .links a:hover {
+  background: #2a2e33;
+}
+
+.visual-summary.night .anim-step .n {
+  background: #2e3238;
+}
+
+.visual-summary.night .anim-step.on {
+  border-color: var(--accent);
+  background: linear-gradient(to right, var(--accent-wash) var(--p), #1f2226 var(--p));
+}
+
+.visual-summary.night .anim-step.on .n {
+  background: var(--accent);
+  color: #141414;
+}
+
+.visual-summary.night .speed-opts button[aria-pressed="true"] {
+  color: #141414;
+}
+
+.visual-summary.night .note {
+  border-top-color: #2e3238;
+}
+
+.visual-summary.night .speed,
+.visual-summary.night .theme,
+.visual-summary.night .note-card {
+  background: rgba(31, 34, 38, 0.97);
+  border-color: #3a3f46;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
+}
+
+@media (max-width: 575.98px) {
+  .visual-summary {
+    --controls-bottom: calc(5.25rem + env(safe-area-inset-bottom));
+  }
+}
+
+/* the expert part: math set in HTML, theorem boxes and a small table */
+.visual-summary { --math: "STIX Two Text", "Cambria Math", Cambria, "Latin Modern Roman", Georgia, "Times New Roman", serif; }
+.visual-summary .part { margin-top: calc(3.8 * var(--unit)); padding-top: calc(1.3 * var(--unit)); border-top: 2px solid #e3e5e8; }
+.visual-summary .part .label { display: block; font-size: calc(0.72 * var(--unit)); font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: calc(0.45 * var(--unit)); }
+.visual-summary .part p { color: var(--text-secondary); }
+.visual-summary .m { font-family: var(--math); font-size: 1.07em; white-space: nowrap; }
+.visual-summary .eq { font-family: var(--math); font-size: calc(1.05 * var(--unit)); display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; margin: calc(0.2 * var(--unit)) auto calc(1.1 * var(--unit)); overflow-x: auto; overflow-y: hidden; padding: calc(0.2 * var(--unit)) 0; }
+.visual-summary .eq > .f { grid-column: 2; white-space: nowrap; }
+.visual-summary .eq > .no { grid-column: 3; justify-self: end; padding-left: calc(1 * var(--unit)); font-family: var(--sans); font-size: calc(0.75 * var(--unit)); color: var(--text-tertiary); white-space: nowrap; }
+.visual-summary .eq sub,
+.visual-summary .eq sup,
+.visual-summary .m sub,
+.visual-summary .m sup { font-size: 0.7em; line-height: 0; }
+.visual-summary .frac { display: inline-flex; flex-direction: column; vertical-align: middle; text-align: center; font-size: 0.9em; line-height: 1.2; margin: 0 0.12em; }
+.visual-summary .frac > span + span { border-top: 1px solid currentColor; padding-top: 0.08em; }
+.visual-summary .big { display: inline-flex; flex-direction: column; align-items: center; vertical-align: middle; line-height: 1; margin: 0 0.08em; }
+.visual-summary .big > b { font-weight: 400; font-size: 1.4em; line-height: 1.05; }
+.visual-summary .big > small { font-size: 0.6em; line-height: 1.1; }
+.visual-summary .ss { display: inline-flex; flex-direction: column; vertical-align: 0.42em; font-size: 0.7em; line-height: 1.05; margin-left: 0.04em; }
+.visual-summary .ss > span:first-child { margin-bottom: -0.05em; }
+.visual-summary .thm { border-left: 3px solid #9aa1ab; background: #f6f7f8; border-radius: 0 8px 8px 0; padding: calc(0.75 * var(--unit)) calc(1 * var(--unit)) calc(0.8 * var(--unit)); margin: calc(1.1 * var(--unit)) auto calc(1.2 * var(--unit)); font-size: calc(0.94 * var(--unit)); }
+.visual-summary .thm.rl { border-left-color: #a86e08; background: #fdf9f0; }
+.visual-summary .thm.sft { border-left-color: #347656; background: #f4f9f6; }
+.visual-summary .thm > b:first-child { display: block; margin-bottom: calc(0.3 * var(--unit)); color: var(--text-primary); }
+.visual-summary .thm .eq { margin-bottom: calc(0.2 * var(--unit)); }
+.visual-summary .proof { font-size: calc(0.94 * var(--unit)); }
+.visual-summary .proof > i:first-child { color: var(--text-primary); }
+.visual-summary .tbl { overflow-x: auto; margin-bottom: calc(1.3 * var(--unit)); }
+.visual-summary table.t1 { border-collapse: collapse; margin: calc(0.2 * var(--unit)) auto 0; font-size: calc(0.9 * var(--unit)); }
+.visual-summary table.t1 th,
+.visual-summary table.t1 td { padding: calc(0.28 * var(--unit)) calc(0.7 * var(--unit)); border-bottom: 1px solid #e6e6e6; text-align: left; font-weight: 400; }
+.visual-summary table.t1 th { color: var(--text-secondary); }
+.visual-summary.night .part { border-top-color: #2e3238; }
+.visual-summary.night .thm { background: #1c1f23; border-left-color: #6b717a; }
+.visual-summary.night .thm.rl { background: #221d14; border-left-color: #c8922e; }
+.visual-summary.night .thm.sft { background: #15201a; border-left-color: #5fa37f; }
+.visual-summary.night table.t1 th,
+.visual-summary.night table.t1 td { border-bottom-color: #2e3238; }

@@ -1,11 +1,13 @@
+const summary = document.querySelector(".visual-summary");
+
 // runtime.js
 /* Shared runtime. Every figure supplies build(root) and draw(t); the time t (seconds) fully determines the frame,
    so pausing, jumping to a step and replaying are all just changes to t. */
 /* A section whose h2 has class "slides-only" appears only on the deck, one with "report-only" only in the report.
    Both stay in the file, so that the page can always be unpacked into its complete sources (build.js --unpack). */
 (() => {
-  const deck = document.documentElement.classList.contains("deck");
-  document.querySelectorAll(deck ? "h2.report-only" : "h2.slides-only").forEach(h => {
+  const deck = summary.classList.contains("deck");
+  summary.querySelectorAll(deck ? "h2.report-only" : "h2.slides-only").forEach(h => {
     for (let e = h, n; e && (e === h || e.tagName !== "H2"); e = n) { n = e.nextElementSibling; e.remove(); }
   });
 })();
@@ -86,6 +88,7 @@ const AF = (() => {
     const fig = document.getElementById(o.id);
     if (!fig) return;                         // its section belongs to the other output form
     const svg = fig.querySelector(".anim-stage svg");
+    if (svg.querySelector("image")) fig.classList.add("pic");   // holds a picture from the source: night mode leaves it as it is
     const btn = fig.querySelector(".anim-play"), steps = [...fig.querySelectorAll(".anim-step")];
     const notes = [...fig.querySelectorAll(".anim-cap p")];
     const still = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -232,7 +235,7 @@ const KIT = (() => {
     return (v, op) => { set(f, {width: Math.max(10, w * v), opacity: v > 0.005 ? 1 : 0}); n.textContent = v.toFixed(2); set(g, {opacity: op}); };
   }
   // Pseudo-3D. Points [x, y, z] (y up, z toward the reader, in stage units about cx, cy) are turned by yaw and pitch and
-  // projected onto the stage. It only computes where to draw. Use it only where the geometry is the point (SKILL.md, "Depth").
+  // projected onto the stage. It only computes where to draw. Use it wherever the geometry is the point (SKILL.md, "Depth").
   function space(cx, cy, persp) {
     let cw = 1, sw = 0, cp = 1, sp = 0;
     const s = {
@@ -306,9 +309,30 @@ const KIT = (() => {
   return {lock, eye, bar, space, spot, lens, hot};
 })();
 
+/* Night mode. By default it follows the clock: night from 19:00 to 07:00 local time, looked at again every minute. The
+   button goes Auto -> Night -> Day -> Auto. The figures are drawn for the light page; the style sheet inverts them with
+   their hues kept, and leaves pictures taken from the source as they are. Nothing is stored: a reload is back on Auto. */
+(() => {
+  const root = summary, H = [19, 7], order = ["auto", "night", "day"];
+  const face = {auto: ["◐", "Auto"], night: ["☾", "Night"], day: ["☀", "Day"]};
+  let mode = "auto";
+  const dark = () => mode === "night" || (mode === "auto" && (h => h >= H[0] || h < H[1])(new Date().getHours()));
+  const apply = () => {
+    root.classList.toggle("night", dark());
+    summary.querySelectorAll(".theme, .deck-theme").forEach(b => {
+      b.textContent = b.classList.contains("theme") ? face[mode].join(" ") : face[mode][0];
+      b.setAttribute("aria-label", "Colour theme: " + face[mode][1] + ". Press to change");
+    });
+  };
+  window.__theme = m => { mode = order.includes(m) ? m : order[(order.indexOf(mode) + 1) % 3]; apply(); return mode; };
+  summary.addEventListener("click", e => { if (e.target.closest && e.target.closest(".theme, .deck-theme")) window.__theme(); });
+  setInterval(apply, 60000);
+  apply();
+})();
+
 /* Speed control: folded to the current speed, opens on hover, focus or tap. */
 (() => {
-  const sp = document.querySelector(".speed");
+  const sp = summary.querySelector(".speed");
   if (!sp) return;
   const now = sp.querySelector(".speed-now"), opts = [...sp.querySelectorAll("[data-v]")];
   now.addEventListener("click", () => sp.classList.toggle("open"));
@@ -324,12 +348,12 @@ const KIT = (() => {
    card on hover, keyboard focus or tap. Elements that are not visible at that moment do not respond, and a figure's clock
    is held while one of its notes is open. */
 (() => {
-  const card = document.querySelector(".visual-summary").appendChild(document.createElement("div"));
+  const card = summary.appendChild(document.createElement("div"));
   card.className = "note-card";
   card.setAttribute("role", "tooltip");
   let open = null, timer = 0;
   const visible = e => { for (let n = e; n && n.getAttribute; n = n.parentNode) if (+(n.getAttribute("opacity") ?? 1) < 0.5) return false; return true; };
-  const find = e => { const n = e.target.closest ? e.target.closest("[data-note]") : null; return n && visible(n) ? n : null; };
+  const find = e => { const n = e.target.closest ? e.target.closest("[data-note]") : null; return n && summary.contains(n) && visible(n) ? n : null; };
   const hide = () => {
     clearTimeout(timer);
     if (open) { open = null; AF.hold(null); card.classList.remove("on"); }
@@ -361,507 +385,716 @@ const KIT = (() => {
   window.addEventListener("scroll", hide, {passive: true});
 })();
 
-// kit-page.js
-/* Pieces shared by the figures of this page. The running example: 12 input bits, 8 of them relevant, 3 steps. */
-Object.assign(KIT, {
-  X: [1, -1, -1, -1, 1, 1, -1, 1, 1, 1, -1, 1],              // the input (invented)
-  B: [0, 2, 3, 5, 6, 8, 9, 11],                               // the relevant positions, paired in this order
-  Y1: [-1, -1, -1, 1], Y2: [1, -1], Y3: [-1],                 // the three steps for this input (products of pairs)
-  sgn: v => v > 0 ? "+1" : "−1",
-  // a value cell: rounded box with a label. Returns {g, box, lab}
-  cell(parent, cx, y, w, h, s, fill, ink, size) {
-    const g = AF.mk(parent, "g");
-    const box = AF.mk(g, "rect", {x: cx - w / 2, y, width: w, height: h, rx: 5, fill});
-    const lab = AF.txt(g, s, {x: cx, y: y + h / 2 + (size || 12.5) * 0.36, "text-anchor": "middle", "font-size": size || 12.5, fill: ink});
-    return {g, box, lab};
-  }
-});
 
 // fig1.js
-/* Fig. 1: the task. Twelve bits, eight relevant; hard end to end; a tree of two-input steps. */
+/* Fig. 1: the task. 12 invented input bits, a hidden subset B of 8, parity as the product of the bits in B,
+   and its decomposition into a tree of two-bit products (Sec. 2.1, Eq. 1). All values are invented. */
 (() => {
-  const {set, mk, txt, ease, mix, rgb, arrow, stagger, note} = AF, P = PAL, K = KIT;
-  const cx = i => 127 + i * 42, rel = i => K.B.includes(i);
-  const n1 = [169, 295, 421, 547], n2 = [232, 484], n3 = [358];
+  const {set, mk, txt, rich, ease, rgb, caps, note, stagger} = AF, P = PAL;
+  const X = [+1, -1, -1, +1, -1, +1, +1, -1, -1, +1, +1, -1];
+  const B = [0, 2, 3, 5, 7, 8, 10, 11];
+  const pairs = [[0, 2], [3, 5], [7, 8], [10, 11]];
+  const bx = i => 96 + i * 44, BY = 236, CW = 32;
+  const s = v => (v > 0 ? "+1" : "−1");
   let el;
 
   function build(root) {
-    el = {bits: [], lv: [[], [], []], ed: [[], [], []], lab: []};
-    el.edges = mk(root, "g");
-    K.X.forEach((v, i) => el.bits.push(K.cell(root, cx(i), 236, 34, 26, K.sgn(v), rgb(P.KNOWN), P.INK)));
-    el.rowLab = txt(root, "input x", {x: 18, y: 253, "font-size": 10.5, fill: P.MID});
-    el.setLab = txt(root, "8 of the 12 bits matter: the hidden set B", {x: 358, y: 283, "text-anchor": "middle", "font-size": 12.5, "font-weight": 700, fill: rgb(P.BLUE)});
-    el.phi = txt(root, "answer = product of the 8 = −1", {x: 662, y: 30, "text-anchor": "end", "font-size": 12.5, fill: P.INK});
-    // step 2: straight to the answer
-    el.q = K.cell(root, 358, 40, 38, 26, "?", rgb(P.RED_T), rgb(P.RED));
-    el.direct = arrow(root, rgb(P.RED), [[358, 228], [358, 72]]);
-    el.hard1 = txt(root, "in one go: the gradient says almost nothing", {x: 372, y: 142, "font-size": 12.5, "font-weight": 700, fill: rgb(P.RED)});
-    el.hard2 = txt(root, "about which bits matter", {x: 372, y: 159, "font-size": 12.5, "font-weight": 700, fill: rgb(P.RED)});
-    // step 3: the tree
-    const lvl = [[n1, 168, K.Y1, K.B.map(cx), 236], [n2, 104, K.Y2, n1, 168], [n3, 40, K.Y3, n2, 104]];
-    lvl.forEach(([xs, y, vals, kids, ky], L) => xs.forEach((x, j) => {
-      [kids[2 * j], kids[2 * j + 1]].forEach(kx => el.ed[L].push(mk(el.edges, "line", {x1: kx, y1: ky - 2, x2: x, y2: y + 28, stroke: rgb(P.BLUE_S), "stroke-width": 1.4, pathLength: 1})));
-      el.lv[L].push(K.cell(root, x, y, 38, 26, K.sgn(vals[j]), rgb(P.BLUE_T), rgb(P.BLUE)));
-    }));
-    ["step 1", "step 2", "step 3"].forEach((s, L) => el.lab.push(txt(root, s, {x: 18, y: [185, 121, 57][L], "font-size": 10.5, fill: P.MID})));
-    el.ans = txt(root, "= the answer", {x: 18, y: 71, "font-size": 10.5, fill: P.MID});
-    el.rule = txt(root, "every node: the product of its two children", {x: 662, y: 49, "text-anchor": "end", "font-size": 12.5, fill: rgb(P.BLUE)});
-    note(el.setLab, "The hidden set B", "A k-sparse Boolean function reads d bits but depends on only k of them. Which k is not told to the learner; finding them is the task. Here d = 12 and k = 8.", "Definition 2.1 of the paper");
-    note(el.phi, "k-PARITY", "The product of the k relevant bits: +1 if an even number of them are −1, and −1 otherwise. The paper also treats k-AND and k-OR, which decompose in the same way with a different two-input function.", "Sec. 2.1 of the paper");
-    note(el.hard2, "Why it is hard", "For parity, the gradient of an end-to-end objective is nearly the same whichever subset is the true one, so it carries a negligible amount of information about the target.", "Shalev-Shwartz et al. [2], as cited in Sec. 2.1");
-    note(el.rule, "Recursive decomposition", "With k = 2^T relevant bits the function is computed by a complete binary tree of height T. Level t is the t-th reasoning step and has k / 2^t tokens. The paper also covers a serial version in which one bit is folded in per step.", "Fig. 2a and Appendix I of the paper");
+    el = {bits: [], lines: [], nodes: [], levels: []};
+    caps(root, "INPUT  x", 24, BY + 12, P.INK, "start");
+    X.forEach((v, i) => {
+      const g = mk(root, "g");
+      const r = mk(g, "rect", {x: bx(i) - CW / 2, y: BY - 15, width: CW, height: 30, rx: 5, fill: rgb(P.KNOWN), stroke: "none", "stroke-width": 1.6});
+      const t = txt(g, s(v), {x: bx(i), y: BY + 5, "text-anchor": "middle", "font-size": 12.5, "font-weight": 700, fill: P.INK});
+      txt(g, "x" + (i + 1), {x: bx(i), y: BY + 31, "text-anchor": "middle", "font-size": 10.5, fill: P.MID});
+      el.bits.push({g, r, t, inB: B.includes(i)});
+    });
+    el.bLab = txt(root, "8 hidden positions B decide the answer", {x: 338, y: BY + 54, "text-anchor": "middle", "font-size": 12.5, "font-weight": 700, fill: rgb(P.BLUE)});
+    note(el.bLab, "Hidden subset B", "A k-sparse Boolean function depends on only k of the d input bits. Here k = 8 of d = 12; the experiment of Fig. 6 uses k = 16 of d = 20.", "Definition 2.1; App. D");
+
+    // step 2: one model asked for the answer directly
+    el.direct = mk(root, "g");
+    X.forEach((v, i) => mk(el.direct, "line", {x1: bx(i), y1: BY - 17, x2: 338, y2: 108, stroke: rgb(P.RED_S), "stroke-width": 1, "stroke-dasharray": "3 3"}));
+    mk(el.direct, "rect", {x: 270, y: 76, width: 136, height: 32, rx: 6, fill: "#fff", stroke: rgb(P.RED), "stroke-width": 1.4});
+    txt(el.direct, "answer in one go", {x: 338, y: 96.5, "text-anchor": "middle", "font-size": 12.5, "font-weight": 700, fill: rgb(P.RED)});
+    el.hard = txt(root, "the gradient says almost nothing about which bits are in B", {x: 338, y: 56, "text-anchor": "middle", "font-size": 12.5, fill: rgb(P.RED)});
+    note(el.hard, "Why one go is hard", "For parity, the gradient of an end-to-end objective barely depends on which subset is the target: with 2^d possible targets, the signal is exponentially small in d [2]. Proposition 3.2 shows the same for RL with only a final reward.", "Prop. 3.2");
+
+    // step 3: the tree of two-bit products
+    const L1 = pairs.map(([a, b]) => (bx(a) + bx(b)) / 2), L2 = [(L1[0] + L1[1]) / 2, (L1[2] + L1[3]) / 2], L3 = [(L2[0] + L2[1]) / 2];
+    const v1 = pairs.map(([a, b]) => X[a] * X[b]), v2 = [v1[0] * v1[1], v1[2] * v1[3]], v3 = [v2[0] * v2[1]];
+    const ys = [178, 124, 72];
+    const levels = [[L1, v1, pairs.map(([a, b]) => [bx(a), bx(b)]), BY - 17], [L2, v2, [[L1[0], L1[1]], [L1[2], L1[3]]], ys[0] - 14],
+                    [L3, v3, [[L2[0], L2[1]]], ys[1] - 14]];
+    levels.forEach(([xs, vals, kids, ky], k) => {
+      const g = mk(root, "g"), y = ys[k];
+      xs.forEach((x, j) => {
+        kids[j].forEach(cx => mk(g, "line", {x1: x, y1: y + 14, x2: cx, y2: ky, stroke: rgb(P.BLUE_S), "stroke-width": 1.4}));
+        mk(g, "circle", {cx: x, cy: y, r: 14, fill: rgb(P.BLUE_T), stroke: rgb(P.BLUE), "stroke-width": 1.4});
+        txt(g, s(vals[j]), {x, y: y + 4.5, "text-anchor": "middle", "font-size": 12, "font-weight": 700, fill: rgb(P.BLUE)});
+      });
+      const lab = txt(g, k === 2 ? "step 3 = answer" : "step " + (k + 1), {x: 24, y: y + 4.5, "font-size": 12.5, "font-weight": 700, fill: rgb(P.BLUE)});
+      if (k === 0) note(lab, "One reasoning step per level", "Each node applies the same two-input function to its two children. For parity it is the product, so a node is +1 when its children agree. A chain of T = log2 k steps reaches the answer.", "Sec. 2.1, Eq. (1)");
+      el.levels.push(g);
+    });
+    el.ans = rich(root, [["product of the bits in B = "], ["+1", {"font-weight": 700}]], {x: 420, y: 76, "font-size": 12.5, fill: rgb(P.BLUE)});
+    note(el.ans, "k-PARITY", "The answer is +1 when an even number of the bits in B are −1, and −1 otherwise. The paper treats k-AND and k-OR in the same way, with other two-input functions.", "Definition 2.1, Table 1");
   }
 
   function draw(t) {
     const E = (a, b) => ease((t - a) / (b - a));
-    // step 1 (0 - 3.4): the bits come in one after another, then the relevant ones are marked
-    el.bits.forEach((c, i) => {
-      set(c.g, {opacity: stagger(t, i, 0.3, 0.07, 0.3)});
-      const u = rel(i) ? stagger(t, K.B.indexOf(i), 1.5, 0.07, 0.35) : 0;
-      set(c.box, {fill: rgb(mix(P.KNOWN, P.BLUE_T, u)), stroke: rgb(P.BLUE), "stroke-opacity": u, "stroke-width": 1.3});
+    el.bits.forEach((b, i) => {
+      set(b.g, {opacity: stagger(t, i, 0.2, 0.06, 0.3)});
+      const hi = b.inB ? E(1.3, 1.8) : 0;
+      set(b.r, {stroke: rgb(P.BLUE), "stroke-opacity": hi, fill: rgb(b.inB ? P.KNOWN.map((c, j) => c + (P.BLUE_T[j] - c) * hi) : P.KNOWN)});
+      set(b.t, {fill: b.inB && hi > 0.5 ? rgb(P.BLUE) : P.INK});
     });
-    set(el.rowLab, {opacity: E(0.3, 0.7)});
-    set(el.setLab, {opacity: E(2.1, 2.5)});
-    set(el.phi, {opacity: E(2.6, 3.0)});
-    // step 2 (3.4 - 6.4): straight to the answer does not work
-    const gone = 1 - E(6.5, 7.0);
-    el.direct(E(3.7, 4.5), gone);
-    set(el.q.g, {opacity: Math.min(E(4.3, 4.7), gone)});
-    set(el.hard1, {opacity: Math.min(E(4.9, 5.3), gone)});
-    set(el.hard2, {opacity: Math.min(E(4.9, 5.3), gone)});
-    // step 3 (6.4 - 11.2): level by level
-    [7.1, 8.5, 9.8].forEach((t0, L) => {
-      el.ed[L].forEach((e, i) => { const u = stagger(t, i >> 1, t0, 0.12, 0.4); set(e, {"stroke-dasharray": u + " 1", opacity: u > 0.01 ? 1 : 0}); });
-      el.lv[L].forEach((c, j) => set(c.g, {opacity: stagger(t, j, t0 + 0.3, 0.12, 0.35)}));
-      set(el.lab[L], {opacity: E(t0, t0 + 0.4)});
-    });
-    set(el.ans, {opacity: E(10.1, 10.5)});
-    set(el.rule, {opacity: E(8.0, 8.4)});
+    set(el.bLab, {opacity: E(1.8, 2.2)});
+    // step 2 (3.0 - 6.0): asked for directly, the target is hidden in the gradient
+    const d = E(3.2, 3.8) * (1 - E(6.2, 6.7));
+    set(el.direct, {opacity: d});
+    set(el.hard, {opacity: E(4.0, 4.4) * (1 - E(6.2, 6.7))});
+    // step 3 (6.2 - ): build the tree level by level
+    el.levels.forEach((g, k) => set(g, {opacity: E(6.9 + k * 0.9, 7.4 + k * 0.9)}));
+    set(el.ans, {opacity: E(9.6, 10.0)});
   }
-
-  AF.run({id: "fig-task", T: 12.0, starts: [0, 3.4, 6.4], rest: 11.2, build, draw});
+  AF.run({id: "fig-task", starts: [0, 3.0, 6.2], rest: 10.6, T: 11.4, build, draw});
 })();
+
 
 // fig2.js
-/* Fig. 2: the model. A sequence of input bits and empty slots; attention of one slot before and after learning. */
+/* Fig. 2: what the one-layer transformer has to learn (Sec. 2.2, Eq. 3). The sequence of Fig. 1: 12 input bits,
+   then empty slots for the three steps. One token of step 1 is followed: uniform attention at the start, attention
+   1/2 on its two children at the goal; psi(z) = z^2 for parity (Table 1). Values are the invented ones of Fig. 1. */
 (() => {
-  const {set, mk, txt, rich, ease, mix, rgb, caps, stagger, note} = AF, P = PAL, K = KIT;
-  const xs = i => 49 + i * 31;                                   // centres of the 12 input cells
-  const s1 = [433, 464, 495, 526], s2 = [569, 600], s3 = [643];  // centres of the slots
-  const vals = [...K.Y1, ...K.Y2, ...K.Y3], slots = [...s1, ...s2, ...s3];
-  const arcD = (a, b, dip) => "M" + a + " 234Q" + (a + b) / 2 + " " + dip + " " + b + " 234";
+  const {set, mk, txt, rich, ease, rgb, caps, note, stagger} = AF, P = PAL;
+  const X = [+1, -1, -1, +1, -1, +1, +1, -1, -1, +1, +1, -1];
+  const kids = [3, 5];                                   // children of the followed token y(1)_2: x4 and x6
+  const Y = 236, CW = 24;                                 // tokens 0..11 inputs, 12..15 step 1, 16..17 step 2, 18 step 3
+  const XS = [...Array(12).keys()].map(i => 36 + 29 * i).concat([398, 427, 456, 485, 524, 553, 592]);
+  const groups = [[12, 15, "step 1"], [16, 17, "step 2"], [18, 18, "step 3"]];
+  const tokX = i => XS[i];
+  const F = 13;                                          // the followed token: y(1)_2
   let el;
 
   function build(root) {
-    el = {bits: [], slots: [], bars: [], arcs: []};
-    caps(root, "INPUT x", 219.5, 24, P.INK);
-    el.heads = [caps(root, "STEP 1", 479.5, 24, P.INK), caps(root, "STEP 2", 584.5, 24, P.INK), caps(root, "STEP 3", 643, 24, P.INK)];
-    K.X.forEach((v, i) => el.bits.push(K.cell(root, xs(i), 206, 26, 26, v > 0 ? "+" : "−", rgb(P.KNOWN), P.INK)));
-    slots.forEach((x, j) => {
-      const g = mk(root, "g");
-      const box = mk(g, "rect", {x: x - 13, y: 206, width: 26, height: 26, rx: 5, fill: "#fff", stroke: "#b9bfc8", "stroke-dasharray": "3 2.5"});
-      const val = txt(g, vals[j] > 0 ? "+" : "−", {x, y: 223.5, "text-anchor": "middle", "font-size": 12.5, "font-weight": 700, fill: rgb(P.BLUE)});
-      el.slots.push({g, box, val});
+    el = {tok: [], arcs: []};
+    // attention arcs from the followed token to every input (drawn first, under the tokens)
+    for (let i = 0; i < 12; i++) {
+      const x0 = tokX(F), x1 = tokX(i), h = 40 + Math.abs(x0 - x1) * 0.28;
+      el.arcs.push(mk(root, "path", {d: `M${x0} ${Y - 16}C${x0} ${Y - 16 - h} ${x1} ${Y - 16 - h} ${x1} ${Y - 16}`, fill: "none", stroke: rgb(P.BLUE), "stroke-width": 1}));
+    }
+    for (let i = 0; i < 19; i++) {
+      const g = mk(root, "g"), inp = i < 12;
+      const r = mk(g, "rect", {x: tokX(i) - CW / 2, y: Y - 14, width: CW, height: 28, rx: 5,
+        fill: inp ? rgb(P.KNOWN) : "#fff", stroke: inp ? "none" : rgb([190, 195, 203]), "stroke-dasharray": inp ? "none" : "3 2"});
+      const t = txt(g, inp ? (X[i] > 0 ? "+1" : "−1") : (i === F ? "+1" : ""), {x: tokX(i), y: Y + 4.5, "text-anchor": "middle", "font-size": 11.5, "font-weight": 700, fill: inp ? P.INK : rgb(P.BLUE)});
+      el.tok.push({g, r, t});
+    }
+    caps(root, "INPUT  x", (tokX(0) + tokX(11)) / 2, Y + 34, P.MID);
+    groups.forEach(([a, b, s]) => txt(root, s, {x: (tokX(a) + tokX(b)) / 2, y: Y + 34, "text-anchor": "middle", "font-size": 11, "font-weight": 700, fill: P.MID}));
+    // step 2: what each step may read (the pretrained mask)
+    el.mask = mk(root, "g");
+    [[0, 11, 12, 15], [12, 15, 16, 17], [16, 17, 18, 18]].forEach(([a, b, c, d], k) => {
+      const y = Y + 50 + k * 0;
+      const x0 = (tokX(a) + tokX(b)) / 2, x1 = (tokX(c) + tokX(d)) / 2;
+      mk(el.mask, "path", {d: `M${x1} ${Y + 40}Q${(x0 + x1) / 2} ${Y + 64} ${x0} ${Y + 40}`, fill: "none", stroke: P.SOFT, "stroke-width": 1.2});
+      mk(el.mask, "path", {d: "M0 0L-6 -3.2L-6 3.2Z", fill: P.SOFT, transform: `translate(${x0},${Y + 40}) rotate(${k === 0 ? 230 : 215})`});
     });
-    el.writes = txt(root, "the model writes these, left to right", {x: 538, y: 44, "text-anchor": "middle", "font-size": 10.5, fill: P.MID});
-    // attention of the first slot over the input
-    el.barG = mk(root, "g");
-    K.X.forEach((v, i) => el.bars.push(mk(el.barG, "rect", {x: xs(i) - 8, width: 16, rx: 3, fill: rgb(P.GREY)})));
-    el.barLab = txt(root, "attention of the first slot", {x: 36, y: 96, "font-size": 10.5, fill: P.MID});
-    el.focus = mk(root, "rect", {x: s1[0] - 16, y: 203, width: 32, height: 32, rx: 7, fill: "none", stroke: P.INK, "stroke-width": 1.6});
-    el.even1 = txt(root, "even attention:", {x: 428, y: 92, "font-size": 12.5, "font-weight": 700, fill: P.MID});
-    el.even2 = txt(root, "it sees the average of all 12 bits", {x: 428, y: 109, "font-size": 12.5, fill: P.MID});
-    el.goal = mk(root, "g");
-    txt(el.goal, "½ on each of its two children", {x: 428, y: 92, "font-size": 12.5, "font-weight": 700, fill: rgb(P.BLUE)});
-    el.calc = rich(el.goal, [["average of (+1, −1) = 0  →  "], ["ψ", {"font-style": "italic"}], ["(0) = 0"]], {x: 428, y: 113, "font-size": 12.5, fill: P.INK});
-    el.out = txt(el.goal, "chance of writing +1 is 0: it writes −1", {x: 428, y: 134, "font-size": 12.5, fill: P.INK});
-    [[xs(0), s1[0], 272], [xs(2), s1[0], 262], [s1[0], s2[0], 262], [s1[1], s2[0], 254], [s2[0], s3[0], 254], [s2[1], s3[0], 250]].forEach(([a, b, dip]) =>
-      el.arcs.push(mk(root, "path", {d: arcD(a, b, dip), fill: "none", stroke: rgb(P.BLUE), "stroke-width": 1.5, pathLength: 1})));
-    el.sum = txt(root, "learning the function = finding the right two positions for every token", {x: 340, y: 290, "text-anchor": "middle", "font-size": 12.5, "font-weight": 700, fill: rgb(P.BLUE)});
-    note(el.writes, "Autoregressive generation", "The slots start at 0. The transformer is applied to its own output again and again: it writes one token, puts it back into the sequence, and writes the next. In RL a token is sampled from the output probability; in SFT it is the sign of a score.", "Sec. 2.2 and Fig. 4 of the paper");
-    note(el.barLab, "Attention score", "For the token being written, the softmax of one column of the weight matrix W: how much weight each earlier position gets. The paper starts from W = 1, which gives equal weight to every position the mask allows.", "Sec. 2.2 of the paper");
-    note(el.calc, "ψ", "The activation after the attention layer. It turns the average of the attended tokens into a number between 0 and 1. For parity ψ(z) = z², so two equal bits (average ±1) give 1 and two different bits (average 0) give 0. AND and OR use other choices.", "Table 1 of the paper");
-    note(el.heads[0], "The mask", "Tokens of step t may attend only to the tokens of step t − 1 (for step 1, the input). The paper calls this a “pretrained” mask: a structural prior standing in for what pretraining provides. It is an assumption of the analysis.", "Sec. 2.2 and Fig. 2b of the paper");
+    el.maskLab = txt(root, "each step reads only the step before it", {x: 400, y: Y + 76, "text-anchor": "middle", "font-size": 12, fill: P.MID});
+    note(el.maskLab, "“Pretrained” mask", "A fixed mask lets a token of step t attend only to the tokens of step t − 1, and step 1 only to the input. We treat it as a stand-in for what pretraining provides: a structural prior, not something learned here.", "Sec. 2.2, Fig. 2b");
+    // the followed token and its readout
+    el.focus = mk(root, "rect", {x: tokX(F) - CW / 2 - 4, y: Y - 18, width: CW + 8, height: 36, rx: 7, fill: "none", stroke: rgb(P.BLUE), "stroke-width": 1.6});
+    el.uni = txt(root, "start: 1/12 of its attention on every input", {x: 24, y: 40, "font-size": 12.5, "font-weight": 700, fill: rgb(P.RED)});
+    note(el.uni, "Uniform attention", "At initialisation all attention scores are equal (W = 1), so the token averages all 12 inputs. The average is close to 0 whatever the answer, so its output carries no information.", "Theorem 3.1 setting");
+    el.goal = txt(root, "goal: 1/2 on each of its two children, 0 elsewhere", {x: 24, y: 40, "font-size": 12.5, "font-weight": 700, fill: rgb(P.BLUE)});
+    note(el.goal, "Attention to the children", "Learning the function means finding, for every token of the chain, the two positions it should read: the children of its node in the tree of Fig. 1.", "Sec. 3.1, W*");
+    el.calc = rich(root, [["ξ = (x4 + x6)/2 = 1,   "], ["P(+1) = ψ(ξ) = ξ² = 1", {"font-weight": 700}], ["  → writes +1 = x4·x6"]],
+      {x: 24, y: 64, "font-size": 12.5, fill: rgb(P.BLUE)});
+    note(el.calc, "ψ for parity", "The token outputs +1 with probability ψ(ξ), where ξ is the attention-weighted average. With ψ(z) = z², agreeing children give ξ = ±1 and output +1; differing children give ξ = 0 and output −1. AND and OR use other ψ (Table 1).", "Eq. (3), Table 1");
+    el.calc0 = rich(root, [["ξ = average of 12 bits ≈ 0,   "], ["P(+1) = ψ(ξ) ≈ 0", {"font-weight": 700}], ["  → output unrelated to the answer"]],
+      {x: 24, y: 64, "font-size": 12.5, fill: rgb(P.RED)});
+    el.att = txt(root, "attention", {x: 232, y: 100, "text-anchor": "middle", "font-size": 11, fill: rgb(P.BLUE)});
+    note(el.att, "Attention over positions", "The key and query matrices are merged into one matrix W over positional encodings, so attention depends only on positions. Fine-tuning changes which positions each token reads.", "Sec. 2.2, Eq. (2)");
   }
 
   function draw(t) {
     const E = (a, b) => ease((t - a) / (b - a));
-    // step 1 (0 - 2.6): the sequence
-    el.bits.forEach((c, i) => set(c.g, {opacity: stagger(t, i, 0.3, 0.05, 0.3)}));
-    el.slots.forEach((s, j) => {
-      set(s.g, {opacity: stagger(t, j, 1.1, 0.08, 0.3)});
-      const w = E([10.0, 10.2, 10.4, 10.6, 11.4, 11.6, 12.4][j], [10.0, 10.2, 10.4, 10.6, 11.4, 11.6, 12.4][j] + 0.35), first = j === 0 ? E(8.3, 8.7) : 0, u = Math.max(w, first);
-      set(s.val, {opacity: u});
-      set(s.box, {fill: rgb(mix(P.WHITE, P.BLUE_T, u)), "stroke-opacity": 1 - u});
+    el.tok.forEach((k, i) => set(k.g, {opacity: stagger(t, i, 0.2, 0.05, 0.3)}));
+    // step 2 (2.8 - 5.6): the mask
+    set(el.mask, {opacity: E(3.0, 3.6)});
+    set(el.maskLab, {opacity: E(3.4, 3.8)});
+    // step 3 (5.6 - 8.8): follow one token, attention uniform
+    const f = E(5.8, 6.2);
+    set(el.focus, {opacity: f});
+    const u = E(6.2, 7.0), g = E(9.2, 10.4);              // uniform arcs appear, then concentrate on the children
+    el.arcs.forEach((a, i) => {
+      const kid = kids.includes(i);
+      const w = kid ? 1 + 3.2 * g : 1 * (1 - g);
+      set(a, {opacity: u * (kid ? 1 : 0.85 * (1 - g)), "stroke-width": Math.max(0.01, w), stroke: rgb(kid ? P.BLUE : (g > 0.05 ? P.RED_S : P.BLUE))});
     });
-    el.heads.forEach((h, j) => set(h, {opacity: E(1.1 + 0.2 * j, 1.5 + 0.2 * j)}));
-    set(el.writes, {opacity: E(1.8, 2.2)});
-    // step 2 (2.6 - 5.6): even attention.  step 3 (5.6 - 9.2): two children
-    const g = E(5.9, 6.9);                                    // from even to learned
-    K.X.forEach((v, i) => {
-      const child = i === 0 || i === 2, h = mix([70 / 6], [child ? 70 : 0], g)[0] * stagger(t, i, 3.0, 0.04, 0.35);
-      set(el.bars[i], {y: 196 - h, height: Math.max(0, h), fill: rgb(child ? mix([200, 204, 211], P.BLUE, g) : [200, 204, 211])});
+    set(el.att, {opacity: u * (1 - g)});
+    set(el.uni, {opacity: E(6.8, 7.2) * (1 - E(9.0, 9.4))});
+    set(el.calc0, {opacity: E(7.4, 7.8) * (1 - E(9.0, 9.4))});
+    // step 4 (8.8 - ): the goal
+    set(el.goal, {opacity: E(9.4, 9.8)});
+    set(el.calc, {opacity: E(10.6, 11.0)});
+    el.tok.forEach((k, i) => {
+      if (kids.includes(i)) set(k.r, {fill: rgb(P.KNOWN.map((c, j) => c + (P.BLUE_T[j] - c) * g)), stroke: rgb(P.BLUE), "stroke-opacity": g});
+      if (i === F) { const w = E(11.0, 11.4); set(k.t, {opacity: w}); set(k.r, {fill: rgb([255, 255, 255].map((c, j) => c + (P.BLUE_T[j] - c) * w))}); }
     });
-    set(el.barG, {opacity: 1 - 0.55 * E(9.4, 9.9)});
-    set(el.barLab, {opacity: Math.min(E(3.0, 3.4), 1 - 0.55 * E(9.4, 9.9))});
-    set(el.focus, {opacity: Math.min(E(2.8, 3.2), 1 - E(9.4, 9.8))});
-    const even = Math.min(E(3.8, 4.2), 1 - E(5.7, 6.0));
-    set(el.even1, {opacity: even}); set(el.even2, {opacity: even});
-    set(el.goal, {opacity: Math.min(E(6.8, 7.2), 1 - E(9.4, 9.8))});
-    set(el.calc, {opacity: E(7.4, 7.8)});
-    set(el.out, {opacity: E(8.0, 8.4)});
-    // arcs: children of the first slot, then (step 4, 9.2 - 13.4) of one token of step 2 and of step 3
-    [[6.6, 9.6], [6.75, 9.6], [10.8, 11.9], [10.9, 11.9], [11.9, 99], [12.0, 99]].forEach(([a, z], i) => {
-      const u = E(a, a + 0.5);
-      set(el.arcs[i], {"stroke-dasharray": u + " 1", opacity: u > 0.01 ? 1 - 0.65 * E(z, z + 0.4) : 0});
-    });
-    set(el.sum, {opacity: E(12.6, 13.0)});
   }
-
-  AF.run({id: "fig-model", T: 14.2, starts: [0, 2.6, 5.6, 9.2], rest: 13.4, build, draw});
+  AF.run({id: "fig-model", starts: [0, 2.8, 5.6, 8.8], rest: 11.8, T: 12.6, build, draw});
 })();
 
+
 // fig3.js
-/* Fig. 3: four ways to supervise a three-step chain. One row per setting. */
+/* Fig. 3: four ways to give feedback on a three-step chain, after Fig. 1 of the paper (our own drawing).
+   RL with process reward (Eq. 5), RL with final reward (Prop. 3.2), SFT with teacher forcing (App. B, Q4),
+   SFT without teacher forcing (Eq. 10-11). */
 (() => {
-  const {set, mk, txt, ease, rgb, arrow, stagger, note} = AF, P = PAL;
-  const SX = [226, 336, 446], W = 66, OWN = "#555", TRUE = rgb(P.GRN);
-  const rows = [
-    {name: "RL, process rewards", sub: "a reward for every step", hue: "AMB", read: [0, 0], fb: ["reward", "reward", "reward"], tag: ["each step is judged on", "what the model itself", "wrote before it"]},
-    {name: "RL, final reward", sub: "one reward at the end", hue: "AMB", read: [0, 0], fb: [null, null, "reward"], tag: ["only the final", "answer is judged"]},
-    {name: "SFT, teacher forcing", sub: "true steps fed in", hue: "GRN", read: [1, 1], fb: ["loss", "loss", "loss"], tag: ["every step reads the", "true step before it"]},
-    {name: "SFT, no teacher forcing", sub: "its own steps fed in", hue: "GRN", read: [0, 0], fb: ["loss", "loss", "loss"], tag: ["labels are fixed from", "the input; the steps it", "reads are its own"]}
+  const {set, mk, txt, rich, ease, rgb, note, arrow} = AF, P = PAL;
+  const AMB = rgb(P.AMB), GRN = rgb(P.GRN), BLUE = rgb(P.BLUE);
+  const panels = [
+    {x: 20, y: 10, title: "RL, reward for every step", hue: "amb", kind: "rlpr", foot: "each step scored, given the model’s own previous step"},
+    {x: 20, y: 166, title: "RL, reward for the answer only", hue: "amb", kind: "rlfin", foot: "only the final answer is scored"},
+    {x: 350, y: 10, title: "SFT with teacher forcing", hue: "grn", kind: "sfttf", foot: "each step is fed the correct previous step"},
+    {x: 350, y: 166, title: "SFT on its own steps", hue: "grn", kind: "sftown", foot: "own previous steps, labels fixed by the input"}
   ];
   let el;
 
+  function box(g, cx, cy, label, style) {
+    const w = 46, h = 26;
+    const fill = {gen: "#fff", gt: rgb(P.GRN_T), ok: rgb(P.BLUE_T), x: rgb(P.KNOWN)}[style];
+    const stroke = {gen: rgb([150, 156, 166]), gt: GRN, ok: BLUE, x: "none"}[style];
+    mk(g, "rect", {x: cx - w / 2, y: cy - h / 2, width: w, height: h, rx: 5, fill, stroke, "stroke-width": 1.2});
+    const parts = label.split("|");
+    return rich(g, parts.length > 1 ? [[parts[0], {"font-style": "italic"}], [parts[1], {"font-size": 9.5, dy: -5}]] : [[label, {"font-style": "italic"}]],
+      {x: cx, y: cy + 4.5, "text-anchor": "middle", "font-size": 12.5, fill: style === "gt" ? GRN : style === "ok" ? BLUE : P.INK});
+  }
+  function badge(g, cx, cy, label, hue) {
+    mk(g, "rect", {x: cx - 15, y: cy - 9, width: 30, height: 18, rx: 9, fill: hue === "amb" ? rgb(P.AMB_T) : rgb(P.GRN_T), stroke: hue === "amb" ? AMB : GRN, "stroke-width": 1});
+    return rich(g, [[label[0], {"font-style": "italic"}], [label.slice(1), {"font-size": 9, dy: 3}]], {x: cx, y: cy + 3.5, "text-anchor": "middle", "font-size": 11.5, "font-weight": 700, fill: hue === "amb" ? AMB : GRN});
+  }
+
   function build(root) {
     el = [];
-    rows.forEach((r, k) => {
-      const y = 30 + k * 66, g = mk(root, "g"), c = P[r.hue], o = {g, arr: [], box: [], fb: [], tag: []};
-      o.name = txt(g, r.name, {x: 18, y: y + 11, "font-size": 12.5, "font-weight": 700, fill: rgb(c)});
-      txt(g, r.sub, {x: 18, y: y + 27, "font-size": 10.5, fill: P.MID});
-      const xb = mk(g, "g");
-      mk(xb, "rect", {x: 172, y, width: 30, height: 26, rx: 5, fill: rgb(P.KNOWN)});
-      txt(xb, "x", {x: 187, y: y + 17.5, "text-anchor": "middle", "font-size": 12.5, "font-style": "italic", fill: P.INK});
-      o.x = xb;
-      SX.forEach((x, j) => {
-        const from = j ? SX[j - 1] + W + 3 : 205, teacher = j && r.read[j - 1];
-        o.arr.push(arrow(g, j ? (teacher ? TRUE : OWN) : P.SOFT, [[from, y + 13], [x - 3, y + 13]]));
-        const b = mk(g, "g");
-        mk(b, "rect", {x, y, width: W, height: 26, rx: 5, fill: "#fff", stroke: "#b9bfc8"});
-        txt(b, "step " + (j + 1), {x: x + W / 2, y: y + 17.5, "text-anchor": "middle", "font-size": 12.5, fill: P.INK});
-        o.box.push(b);
-        const f = mk(g, "g");
-        if (r.fb[j]) {
-          mk(f, "rect", {x, y: y + 31, width: W, height: 17, rx: 4, fill: rgb(P[r.hue + "_T"])});
-          txt(f, r.fb[j], {x: x + W / 2, y: y + 43.3, "text-anchor": "middle", "font-size": 10.5, "font-weight": 700, fill: rgb(c)});
-        } else {
-          mk(f, "rect", {x: x + 0.5, y: y + 31.5, width: W - 1, height: 16, rx: 4, fill: "none", stroke: "#cfd3d9", "stroke-dasharray": "3 2.5"});
-          txt(f, "none", {x: x + W / 2, y: y + 43.3, "text-anchor": "middle", "font-size": 10.5, fill: P.SOFT});
+    panels.forEach(p => {
+      const g0 = mk(root, "g"), hue = p.hue === "amb" ? AMB : GRN;
+      const g = mk(g0, "g"), gf = mk(g0, "g"), gn = mk(g0, "g");
+      mk(g, "rect", {x: p.x, y: p.y, width: 310, height: 146, rx: 8, fill: p.hue === "amb" ? "#fdfaf3" : "#f6faf7", stroke: p.hue === "amb" ? rgb(P.AMB_S) : rgb(P.GRN_S), "stroke-width": 1});
+      const title = txt(g, p.title, {x: p.x + 12, y: p.y + 21, "font-size": 12.5, "font-weight": 700, fill: hue});
+      const X = [p.x + 36, p.x + 104, p.x + 172, p.x + 240], top = p.y + 48, low = p.y + 102, mid = (top + low) / 2;
+      box(g, X[0], top, "x", "x");
+      const genRow = p.kind !== "sfttf";
+      for (let t = 1; t <= 3; t++) {
+        // the model's step t: generated from its own previous step, or (teacher forcing) from the correct one
+        box(g, X[t], top, "ŷ|(" + t + ")", "gen");
+        if (genRow || t === 1) arrow(g, P.SOFT, [[X[t - 1] + 24, top], [X[t] - 24, top]])(1);
+      }
+      if (p.kind === "rlpr") {
+        for (let t = 1; t <= 3; t++) {
+          const lab = box(gf, X[t], low, "ȳ|(" + t + ")", "ok");
+          arrow(gf, rgb(P.BLUE_S), [[X[t - 1] + 23, top + 8], [X[t] - 23, low - 8]])(1);
+          badge(gf, X[t], mid, "r" + t, "amb");
+          if (t === 1) note(lab, "ȳ(t): the step checked locally", "The correct value of step t given the model’s own previous step ŷ(t−1). A verifier checks each step locally, so the reward for step t is informative even when earlier steps are wrong.", "Eq. (5)");
         }
-        o.fb.push(f);
-      });
-      r.tag.forEach((s, i) => o.tag.push(txt(g, s, {x: 532, y: y + 9 + i * 14.5 + (3 - r.tag.length) * 7, "font-size": 10.5, fill: P.INK})));
-      el.push(o);
+      } else if (p.kind === "rlfin") {
+        const lab = box(gf, X[3], low, "Φ(x)", "ok");
+        note(lab, "Φ(x): the true answer", "With only a final reward, the model is told whether its last step equals the true answer, and nothing about the steps before it.", "Prop. 3.2");
+        badge(gf, X[3], mid, "r ", "amb");
+        txt(gf, "no feedback on steps 1 and 2", {x: (X[1] + X[2]) / 2 - 4, y: mid + 4, "text-anchor": "middle", "font-size": 11.5, fill: rgb(P.RED)});
+      } else {
+        for (let t = 1; t <= 3; t++) {
+          const lab = box(gf, X[t], low, "ỹ|(" + t + ")", "gt");
+          badge(gf, X[t], mid, "L" + t, "grn");
+          if (p.kind === "sfttf" && t < 3) arrow(gf, GRN, [[X[t] + 23, low - 8], [X[t + 1] - 23, top + 8]])(1);
+          if (t === 1) note(lab, "ỹ(t): the ground-truth step", "The correct value of step t computed from the input x alone, as in a labelled chain of thought. It does not change with what the model generated before.", "Sec. 3.2");
+        }
+      }
+      txt(gn, p.foot, {x: p.x + 12, y: p.y + 134, "font-size": 11.5, fill: P.MID});
+      if (p.kind === "rlpr") note(title, "RL with verifiable process rewards", "The model samples a whole chain; each step earns a reward r_t that compares its tokens with ȳ(t). We analyse vanilla policy gradient with signed updates, as in reasoning models trained with process rewards [5][6].", "Sec. 3.1");
+      if (p.kind === "rlfin") note(title, "RL with a final reward", "The reward depends only on the last step. For parity, Proposition 3.2 bounds how much the policy gradient can depend on the target, and the bound is exponentially small in d.", "Prop. 3.2");
+      if (p.kind === "sfttf") note(title, "Teacher forcing", "Each step is generated from the correct previous step ỹ(t−1) rather than the model’s own, so all steps train on clean inputs. The paper treats it in App. B, Q4.", "App. B, Q4");
+      if (p.kind === "sftown") note(title, "SFT without teacher forcing", "The model generates the whole chain itself, as it will at test time, and each generated step is compared with the fixed label ỹ(t) by a hinge loss L_t. No data augmentation or filtering.", "Eqs. (10)–(11)");
+      el.push([g, gf, gn]);
     });
-    el.key = mk(root, "g");
-    mk(el.key, "path", {d: "M172 297h22", stroke: OWN, "stroke-width": 1.6});
-    mk(el.key, "path", {d: "M199 297l-7 -3.6v7.2z", fill: OWN});
-    el.k1 = txt(el.key, "reads the model’s own previous step", {x: 206, y: 301, "font-size": 10.5, fill: P.MID});
-    mk(el.key, "path", {d: "M418 297h22", stroke: TRUE, "stroke-width": 1.6});
-    mk(el.key, "path", {d: "M445 297l-7 -3.6v7.2z", fill: TRUE});
-    el.k2 = txt(el.key, "reads the true previous step", {x: 452, y: 301, "font-size": 10.5, fill: P.MID});
-    note(el[0].name, "Verifiable process reward", "The reward of step t compares the generated step with the label that is correct given the step the model generated before it. The total reward is the sum over steps, and it is maximised by policy gradient.", "Sec. 3.1 and Fig. 1 of the paper; the idea of process rewards follows Shao et al. [5]");
-    note(el[1].name, "Final reward", "The reward is the generated final answer times the true answer: +1 if they agree, −1 if not. Nothing rewards the intermediate steps.", "Sec. 3.1 of the paper");
-    note(el[2].name, "Teacher forcing", "During training each step is generated from the ground-truth previous steps, not from the model’s own. At inference no ground truth exists, so training and use do not match.", "Sec. 3.2 of the paper");
-    note(el[3].name, "SFT without teacher forcing", "The model generates the whole chain from its own outputs and a hinge loss compares each generated step with its ground-truth label. No data augmentation, filtering or curriculum is used.", "Sec. 3.2 of the paper");
-    note(el.k2, "True step", "The ground-truth value of a reasoning step, computed from the input by the decomposition of Fig. 1.");
   }
 
   function draw(t) {
     const E = (a, b) => ease((t - a) / (b - a));
-    el.forEach((o, k) => {
-      const t0 = [0.3, 4.2, 7.8, 11.4][k];
-      set(o.g, {opacity: E(t0, t0 + 0.4)});
-      set(o.x, {opacity: E(t0 + 0.2, t0 + 0.5)});
-      SX.forEach((x, j) => {
-        o.arr[j](stagger(t, j, t0 + 0.5, 0.45, 0.4));
-        set(o.box[j], {opacity: stagger(t, j, t0 + 0.75, 0.45, 0.3)});
-        set(o.fb[j], {opacity: stagger(t, j, t0 + 2.0, 0.15, 0.35)});
-      });
-      o.tag.forEach(e => set(e, {opacity: E(t0 + 2.7, t0 + 3.1)}));
+    const on = [0.2, 3.4, 6.6, 9.8];
+    el.forEach(([g, gf, gn], k) => {
+      set(g, {opacity: E(on[k], on[k] + 0.4)});
+      set(gf, {opacity: E(on[k] + 0.7, on[k] + 1.1)});
+      set(gn, {opacity: E(on[k] + 1.3, on[k] + 1.7)});
     });
-    set(el.key, {opacity: E(1.6, 2.0)});
-    set(el.k2, {opacity: 1}); set(el.k1, {opacity: 1});
   }
-
-  AF.run({id: "fig-ways", T: 15.8, starts: [0, 3.9, 7.5, 11.1], rest: 15.0, build, draw});
+  AF.run({id: "fig-supervision", starts: [0, 3.2, 6.4, 9.6], rest: 12.4, T: 13.2, build, draw});
 })();
 
+
 // fig4.js
-/* Fig. 4: why the order differs. Two lanes; a label fits when it answers the question the model was actually asked. */
+/* Fig. 4 (depth): one token's attention as a point on the probability simplex, with its irrelevant positions merged into
+   one corner (they keep equal scores under signed updates). The point moves along the median towards the edge of the
+   two children. Attention on each child after one signed update of size eta, from Theorem 4.1 (RL, parity) with
+   d_{t-1} visible positions: 1 / (2 + (d_{t-1} - 2) exp(-2 eta)). */
 (() => {
-  const {set, mk, txt, ease, mix, rgb, arrow, caps, stagger, note} = AF, P = PAL;
-  const SX = [150, 300, 450], W = 96;
-  const lanes = [{y: 52, hue: "AMB", title: "RL WITH PROCESS REWARDS"}, {y: 196, hue: "GRN", title: "SFT WITHOUT TEACHER FORCING"}];
+  const {set, mk, txt, rich, ease, rgb, caps, note} = AF, P = PAL;
+  const L = 170, S = KIT.space(220, 222);
+  const A = [L, 0, 0], B = [0, 0, L], C = [0, L, 0];
+  const at = sig => [sig * L, (1 - 2 * sig) * L, sig * L];          // attention (sig, sig, 1 - 2 sig) as a point
+  const sigma = (eta, d) => 1 / (2 + (d - 2) * Math.exp(-2 * eta));
+  const D = 20, ETAS = [1, 2, 3];
+  const later = [[2, 8], [3, 4], [4, 2]];                            // step, visible positions
   let el;
 
   function build(root) {
-    el = [];
-    lanes.forEach((L, k) => {
-      const c = P[L.hue], o = {box: [], wrong: [], right: [], lab: [], dep: [], ok: [], no: []}, y = L.y;
-      o.g = mk(root, "g");
-      o.title = caps(o.g, L.title, 18, y - 20, rgb(c), "start");
-      mk(o.g, "rect", {x: 60, y, width: 44, height: 28, rx: 5, fill: rgb(P.KNOWN)});
-      txt(o.g, "x", {x: 82, y: y + 18.5, "text-anchor": "middle", "font-size": 12.5, "font-style": "italic", fill: P.INK});
-      SX.forEach((x, j) => {
-        arrow(o.g, P.SOFT, [[j ? SX[j - 1] + W + 3 : 107, y + 14], [x - 3, y + 14]])(1);
-        o.box.push(mk(o.g, "rect", {x, y, width: W, height: 28, rx: 5}));
-        o.wrong.push(txt(o.g, "step " + (j + 1) + ": wrong", {x: x + W / 2, y: y + 18.5, "text-anchor": "middle", "font-size": 12.5, fill: rgb(P.RED)}));
-        o.right.push(txt(o.g, "step " + (j + 1) + ": right", {x: x + W / 2, y: y + 18.5, "text-anchor": "middle", "font-size": 12.5, "font-weight": 700, fill: rgb(P.BLUE)}));
-        // the label this step is compared with, and where that label comes from
-        const lg = mk(o.g, "g");
-        mk(lg, "rect", {x: x - 8, y: y + 46, width: W + 16, height: 22, rx: 4, fill: rgb(P[L.hue + "_T"])});
-        txt(lg, k ? "label, fixed from x" : ["label, from x", "label, from its step 1", "label, from its step 2"][j], {x: x + W / 2, y: y + 60.7, "text-anchor": "middle", "font-size": 9.8, "font-weight": 700, fill: rgb(c)});
-        o.lab.push(lg);
-        // RL: the label depends on the step just before (or on x); SFT: every label hangs on one line from x
-        // RL: the label is computed from the value the step itself reads (tapped off the arrow into the step).
-        // SFT: every label hangs on one line that starts at x
-        o.dep.push(k ? mk(o.g, "path", {d: "M82 " + (y + 30) + "V" + (y + 38) + "H" + (x + W / 2) + "V" + (y + 45), fill: "none", stroke: rgb(c), "stroke-width": 1.4, pathLength: 1})
-                     : mk(o.g, "path", {d: "M" + (x - 23) + " " + (y + 16) + "V" + (y + 57) + "H" + (x - 11), fill: "none", stroke: rgb(c), "stroke-width": 1.4, pathLength: 1}));
-        o.ok.push(txt(o.g, "fits what it read", {x: x + W / 2, y: y + 84, "text-anchor": "middle", "font-size": 10.5, "font-weight": 700, fill: rgb(P.BLUE)}));
-        o.no.push(txt(o.g, "does not fit yet", {x: x + W / 2, y: y + 84, "text-anchor": "middle", "font-size": 10.5, fill: rgb(P.RED)}));
-      });
-      o.num = [1, 2, 3].map(n => txt(o.g, String(n), {x: 615, y: y + 30, "text-anchor": "middle", "font-size": 30, "font-weight": 700, fill: rgb(c)}));
-      o.numLab = txt(o.g, "update", {x: 615, y: y + 48, "text-anchor": "middle", "font-size": 10.5, fill: P.MID});
-      o.numLabs = txt(o.g, "updates", {x: 615, y: y + 48, "text-anchor": "middle", "font-size": 10.5, fill: P.MID});
-      el.push(o);
-    });
-    el.rule = mk(root, "line", {x1: 18, y1: 154, x2: 662, y2: 154, stroke: "#e6e6e6"});
-    note(el[0].title, "Why one update is enough", "The reward of step t is defined against the label that is correct given the generated step t − 1. So its signal does not depend on the earlier steps being right, and the rewards of all steps can be improved in the same update.", "Theorem 3.1 and the discussion in Sec. 3.3 of the paper");
-    note(el[1].title, "Why it is step-wise", "The labels of all steps are fixed by the input. A later step can only match its label once the steps before it are generated correctly, so the steps are learned in order. No curriculum or filtering is needed for this to happen.", "Theorem 3.3 and Sec. 3.3 of the paper");
-    note(el[0].ok[1], "A wrong step still gets a fair test", "Step 2 read a wrong step 1. Its reward asks: is step 2 the right function of that wrong step? The model can learn to answer this before step 1 is fixed.");
-    note(el[1].numLabs, "T updates", "One sign-gradient update per reasoning step, so T updates for a chain of T steps. With teacher forcing, SFT learns all steps in one update, like RL here.", "Theorem 3.3 and Appendix B (Q4) of the paper");
-  }
-
-  function draw(t) {
-    const E = (a, b) => ease((t - a) / (b - a));
-    // when each step turns right, and when each label is seen to fit
-    const turn = [[6.4, 6.4, 6.4], [10.6, 13.2, 15.2]], fit = [[4.9, 5.2, 5.5], [9.0, 12.4, 14.4]], show = [[3.3, 3.6, 3.9], [7.9, 8.1, 8.3]];
-    el.forEach((o, k) => {
-      set(o.g, {opacity: E(0.3 + 0.5 * k, 0.8 + 0.5 * k)});
-      [0, 1, 2].forEach(j => {
-        const r = E(turn[k][j], turn[k][j] + 0.6), f = E(fit[k][j], fit[k][j] + 0.4), s = E(show[k][j], show[k][j] + 0.4);
-        set(o.box[j], {fill: rgb(mix(P.RED_T, P.BLUE_T, r))});
-        set(o.wrong[j], {opacity: (1 - r) * stagger(t, j, 1.3 + 0.3 * k, 0.25, 0.3)});
-        set(o.right[j], {opacity: r});
-        set(o.lab[j], {opacity: s});
-        const u = E(show[k][j] + 0.2, show[k][j] + 0.9);
-        set(o.dep[j], {"stroke-dasharray": u + " 1", opacity: u > 0.01 ? 1 : 0});
-        set(o.ok[j], {opacity: f});
-        set(o.no[j], {opacity: k ? Math.min(E(9.2, 9.6), 1 - f) : 0});
-      });
-      const n = k ? [E(10.9, 11.2), E(13.5, 13.8), E(15.5, 15.8)] : [E(6.7, 7.0), 0, 0];
-      set(o.num[0], {opacity: n[0] * (1 - n[1])}); set(o.num[1], {opacity: n[1] * (1 - n[2])}); set(o.num[2], {opacity: n[2]});
-      set(o.numLab, {opacity: n[0] * (1 - n[1])}); set(o.numLabs, {opacity: n[1]});
-    });
-    set(el.rule, {opacity: E(0.6, 1.0)});
-  }
-
-  AF.run({id: "fig-why", T: 17.2, starts: [0, 3.0, 7.5, 11.8], rest: 16.4, build, draw});
-})();
-
-// fig5.js
-/* Fig. 5: the sign of the gradient as a grid (rows: tokens written, columns: positions attended to). RL: one grid with
-   signal in all three blocks. SFT: one grid per update, stacked in depth, with signal in one block each. */
-(() => {
-  const {set, mk, txt, ease, rgb, caps, note} = AF, P = PAL, K = KIT;
-  const CW = 11, CH = 13, X0 = -99, Y0 = 45.5;
-  const blocks = [[0, 4, 0, 12], [4, 6, 12, 16], [6, 7, 16, 18]];             // rows r0..r1, columns c0..c1 of each step
-  const kids = r => r < 4 ? [K.B[2 * r], K.B[2 * r + 1]] : r === 4 ? [12, 13] : r === 5 ? [14, 15] : [16, 17];
-  const SR = K.space(172, 150), SS = K.space(486, 150);
-  const quad = (S, c0, r0, c1, r1, z) => S.path([[X0 + c0 * CW, Y0 - r0 * CH, z], [X0 + c1 * CW, Y0 - r0 * CH, z], [X0 + c1 * CW, Y0 - r1 * CH, z], [X0 + c0 * CW, Y0 - r1 * CH, z]], true);
-  let pl, el;
-
-  function plane(root, S, z, lit, at, name) {
-    const g = mk(root, "g"), p = {g, S, z, lit, at, cells: [], blk: [], marks: []};
-    p.frame = mk(g, "path", {fill: "#fff", "fill-opacity": 0.3, stroke: "#c3c8d0", "stroke-linejoin": "round"});
-    blocks.forEach(b => p.blk.push(mk(g, "path", {fill: "#eceef2", "fill-opacity": 0.55, stroke: "#d5d9df", "stroke-linejoin": "round"})));
-    blocks.forEach((b, k) => { for (let r = b[0]; r < b[1]; r++) for (let c = b[2]; c < b[3]; c++) {
-      const child = kids(r).includes(c);
-      p.cells.push({e: mk(g, "path", {fill: rgb(child ? P.BLUE : P.RED_S), stroke: "#fff", "stroke-width": 0.6}), r, c, k, child});
-    } });
-    p.cells.filter(q => q.child).forEach(q => p.marks.push({e: mk(g, "path", {fill: "none", stroke: rgb(P.BLUE), "stroke-width": 1.1}), r: q.r, c: q.c}));
-    p.name = txt(g, name, {"font-size": 10.5, "font-weight": 700, fill: P.MID});
-    return p;
-  }
-
-  function build(root) {
     el = {};
-    el.hRL = caps(root, "RL, PROCESS REWARDS", 18, 26, rgb(P.AMB), "start");
-    el.hSFT = caps(root, "SFT, NO TEACHER FORCING", 372, 26, rgb(P.GRN), "start");
-    // back to front
-    pl = [plane(root, SS, -60, 1, 11.6, "update 2"), plane(root, SS, 60, 0, 8.3, "update 1"), plane(root, SR, 0, -1, 0.3, "update 1")];
-    el.cols = txt(root, "columns: the positions a token may attend to", {x: 172, y: 92, "text-anchor": "middle", "font-size": 10.5, fill: P.MID});
-    el.rows = txt(root, "rows: the tokens the model writes", {x: 73, y: 216, "font-size": 10.5, fill: P.MID});
-    el.steps = ["step 1", "step 2", "step 3: nothing to learn"].map(s => txt(root, s, {"font-size": 10.5, fill: P.INK}));
-    el.rRL = txt(root, "every block at once: 1 update", {x: 172, y: 252, "text-anchor": "middle", "font-size": 12.5, "font-weight": 700, fill: rgb(P.AMB)});
-    el.rSFT = txt(root, "one block per update, in order", {x: 492, y: 252, "text-anchor": "middle", "font-size": 12.5, "font-weight": 700, fill: rgb(P.GRN)});
-    el.key = mk(root, "g");
-    mk(el.key, "rect", {x: 112, y: 276, width: 11, height: 11, rx: 2, fill: rgb(P.BLUE)});
-    el.k1 = txt(el.key, "pushes attention up: a child", {x: 129, y: 285.5, "font-size": 10.5, fill: P.MID});
-    mk(el.key, "rect", {x: 300, y: 276, width: 11, height: 11, rx: 2, fill: rgb(P.RED_S)});
-    el.k2 = txt(el.key, "pushes it down: not a child", {x: 317, y: 285.5, "font-size": 10.5, fill: P.MID});
-    mk(el.key, "rect", {x: 482.5, y: 276.5, width: 10, height: 10, rx: 2, fill: "#f1f2f5", stroke: "#d5d9df"});
-    txt(el.key, "no signal", {x: 499, y: 285.5, "font-size": 10.5, fill: P.MID});
-    note(el.k1, "Separation", "The proofs reduce to one condition on a quantity the paper calls the critical gradient component: it must be larger at a token’s two children than at any other position. Then the sign gradient raises the attention on the children and lowers it everywhere else.", "Eq. (7), Theorems 3.1 and 3.3 of the paper");
-    note(el.rRL, "RL at initialisation", "What Theorem 3.1 needs: at W = 1 the policy gradient is positive at every child and negative at every other position, for all steps together. The paper’s numerical experiment shows this pattern; it is the next figure on this page.", "Theorem 3.1 of the paper");
-    note(el.rSFT, "SFT, update by update", "What Theorem 3.3 describes: at each update the loss gradient is non-zero only for the step whose earlier steps are already right. The paper’s experiment shows this too; see the next figure.", "Theorem 3.3 of the paper");
-    note(el.hSFT, "Depth = update number", "The three grids are the same weight matrix seen at three successive updates. They are stacked from front to back only so that all three can be read at once.");
+    const g = mk(root, "g");
+    el.axes = [A, B, C].map(() => mk(g, "line", {stroke: "#cdd1d7", "stroke-width": 1}));
+    el.face = mk(g, "path", {fill: rgb(P.KNOWN), "fill-opacity": 0.55, stroke: "#9aa1ab", "stroke-width": 1.2, "stroke-linejoin": "round"});
+    el.childEdge = mk(g, "path", {stroke: rgb(P.BLUE), "stroke-width": 2.6, fill: "none"});
+    el.median = mk(g, "path", {stroke: rgb(P.BLUE_S), "stroke-width": 1.2, "stroke-dasharray": "4 3", fill: "none"});
+    el.ticks = ETAS.map(() => mk(g, "circle", {r: 2.6, fill: rgb(P.BLUE)}));
+    el.tickLab = ETAS.map(e => txt(g, "η = " + e, {"font-size": 10.5, fill: rgb(P.BLUE), "text-anchor": "end"}));
+    el.trail = mk(g, "path", {stroke: rgb(P.BLUE), "stroke-width": 2.2, fill: "none"});
+    el.arrow = mk(g, "path", {stroke: P.INK, "stroke-width": 1.5, fill: "none"});
+    el.head = mk(g, "path", {d: "M0 0L-7 -3.6L-7 3.6Z", fill: P.INK});
+    el.target = mk(g, "circle", {r: 9, fill: "none", stroke: rgb(P.BLUE), "stroke-width": 1.6});
+    el.later = later.map(() => mk(g, "circle", {r: 4.5, fill: "#fff", stroke: P.INK, "stroke-width": 1.4}));
+    el.laterLab = later.map(([s]) => txt(g, "step " + s, {"font-size": 10.5, fill: P.MID}));
+    el.dot = mk(g, "circle", {r: 6, fill: P.INK, stroke: "#fff", "stroke-width": 1.5});
+    // corner labels, flat and upright at projected points
+    el.labA = txt(root, "child 1", {"font-size": 12.5, "font-weight": 700, fill: rgb(P.BLUE)});
+    el.labB = txt(root, "child 2", {"font-size": 12.5, "font-weight": 700, fill: rgb(P.BLUE), "text-anchor": "end"});
+    el.labC = txt(root, "all other positions", {"font-size": 12.5, "font-weight": 700, fill: rgb(P.RED), "text-anchor": "middle"});
+    note(el.labA, "Children", "The two positions this token must read: the children of its node in the tree of Fig. 1. At this corner all attention is on child 1.");
+    note(el.labC, "The other positions", "All positions that are not children, merged into one corner. A token of step 1 sees 20 inputs, so 18 positions sit here; under the signed update they keep equal scores, so three numbers describe the attention.", "Theorem 4.1");
+    el.startLab = txt(root, "start: 1/20 on every input", {"font-size": 12, fill: P.INK});
+    note(el.startLab, "Uniform start", "At initialisation all scores are equal, so a step-1 token puts 1/20 of its attention on each of the 20 inputs: 0.05 on each child and 0.90 on the rest.", "Theorem 3.1 setting");
+    el.gradLab = mk(root, "g");
+    txt(el.gradLab, "signed gradient:", {x: 0, y: 0, "font-size": 12, fill: P.INK});
+    rich(el.gradLab, [["+", {"font-weight": 700, fill: rgb(P.BLUE)}], [" at the children,"]], {x: 0, y: 16, "font-size": 12, fill: P.INK});
+    rich(el.gradLab, [["−", {"font-weight": 700, fill: rgb(P.RED)}], [" elsewhere"]], {x: 0, y: 32, "font-size": 12, fill: P.INK});
+    note(el.gradLab, "The separation condition", "The critical gradient component γ is larger, in expectation, at a token’s children than at any other position. Then the sign of the gradient is + at the children and − elsewhere, which points attention straight at the children’s edge.", "Eqs. (7)–(8), (12)");
+    el.targetLab = txt(root, "target: ½ on each child", {"font-size": 12, "font-weight": 700, fill: rgb(P.BLUE)});
+    // right-hand readout
+    const R = mk(root, "g");
+    el.head1 = caps(R, "ONE UPDATE OF SIZE η", 452, 52, P.INK, "start");
+    el.rows = [["start", sigma(0, D)], ...ETAS.map(e => ["η = " + e, sigma(e, D)])].map(([a, v], i) => {
+      const r = mk(R, "g");
+      txt(r, a, {x: 452, y: 94 + i * 22, "font-size": 12.5, fill: P.INK});
+      txt(r, v.toFixed(2), {x: 640, y: 94 + i * 22, "text-anchor": "end", "font-size": 12.5, "font-weight": 700, fill: rgb(P.BLUE)});
+      return r;
+    });
+    el.rowHead = txt(R, "attention on each child", {x: 452, y: 70, "font-size": 10.5, fill: P.MID});
+    note(el.rowHead, "Theorem 4.1", "For parity under RL, attention on each child after s signed updates of size η is 1 / (2 + (d − 2) e^(−2ηs)), where d = 20 is the number of positions a step-1 token sees. A step of size of order ln(d/ε) lands within ε of the target in one update.", "Theorem 4.1, Theorem 3.1");
+    el.steps = mk(root, "g");
+    caps(el.steps, "WHERE EACH STEP STARTS", 452, 206, P.INK, "start");
+    [[1, 20], ...later].forEach(([s, d], i) => {
+      txt(el.steps, "step " + s + " · sees " + d, {x: 452, y: 232 + i * 22, "font-size": 12.5, fill: P.INK});
+      txt(el.steps, (1 / d).toFixed(d === 8 ? 3 : 2), {x: 640, y: 232 + i * 22, "text-anchor": "end", "font-size": 12.5, "font-weight": 700, fill: rgb(P.BLUE)});
+    });
+    el.root = g;
   }
 
   function draw(t, life = 0) {
     const E = (a, b) => ease((t - a) / (b - a));
-    const turn = E(7.2, 8.5), yaw = -0.56 * turn + 0.07 * Math.sin(0.8 * life) * E(8.5, 9.3), pitch = 0.3 * turn;
-    SR.view(yaw, pitch); SS.view(yaw, pitch);
-    pl.forEach(p => {
-      const inn = E(p.at, p.at + 0.7), z = p.z + (p.S === SS ? -60 * (1 - inn) : 0);
-      set(p.g, {opacity: inn});
-      set(p.frame, {d: quad(p.S, 0, 0, 18, 7, z)});
-      blocks.forEach((b, k) => set(p.blk[k], {d: quad(p.S, b[2], b[0], b[3], b[1], z)}));
-      const on = p.lit < 0 ? E(4.0, 4.7) : E(p.at + 0.9, p.at + 1.5);
-      p.cells.forEach(q => set(q.e, {d: quad(p.S, q.c, q.r, q.c + 1, q.r + 1, z), opacity: q.k < 2 && (p.lit < 0 || p.lit === q.k) ? on : 0}));   // step 3 has only its two children to look at: no gradient
-      p.marks.forEach(m => set(m.e, {d: quad(p.S, m.c + 0.12, m.r + 0.12, m.c + 0.88, m.r + 0.88, z), opacity: E(1.6, 2.0)}));
-      const c = p.S.pt([X0, Y0 + 7, z]);
-      set(p.name, {x: c[0], y: c[1], opacity: p.S === SS ? 1 : E(8.3, 8.7)});
+    S.view(-0.78 + 0.07 * Math.sin(0.8 * life), 0.38);
+    const q = p => S.pt(p);
+    const [a, b, c, o] = [q(A), q(B), q(C), q([0, 0, 0])];
+    el.axes.forEach((ln, i) => { const v = [a, b, c][i]; set(ln, {x1: o[0], y1: o[1], x2: v[0], y2: v[1], opacity: E(0.2, 0.8)}); });
+    set(el.face, {d: S.path([A, B, C], true), opacity: E(0.3, 1.0)});
+    set(el.childEdge, {d: S.path([A, B]), opacity: E(0.9, 1.4)});
+    set(el.labA, {x: a[0] + 8, y: a[1] + 18, opacity: E(1.0, 1.4)});
+    set(el.labB, {x: b[0] - 8, y: b[1] + 18, opacity: E(1.2, 1.6)});
+    set(el.labC, {x: c[0], y: c[1] - 12, opacity: E(1.4, 1.8)});
+    const mAB = [L / 2, 0, L / 2], s0 = sigma(0, D);
+    set(el.median, {d: S.path([C, mAB]), opacity: E(4.0, 4.6) * 0.9});
+    // the step-1 token: start, then one large signed update
+    const eta = 3 * E(6.9, 9.9), sNow = sigma(eta, D), pNow = q(at(sNow)), p0 = q(at(s0));
+    set(el.dot, {cx: pNow[0], cy: pNow[1], opacity: E(2.0, 2.4)});
+    set(el.startLab, {x: p0[0] + 16, y: p0[1] - 6, opacity: E(2.3, 2.7)});
+    set(el.trail, {d: `M${p0[0]} ${p0[1]}L${pNow[0]} ${pNow[1]}`, opacity: eta > 0.01 ? 1 : 0});
+    ETAS.forEach((e, i) => {
+      const p = q(at(sigma(e, D))), seen = E(6.9 + (9.9 - 6.9) * e / 3 - 0.2, 6.9 + (9.9 - 6.9) * e / 3);
+      set(el.ticks[i], {cx: p[0], cy: p[1], opacity: seen});
+      set(el.tickLab[i], {x: p[0] - (i === 2 ? 16 : 8), y: p[1] + (i === 2 ? -5 : 4), opacity: seen});
+      set(el.rows[i + 1], {opacity: seen});
     });
-    const flat = 1 - E(6.8, 7.2);
-    set(el.cols, {opacity: Math.min(E(0.9, 1.3), flat)}); set(el.rows, {opacity: Math.min(E(1.1, 1.5), flat)});
-    [[X0 + 4, Y0 - 4 * CH - 13, "start"], [X0 + 16 * CW, Y0 - 4 * CH + 6, "end"], [X0 + 18 * CW, Y0 - 7 * CH - 11, "end"]].forEach(([x, y, a], k) => {
-      const q = SR.pt([x, y, 0]);
-      set(el.steps[k], {x: q[0], y: q[1], "text-anchor": a, opacity: E(2.2 + 0.25 * k, 2.6 + 0.25 * k)});
+    set(el.rows[0], {opacity: E(2.4, 2.8)});
+    set(el.rowHead, {opacity: E(2.4, 2.8)});
+    set(el.head1, {opacity: E(2.3, 2.7)});
+    // step 2: the direction of the signed gradient, and the target
+    const tgt = q(mAB), u = E(3.8, 4.6), aim = q(at(s0 + (0.5 - s0) * 0.42));
+    const tip = [p0[0] + (aim[0] - p0[0]) * u, p0[1] + (aim[1] - p0[1]) * u];
+    set(el.arrow, {d: `M${p0[0] + 10} ${p0[1]}L${tip[0] + 10} ${tip[1]}`, opacity: u > 0.01 ? (1 - E(6.7, 7.1)) : 0});
+    const ang = Math.atan2(aim[1] - p0[1], aim[0] - p0[0]) * 180 / Math.PI;
+    set(el.head, {transform: `translate(${tip[0] + 10},${tip[1]}) rotate(${ang})`, opacity: AF.ease((u - 0.15) / 0.3) * (1 - E(6.7, 7.1))});
+    set(el.gradLab, {transform: `translate(${p0[0] + 66},${(p0[1] + aim[1]) / 2 - 12})`, opacity: E(4.4, 4.8) * (1 - E(6.7, 7.1))});
+    set(el.target, {cx: tgt[0], cy: tgt[1], opacity: E(5.0, 5.4)});
+    set(el.targetLab, {x: tgt[0] + 14, y: tgt[1] + 30, opacity: E(5.2, 5.6)});
+    // step 4: where the tokens of later steps start; under RL they all move in the same update
+    later.forEach(([s, d], i) => {
+      const p = q(at(1 / d)), v = E(11.0 + i * 0.4, 11.4 + i * 0.4);
+      set(el.later[i], {cx: p[0], cy: p[1], opacity: s === 4 ? 0 : v});
+      set(el.laterLab[i], {x: p[0] + (s === 4 ? 14 : 10), y: p[1] + (s === 4 ? -8 : 4), opacity: v});
     });
-    set(el.hRL, {opacity: E(0.3, 0.7)});
-    set(el.hSFT, {opacity: E(7.6, 8.0)});
-    set(el.rRL, {opacity: E(5.0, 5.4)});
-    set(el.rSFT, {opacity: E(13.2, 13.6)});
-    set(el.key, {opacity: E(4.4, 4.8)});
+    set(el.steps, {opacity: E(10.8, 11.3)});
   }
-
-  AF.run({id: "fig-grad", T: 15.0, starts: [0, 3.6, 7.0, 11.2], rest: 14.2, idle: true, build, draw});
+  AF.run({id: "fig-simplex", starts: [0, 3.4, 6.6, 10.6], rest: 13.4, T: 14.2, build, draw, idle: true});
 })();
 
-// fig6.js
-/* Fig. 6: the paper's own Figures 5 and 6 as the base picture, with a guide drawn on top: where to look, in which order.
-   Stage units = picture pixels x 680 / 2673; the picture sits 30 units down, leaving a band for our labels. */
+
+// fig5.js
+/* Fig. 5: which steps of a four-step chain have their attention on target before training and after each signed
+   update, for the four kinds of feedback of Fig. 3 (same layout). Schematic summary of Theorem 3.1 (RL, process reward:
+   all steps after one update), App. B Q4 (SFT with teacher forcing: all at once), Theorem 3.3 (SFT on its own steps:
+   one step per update, at most T updates), Proposition 3.2 (RL with final reward: for parity the gradient carries
+   almost no information about the target). The last step has one token that reads only its two children, so its
+   attention is on target from the start (dashed cells), in every setting; this is why Fig. 7 needs only three updates. */
 (() => {
-  const {set, mk, txt, ease, rgb, stagger, note} = AF, P = PAL, K = KIT, OY = 30;
-  const grid = (ox, oy, cw, ch) => (c0, c1, r0, r1) => [ox + c0 * cw - 1.2, OY + oy + r0 * ch - 1.2, (c1 - c0) * cw + 2.4, (r1 - r0) * ch + 2.4];
-  const RL = grid(191.6, 7.6, 63.3 / 15, 149.6 / 35), S = [335.0, 451.0, 567.6].map(x => grid(x, 8.9, 81.3 / 15, 191.1 / 35));
-  const blocks = g => [g(0, 8, 0, 20), g(8, 12, 20, 28), g(12, 14, 28, 32)];            // steps 1, 2, 3
-  const mixR = (a, b, u) => a.map((v, i) => v + (b[i] - v) * u);
-  const A = [10, OY, 92, 190], Bp = [172, OY, 92, 190], S0 = [316, OY, 110, 229], SA = [316, OY, 348, 229];
+  const {set, mk, txt, rich, ease, rgb, note} = AF, P = PAL;
+  const AMB = rgb(P.AMB), GRN = rgb(P.GRN), BLUE = rgb(P.BLUE);
+  const T = 4, U = 4, CW = 30, CH = 16;                     // four steps; columns: before training, then updates 1-3
+  const panels = [
+    {x: 20, y: 10, title: "RL, reward for every step", hue: "amb", learned: (step, upd) => upd >= 1, verdict: "all steps after one update",
+     why: ["Theorem 3.1", "Each step’s reward checks it against the right value given the model’s own previous step, so every step gets a useful gradient at once. One signed update with a large enough step learns the whole chain."]},
+    {x: 20, y: 166, title: "RL, reward for the answer only", hue: "amb", learned: () => false, verdict: "for parity, almost no signal",
+     why: ["Proposition 3.2", "With only a final reward, the policy gradient barely depends on which parity is the target: its variance across the 2^d targets is at most M/2^d. The figure shows no step learned; the theory gives a hardness bound, not a schedule."]},
+    {x: 350, y: 10, title: "SFT with teacher forcing", hue: "grn", learned: (step, upd) => upd >= 1, verdict: "all steps after one update",
+     why: ["App. B, Q4", "Every step trains on the correct previous step, so the separation condition holds for all steps at the first update, as for RL with process rewards."]},
+    {x: 350, y: 166, title: "SFT on its own steps", hue: "grn", learned: (step, upd) => upd >= step, verdict: "one step per update",
+     why: ["Theorem 3.3", "A later step’s fixed label only matches a correct prefix once the earlier steps are right, so each update learns the next step. Theorem 3.3 allows T updates for T steps; here the last step is right from the start, so three are enough."]}
+  ];
+  const ups = [0.9, 1.9, 4.6, 7.8];                        // when each column fills: before training, updates 1, 2, 3
+  const ok = (p, s, u) => s === T || p.learned(s, u);      // the last step is on target from the start
+  let el;
+
+  function build(root) {
+    el = [];
+    panels.forEach(p => {
+      const g = mk(root, "g"), hue = p.hue === "amb" ? AMB : GRN;
+      mk(g, "rect", {x: p.x, y: p.y, width: 310, height: 146, rx: 8, fill: p.hue === "amb" ? "#fdfaf3" : "#f6faf7", stroke: p.hue === "amb" ? rgb(P.AMB_S) : rgb(P.GRN_S), "stroke-width": 1});
+      const title = txt(g, p.title, {x: p.x + 12, y: p.y + 21, "font-size": 12.5, "font-weight": 700, fill: hue});
+      note(title, p.why[0], p.why[1], p.why[0]);
+      const gx = p.x + 74, gy = p.y + 32;
+      const cells = [];
+      for (let s = 1; s <= T; s++) {
+        const y = gy + (T - s) * (CH + 3);
+        txt(g, "step " + s, {x: gx - 10, y: y + 12, "text-anchor": "end", "font-size": 11, fill: P.MID});
+        for (let u = 0; u < U; u++) {
+          const r = mk(g, "rect", {x: gx + u * (CW + 4), y, width: CW, height: CH, rx: 3, fill: rgb(P.KNOWN)});
+          if (s === T) set(r, {"stroke-dasharray": "3 2"});
+          cells.push({r, s, u});
+        }
+      }
+      ["start", "1", "2", "3"].forEach((a, u) => txt(g, a, {x: gx + u * (CW + 4) + CW / 2, y: gy + T * (CH + 3) + 11, "text-anchor": "middle", "font-size": 10.5, fill: P.MID}));
+      txt(g, "update", {x: gx + U * (CW + 4) + 4, y: gy + T * (CH + 3) + 11, "font-size": 10.5, fill: P.MID});
+      const v = txt(g, p.verdict, {x: p.x + 12, y: p.y + 134, "font-size": 12.5, "font-weight": 700, fill: p.learned(1, 3) ? BLUE : rgb(P.RED)});
+      el.push({g, cells, p, v});
+    });
+    el.key = mk(root, "g");
+    mk(el.key, "rect", {x: 20, y: 326, width: 14, height: 10, rx: 2, fill: rgb(P.BLUE_T), stroke: BLUE, "stroke-width": 1});
+    txt(el.key, "learned: attention on the right two positions", {x: 40, y: 335, "font-size": 11.5, fill: P.MID});
+    const k2 = mk(el.key, "g");
+    mk(k2, "rect", {x: 318, y: 326, width: 14, height: 10, rx: 2, fill: rgb(P.BLUE_T), stroke: BLUE, "stroke-width": 1, "stroke-dasharray": "3 2"});
+    txt(k2, "right from the start: step 4 sees only its two children", {x: 338, y: 335, "font-size": 11.5, fill: P.MID});
+    note(k2, "Step 4", "The last step has one token, which reads only the two tokens of step 3, both of them its children. Its attention is uniform over them from the start, which is already the target, so it has nothing to learn. Fig. 7 shows the same.", "Sec. 2.2 and App. D of the paper");
+  }
+
+  function draw(t) {
+    const E = (a, b) => ease((t - a) / (b - a));
+    el.forEach(({g, cells, p, v}, k) => {
+      set(g, {opacity: E(0.1 + k * 0.15, 0.5 + k * 0.15)});
+      cells.forEach(({r, s, u}) => {
+        // a cell shows whether step s is on target after update u (u = 0: before training); it fills when that column does
+        const fresh = u > 0 && !ok(p, s, u - 1), d = fresh ? 0.08 * s : 0;
+        const on = ok(p, s, u) ? E(ups[u] - 0.6 + d, ups[u] - 0.2 + d) : 0;
+        const c = P.KNOWN.map((x, j) => x + (P.BLUE_T[j] - x) * on);
+        set(r, {fill: rgb(c), stroke: BLUE, "stroke-width": 1, "stroke-opacity": on});
+      });
+      const done = p.learned(1, 1) || !p.learned(1, 3) ? ups[1] : ups[3];
+      set(v, {opacity: E(done, done + 0.4)});
+    });
+    set(el.key, {opacity: E(0.6, 1.0)});
+  }
+  AF.run({id: "fig-order", starts: [0, 3.4, 6.6], rest: 9.6, T: 10.4, build, draw});
+})();
+
+
+// fig6.js
+/* Fig. 6: Figure 5 of the paper, reproduced unchanged as the picture orig-fig5.png (1090 x 790 px, placed at x 135.8,
+   y 44, height 296). Our guide on top: a light that moves from panel (a) to panel (b), amber outlines on the blocks of
+   steps 1-3 in (b), and an enlarged copy of the blocks of steps 2-3, placed so that its ties cross only grey cells. Panel frames and cells were measured on the picture:
+   (a) frame x 55-343, y 10-682 px; (b) x 790-1078; 15 columns x 35 rows of 19.2 px. */
+(() => {
+  const {set, mk, txt, ease, rgb, note} = AF, P = PAL;
+  const SC = 296 / 790, PX = 135.8, PY = 44;
+  const sx = v => PX + v * SC, sy = v => PY + v * SC;
+  const cell = 19.2, FA = [55, 10], FB = [790, 10];
+  const blk = (f, c0, c1, r0, r1) => [sx(f[0] + c0 * cell), sy(f[1] + r0 * cell), (c1 - c0) * cell * SC, (r1 - r0) * cell * SC];
+  const regA = [sx(0), sy(0), 372 * SC, 790 * SC], regB = [sx(718), sy(0), 372 * SC, 790 * SC];
+  const blocks = [blk(FB, 0, 8, 0, 20), blk(FB, 8, 12, 20, 28), blk(FB, 12, 14, 28, 32)];
   let el;
 
   function build(root, svg) {
     el = {};
-    el.spot = K.spot(root, 680, 268);
-    el.heads = [["the pattern to reach", 58.6, P.BLUE], ["RL, first update", 223.2, P.AMB], ["SFT, update 1", 375.6, P.GRN], ["SFT, update 2", 491.7, P.GRN], ["SFT, update 3", 608.4, P.GRN]]
-      .map(([s, x, c]) => txt(root, s, {x, y: 19, "text-anchor": "middle", "font-size": 10.5, "font-weight": 700, fill: rgb(c)}));
-    el.rl = blocks(RL).map(b => mk(root, "rect", {x: b[0], y: b[1], width: b[2], height: b[3], rx: 1.5, fill: "none", stroke: rgb(P.AMB), "stroke-width": 2}));
-    el.ghost = [0, 1].map(k => { const b = blocks(S[k])[k]; return mk(root, "rect", {x: b[0], y: b[1], width: b[2], height: b[3], rx: 1.5, fill: "none", stroke: rgb(P.GRN_S), "stroke-width": 1.6}); });
-    el.box = mk(root, "rect", {rx: 1.5, fill: "none", stroke: rgb(P.GRN), "stroke-width": 2});
-    el.tRL = txt(root, "RL: all three blocks in the same update", {x: 25, y: 240, "font-size": 12.5, "font-weight": 700, fill: rgb(P.AMB)});
-    el.tSFT = txt(root, "SFT: one block per update", {x: 25, y: 258, "font-size": 12.5, "font-weight": 700, fill: rgb(P.GRN)});
-    const b3 = blocks(S[2])[2];
-    el.lens = K.lens(root, svg, b3, [575, OY + 22, b3[2] * 3.4, b3[3] * 3.4]);
-    el.rows = K.hot(root, 176, OY + 7.6, 14, 150, "Rows", "The position a token may attend to: the 20 input bits x1 to x20, then the tokens of steps 1, 2 and 3.", "Fig. 5 of the paper");
-    el.cols = K.hot(root, 191.6, OY + 158.5, 63.3, 14, "Columns", "The token being written: 8 tokens of step 1, 4 of step 2, 2 of step 3 and the final answer.", "Fig. 5 of the paper");
-    note(el.heads[0], "Ground-truth attention", "The attention that solves the task: each column has two white cells, the two children of that token, with weight ½ each. Grey is 0.", "Fig. 5a of the paper");
-    note(el.heads[1], "Sign of the policy gradient", "Computed at the initial weights W = 1. White is +1, black is −1, grey is 0 (masked positions, and the last token, which has nothing to learn).", "Fig. 5b of the paper");
-    note(el.heads[2], "Sign of the SFT gradient", "The sign of the negative loss gradient at update s = 0, with the same colours. The next two grids are updates s = 1 and s = 2.", "Fig. 6 of the paper");
-    note(el.tSFT, "The experiment", "Parity with d = 20 input bits and k = 16 relevant ones, so four reasoning steps. One-layer transformer as in Fig. 2, 50,000 training inputs, sign gradient updates.", "Appendix D of the paper");
+    el.spot = KIT.spot(root, 680, 350);
+    el.outs = blocks.map(b => mk(root, "rect", {x: b[0] - 1.5, y: b[1] - 1.5, width: b[2] + 3, height: b[3] + 3, rx: 2, fill: "none", stroke: rgb(P.AMB), "stroke-width": 1.8}));
+    el.labA = txt(root, "target attention", {x: sx(199), y: 30, "text-anchor": "middle", "font-size": 12.5, "font-weight": 700, fill: P.INK});
+    el.labB = txt(root, "RL: sign of the first gradient", {x: sx(934), y: 30, "text-anchor": "middle", "font-size": 12.5, "font-weight": 700, fill: rgb(P.AMB)});
+    el.lens = KIT.lens(root, svg, blk(FB, 8, 14, 20, 32), [558, 110, 90, 180]);
+    el.lensLab = mk(root, "g");
+    txt(el.lensLab, "steps 2 and 3,", {x: 603, y: 305, "text-anchor": "middle", "font-size": 10.5, fill: P.MID});
+    txt(el.lensLab, "enlarged", {x: 603, y: 318, "text-anchor": "middle", "font-size": 10.5, fill: P.MID});
+    el.all = mk(root, "g");
+    txt(el.all, "steps 1, 2 and 3:", {x: 603, y: 62, "text-anchor": "middle", "font-size": 12, "font-weight": 700, fill: rgb(P.AMB)});
+    txt(el.all, "right sign at once", {x: 603, y: 78, "text-anchor": "middle", "font-size": 12, "font-weight": 700, fill: rgb(P.AMB)});
+    note(el.all, "Steps 1, 2 and 3", "In every block of (b) the sign matches the target: white where (a) is white, black elsewhere. Step 4’s column is grey because the last token sees only the two tokens of step 3, both of them its children, so its gradient is zero from the start.", "Figure 5 and App. D of the paper");
+    KIT.hot(root, sx(0), sy(10), 52 * SC, 672 * SC, "Rows: positions a token can read", "The 20 inputs x1–x20, then the 15 tokens of the chain. In (a) each column has 0.5 on two rows, the token’s children, and 0 elsewhere.", "Figure 5 of the paper");
+    KIT.hot(root, sx(55), sy(690), 288 * SC, 70 * SC, "Columns: tokens being written", "The 15 tokens of the chain: 8 for step 1, 4 for step 2, 2 for step 3 and 1 for step 4. Here d = 20 and k = 16.", "App. D");
+    KIT.hot(root, sx(790), sy(752), 288 * SC, 36 * SC, "Sign of the policy gradient", "White: +1, the update raises this attention score. Black: −1, it lowers it. Grey: 0, mostly where the causal and pretrained masks forbid attention.", "Figure 5b of the paper");
   }
 
   function draw(t) {
     const E = (a, b) => ease((t - a) / (b - a));
-    el.heads.forEach((h, i) => set(h, {opacity: stagger(t, i, 0.4, 0.18, 0.35)}));
-    // the light: on the target (step 1), on the RL grid (step 2), on the first SFT grid and then all three (step 3)
-    const r = mixR(mixR(mixR(A, Bp, E(3.6, 4.6)), S0, E(7.0, 8.0)), SA, E(8.9, 9.7));
-    el.spot(r, E(1.5, 2.1));
-    el.rl.forEach(b => set(b, {opacity: E(4.9, 5.4)}));                       // together: that is the point
-    set(el.tRL, {opacity: E(5.6, 6.0)});
-    // one box, which moves from block to block and leaves a trace behind
-    const g = [blocks(S[0])[0], blocks(S[1])[1], blocks(S[2])[2]], q = mixR(mixR(g[0], g[1], E(9.8, 10.6)), g[2], E(10.9, 11.7));
-    set(el.box, {x: q[0], y: q[1], width: q[2], height: q[3], opacity: E(8.2, 8.6)});
-    set(el.ghost[0], {opacity: E(9.9, 10.3)}); set(el.ghost[1], {opacity: E(11.0, 11.4)});
-    set(el.tSFT, {opacity: E(11.8, 12.2)});
-    // step 4: the smallest block, enlarged
-    el.lens(E(13.0, 14.2), E(12.8, 13.1));
+    const m = E(3.4, 4.4);                                   // the light travels from (a) to (b)
+    const r = regA.map((v, i) => v + (regB[i] - v) * m);
+    el.spot(r, E(0.3, 0.9));
+    set(el.labA, {opacity: E(0.6, 1.0) * (1 - 0.6 * E(3.4, 4.0))});
+    set(el.labB, {opacity: E(4.2, 4.6)});
+    el.outs.forEach((o, i) => set(o, {opacity: E(6.8 + i * 0.5, 7.2 + i * 0.5)}));
+    el.lens(E(8.4, 9.4), E(8.3, 8.6));
+    set(el.lensLab, {opacity: E(9.2, 9.6)});
+    set(el.all, {opacity: E(7.0, 7.4)});
   }
-
-  AF.run({id: "fig-exp", T: 16.2, starts: [0, 3.4, 6.8, 12.6], rest: 15.4, build, draw});
+  AF.run({id: "fig-rl-exp", starts: [0, 3.2, 6.4], rest: 10.4, T: 11.2, build, draw});
 })();
 
+
 // fig7.js
-/* Fig. 6: the four results, first sorted by method, then by whether every step gets feedback that fits. */
+/* Fig. 7: Figure 6 of the paper, reproduced unchanged as the picture orig-fig6.png (1480 x 989 px, placed at x 118.5,
+   y 44, height 296). Our guide on top: a light that moves across the three panels (s = 0, 1, 2), one green outline that
+   travels to the only non-zero block of each panel, and enlarged copies of the small blocks. Measured on the picture:
+   panel frames at x 57-425, 577-945, 1097-1465 and y 11-868 px; 15 columns x 35 rows of about 24.5 px. */
 (() => {
-  const {set, mk, txt, ease, rgb, arc, caps, stagger, note} = AF, P = PAL;
-  const CX = [110, 396], W = 256, H = 64, RY = [48, 130];
-  const cards = [
-    {hue: "AMB", name: "RL, process rewards", res: "the whole chain in one update", src: "Theorem 3.1", a: [0, 0], b: [0, 0]},
-    {hue: "AMB", name: "RL, final reward only", res: "hard for parity: no usable signal", src: "Proposition 3.2", a: [1, 0], b: [1, 0]},
-    {hue: "GRN", name: "SFT, no teacher forcing", res: "one step per update", src: "Theorem 3.3", a: [0, 1], b: [1, 1]},
-    {hue: "GRN", name: "SFT, teacher forcing", res: "the whole chain in one update", src: "Appendix B; Kim and Suzuki [4]", a: [1, 1], b: [0, 1]}
-  ];
+  const {set, mk, txt, ease, rgb, note} = AF, P = PAL;
+  const SC = 296 / 989, PX = 118.5, PY = 44;
+  const sx = v => PX + v * SC, sy = v => PY + v * SC;
+  const cw = 368 / 15, ch = 857 / 35, F = [[57, 11], [577, 11], [1097, 11]];
+  const blk = (f, c0, c1, r0, r1) => [sx(f[0] + c0 * cw), sy(f[1] + r0 * ch), (c1 - c0) * cw * SC, (r1 - r0) * ch * SC];
+  const regs = [[0, 488], [512, 1000], [1032, 1480]].map(([a, b]) => [sx(a), sy(0), (b - a) * SC, 989 * SC]);
+  const blocks = [blk(F[0], 0, 8, 0, 20), blk(F[1], 8, 12, 20, 28), blk(F[2], 12, 14, 28, 32)];
+  const at = [[0.3, 1.0], [3.6, 5.0], [6.8, 8.2]];         // when the light and the outline move to each panel
+  let el;
+
+  function build(root, svg) {
+    el = {};
+    el.spot = KIT.spot(root, 680, 346);
+    el.out = mk(root, "rect", {fill: "none", stroke: rgb(P.GRN), "stroke-width": 1.8, rx: 2});
+    el.labs = ["update 1: step 1 only", "update 2: step 2 only", "update 3: step 3 only"].map((s, i) =>
+      txt(root, s, {x: regs[i][0] + regs[i][2] / 2, y: 30, "text-anchor": "middle", "font-size": 12, "font-weight": 700, fill: rgb(P.GRN)}));
+    el.lensB = KIT.lens(root, svg, blocks[1], [570, 124, 88, 176]);
+    el.lensC = KIT.lens(root, svg, blocks[2], [570, 124, 88, 176]);
+    el.lensLab = txt(root, "enlarged", {x: 614, y: 316, "text-anchor": "middle", "font-size": 10.5, fill: P.MID});
+    KIT.hot(root, sx(0), sy(11), 55 * SC, 857 * SC, "Rows: positions a token can read", "The 20 inputs x1–x20, then the 15 tokens of the chain, as in Fig. 6.", "Figure 6 of the paper");
+    KIT.hot(root, sx(57), sy(940), 368 * SC, 49 * SC, "s counts updates", "s = 0 is the gradient at initialisation, which makes the first update; s = 1 is computed after it, and so on.", "Figure 6 of the paper");
+    KIT.hot(root, sx(577), sy(940), 368 * SC, 49 * SC, "Sign of the negative SFT gradient", "White: +1, the update raises this attention score. Black: −1, it lowers it. Grey: 0. At each s only one step’s block is not grey.", "Figure 6 of the paper");
+  }
+
+  function draw(t) {
+    const E = (a, b) => ease((t - a) / (b - a));
+    const m1 = E(...at[1]), m2 = E(...at[2]);
+    const lerp = (a, b, u) => a.map((v, i) => v + (b[i] - v) * u);
+    el.spot(lerp(lerp(regs[0], regs[1], m1), regs[2], m2), E(0.3, 0.9));
+    const b = lerp(lerp(blocks[0], blocks[1], m1), blocks[2], m2);
+    set(el.out, {x: b[0] - 1.5, y: b[1] - 1.5, width: b[2] + 3, height: b[3] + 3, opacity: E(1.0, 1.4)});
+    set(el.labs[0], {opacity: E(1.2, 1.6) * (1 - 0.6 * m1)});
+    set(el.labs[1], {opacity: E(5.0, 5.4) * (1 - 0.6 * m2)});
+    set(el.labs[2], {opacity: E(8.2, 8.6)});
+    el.lensB(E(5.2, 6.4), E(5.1, 5.4) * (1 - E(7.0, 7.4)));
+    el.lensC(E(8.4, 9.6), E(8.3, 8.6));
+    set(el.lensLab, {opacity: E(6.2, 6.6) * (1 - E(7.0, 7.4)) + E(9.4, 9.8)});
+  }
+  AF.run({id: "fig-sft-exp", starts: [0, 3.4, 6.6], rest: 10.6, T: 11.4, build, draw});
+})();
+
+
+// fig8.js
+/* Fig. 8 (theory part): Lemma E.2 at work for one token of step 1 in the parity experiment (d = 20 inputs, k = 16),
+   at W(0) = 1 (uniform attention 1/20). E[gamma^p] (Eq. 7) is 4/((k-1)d) at each child and 0 elsewhere, since a product
+   of distinct uniform bits averages to 0. Gradient (Eq. 19): (gamma^p - sum_q sigma_q gamma^q) sigma_p, i.e. +9 units at
+   each child and -1 at each of the 18 others (units of 1/15000), summing to 0. Signed step: +eta / -eta. Softmax after
+   one update with eta = 3 (Eq. 64): 1/(2 + 18 e^-6) = 0.489 at each child, 1/(18 + 2 e^6) = 0.0012 elsewhere,
+   l1 distance 1/(1/2 + e^6/18) = 0.044. The children are placed at x4 and x6 for illustration. */
+(() => {
+  const {set, mk, txt, rich, ease, rgb, caps, note, stagger} = AF, P = PAL;
+  const D = 20, KIDS = [3, 5], BASE = 176, BW = 11;
+  const X = p => 52 + p * 19.5;
+  const kid = p => KIDS.includes(p);
+  // bar heights in px for the four stages (up is positive)
+  const hA = p => kid(p) ? 100 : 0;
+  const hB = p => kid(p) ? 90 : -10;
+  const hC = p => kid(p) ? 60 : -60;
+  const sc = 1 / (2 + 18 * Math.exp(-6)), so = 1 / (18 + 2 * Math.exp(6));
+  const hD = p => (kid(p) ? sc : so) / 0.5 * 108;
   let el;
 
   function build(root) {
-    el = {cards: []};
-    el.rl = caps(root, "RL", 18, RY[0] + 36, rgb(P.AMB), "start");
-    el.sft = caps(root, "SFT", 18, RY[1] + 36, rgb(P.GRN), "start");
-    el.h1 = txt(root, "every step gets feedback that fits", {x: CX[0] + W / 2, y: 32, "text-anchor": "middle", "font-size": 12.5, "font-weight": 700, fill: rgb(P.BLUE)});
-    el.h2 = txt(root, "feedback comes late, or not at all", {x: CX[1] + W / 2, y: 32, "text-anchor": "middle", "font-size": 12.5, "font-weight": 700, fill: P.MID});
-    cards.forEach(c => {
+    el = {bars: []};
+    mk(root, "line", {x1: 40, x2: 436, y1: BASE, y2: BASE, stroke: "#b9bec6", "stroke-width": 1});
+    el.mean = mk(root, "g");
+    mk(el.mean, "line", {x1: 40, x2: 436, y1: BASE - 10, y2: BASE - 10, stroke: P.INK, "stroke-width": 1, "stroke-dasharray": "4 3"});
+    rich(el.mean, [["weighted mean Σ σ"], ["q", {"font-size": 8.5, dy: 3}], [" γ", {dy: -3}], ["q", {"font-size": 8.5, dy: -4}]], {x: 436, y: BASE - 15, "text-anchor": "end", "font-size": 10.5, fill: P.MID});
+    el.target = mk(root, "g");
+    mk(el.target, "line", {x1: 40, x2: 436, y1: BASE - 108, y2: BASE - 108, stroke: rgb(P.BLUE), "stroke-width": 1, "stroke-dasharray": "4 3"});
+    txt(el.target, "target ½", {x: 436, y: BASE - 113, "text-anchor": "end", "font-size": 10.5, fill: rgb(P.BLUE)});
+    for (let p = 0; p < D; p++) el.bars.push(mk(root, "rect", {x: X(p) - BW / 2, width: BW, rx: 2}));
+    // position labels
+    [[0, "x1"], [3, "x4"], [5, "x6"], [19, "x20"]].forEach(([p, s]) =>
+      txt(root, s, {x: X(p), y: 258, "text-anchor": "middle", "font-size": 11, "font-weight": kid(p) ? 700 : 400, fill: kid(p) ? rgb(P.BLUE) : P.MID}));
+    el.kidLab = txt(root, "children", {x: (X(3) + X(5)) / 2, y: 274, "text-anchor": "middle", "font-size": 10.5, fill: rgb(P.BLUE)});
+    note(el.kidLab, "The two children", "The two inputs this token must read, here put at x4 and x6. The other 18 inputs are irrelevant to it.", "invented placement");
+    // what the bars mean, one title per stage
+    const T1 = (s, a) => { const e = rich(root, s, {x: 40, y: 38, "font-size": 12.5, "font-weight": 700, fill: P.INK}); if (a) note(e, ...a); return e; };
+    el.titles = [
+      T1([["𝔼[γ"], ["p", {"font-size": 9.5, dy: -5}], ["]", {dy: 5}], [" at each input"]], ["Critical gradient component", "γ^p = 2/(k − 1) · ψ′(ξ) · ϕ₂(children) · value at p. For parity ψ′(ξ) = 2ξ and ϕ₂ is the product of the two children, so the average keeps only terms in which every bit appears twice.", "Eq. (7)"]),
+      T1([["gradient: (γ"], ["p", {"font-size": 9.5, dy: -5}], [" − Σ σ", {dy: 5}], ["q", {"font-size": 9.5, dy: 3}], [" γ", {dy: -3}], ["q", {"font-size": 9.5, dy: -5}], [") σ", {dy: 5}], ["p", {"font-size": 9.5, dy: 3}]], ["Lemma E.2", "The gradient on the token’s score W_p is the expectation of γ^p minus its attention-weighted mean, times σ_p. While all scores are equal, σ_p = 1/d for every p, so it only rescales.", "Eq. (19)"]),
+      T1([["sign of the gradient"]], ["Signed update", "W(s + 1) = W(s) + η sign(∇R). Only the sign of each entry is kept, so every score moves by exactly η.", "Theorem 3.1"]),
+      T1([["attention after one update, η = 3"]], ["After one signed update", "Scores 1 + η at the children and 1 − η elsewhere give attention 1/(2 + (d − 2)e^(−2η)) on each child and 1/(d − 2 + 2e^(2η)) on each other input.", "Eq. (64)"])
+    ];
+    // right-hand readout, one block per stage
+    const block = (head, rows) => {
       const g = mk(root, "g");
-      mk(g, "rect", {x: 0, y: 0, width: W, height: H, rx: 7, fill: rgb(P[c.hue + "_T"])});
-      const name = txt(g, c.name, {x: 14, y: 21, "font-size": 12.5, "font-weight": 700, fill: rgb(P[c.hue])});
-      txt(g, c.res, {x: 14, y: 39, "font-size": 12.5, fill: P.INK});
-      txt(g, c.src, {x: 14, y: 55, "font-size": 10.5, fill: P.MID});
-      el.cards.push({g, name});
-    });
-    el.foot = mk(root, "g");
-    mk(el.foot, "line", {x1: 18, y1: 214, x2: 662, y2: 214, stroke: "#e6e6e6"});
-    txt(el.foot, "verified for", {x: 18, y: 240, "font-size": 12.5, fill: P.MID});
-    el.fn = ["k-PARITY", "k-AND", "k-OR"].map((s, i) => {
-      const g = mk(el.foot, "g");
-      mk(g, "rect", {x: 104 + i * 92, y: 225, width: 82, height: 22, rx: 11, fill: rgb(P.BLUE_T)});
-      txt(g, s, {x: 145 + i * 92, y: 240.4, "text-anchor": "middle", "font-size": 12.5, "font-weight": 700, fill: rgb(P.BLUE)});
+      caps(g, head, 470, 62, P.INK, "start");
+      rows.forEach(([a, v, c], i) => {
+        txt(g, a, {x: 470, y: 92 + i * 24, "font-size": 12, fill: P.INK});
+        txt(g, v, {x: 650, y: 92 + i * 24, "text-anchor": "end", "font-size": 12, "font-weight": 700, fill: c});
+      });
       return g;
-    });
-    el.scope = txt(el.foot, "one attention layer, structured masks", {x: 662, y: 240, "text-anchor": "end", "font-size": 12.5, fill: P.INK});
-    el.scope2 = txt(el.foot, "sufficient conditions; deeper models and finite samples are left open", {x: 662, y: 266, "text-anchor": "end", "font-size": 10.5, fill: P.MID});
-    note(el.cards[0].name, "Theorem 3.1", "If the critical gradient component separates a token’s children from all other positions, one update of sign policy gradient from W = 1, with a learning rate of order ln(d/ε), brings the attention within ε of the optimum for every step of the chain.", "Theorem 3.1 of the paper");
-    note(el.cards[1].name, "Proposition 3.2", "For a class of mutually orthogonal targets, the variance of the final-reward policy gradient across targets is at most M divided by the size of the class. Sparse parities form such a class of size 2^d, so the part of the gradient that depends on the target is exponentially small.", "Proposition 3.2 of the paper, after Shalev-Shwartz et al. [2]");
-    note(el.cards[2].name, "Theorem 3.3", "Under the same separation condition, evaluated on ground-truth steps, T updates of sign gradient descent on the SFT loss bring the attention within ε of the optimum. Each update learns one step.", "Theorem 3.3 of the paper");
-    note(el.cards[3].name, "Teacher forcing", "With the true previous steps fed in, the separation condition holds for all steps at once, so all steps get a useful gradient in the same update. Kim and Suzuki proved one-update learning of parity in this setting.", "Appendix B (Q4) of the paper; Kim and Suzuki [4]");
-    note(el.scope, "Assumptions", "A one-layer transformer with positional encoding, one attention head and a fixed activation; a mask that lets each step read only the step before it; Boolean functions that decompose into one fixed two-input function; population gradients.", "Sec. 2 and Appendix A of the paper");
+    };
+    const B = rgb(P.BLUE), R = rgb(P.RED), M = P.MID;
+    el.blocks = [
+      block("EXPECTED γ", [["each child", "4/((k−1)d) = 0.013", B], ["every other input", "0", M]]),
+      block("GRADIENT", [["each child", "+0.60 × 10⁻³", B], ["every other input", "−0.067 × 10⁻³", R], ["sum over all 20", "0", M]]),
+      block("SIGNED STEP", [["each child", "score 1 + η", B], ["every other input", "score 1 − η", R]]),
+      block("ATTENTION", [["each child", "0.489", B], ["every other input", "0.0012", R], ["ℓ1 distance to target", "0.044", M]])
+    ];
   }
 
   function draw(t) {
     const E = (a, b) => ease((t - a) / (b - a));
-    const m = E(4.2, 5.6);                                         // the regrouping
-    cards.forEach((c, i) => {
-      const A = [CX[c.a[0]], RY[c.a[1]]], Bq = [CX[c.b[0]], RY[c.b[1]]];
-      const q = A[0] === Bq[0] ? A : arc(A, Bq, i === 3 ? 140 : 0, m);     // the two SFT cards pass each other
-      set(el.cards[i].g, {transform: "translate(" + q[0].toFixed(1) + "," + q[1].toFixed(1) + ")", opacity: stagger(t, i, 0.4, 0.35, 0.4)});
+    const uB = E(4.0, 5.0), uC = E(7.0, 8.0), uD = E(10.2, 11.2);
+    el.bars.forEach((r, p) => {
+      const g = stagger(t, p, 0.5, 0.04, 0.5);
+      const lerp = (a, b, u) => a + (b - a) * u;
+      let h = lerp(lerp(lerp(hA(p) * g, hB(p), uB), hC(p), uC), hD(p), uD);
+      const hh = Math.max(Math.abs(h), 1.5);
+      const red = kid(p) ? 0 : Math.max(E(4.2, 4.8), 0);
+      const col = kid(p) ? rgb(P.BLUE) : rgb(PAL.KNOWN.map((v, j) => v + ([200, 92, 80][j] - v) * red));
+      set(r, {y: h >= 0 ? BASE - hh : BASE, height: hh, fill: col, opacity: g});
     });
-    set(el.rl, {opacity: E(0.3, 0.7)}); set(el.sft, {opacity: E(1.0, 1.4)});
-    set(el.h1, {opacity: E(5.7, 6.1)}); set(el.h2, {opacity: E(6.0, 6.4)});
-    set(el.foot, {opacity: E(7.6, 8.0)});
-    el.fn.forEach((g, i) => set(g, {opacity: stagger(t, i, 8.0, 0.2, 0.35)}));
-    set(el.scope, {opacity: E(8.9, 9.3)}); set(el.scope2, {opacity: E(9.5, 9.9)});
+    set(el.mean, {opacity: E(3.5, 3.9) * (1 - E(5.4, 5.8))});
+    set(el.target, {opacity: E(10.8, 11.2)});
+    const win = [[0.2, 3.4], [3.6, 6.6], [6.8, 9.8], [10.0, 99]];
+    el.titles.forEach((e, i) => set(e, {opacity: E(win[i][0], win[i][0] + 0.4) * (1 - E(win[i][1], win[i][1] + 0.3))}));
+    const rwin = [[1.2, 3.4], [4.8, 6.6], [7.8, 9.8], [11.0, 99]];
+    el.blocks.forEach((g, i) => set(g, {opacity: E(rwin[i][0], rwin[i][0] + 0.4) * (1 - E(rwin[i][1], rwin[i][1] + 0.3))}));
+    set(el.kidLab, {opacity: E(1.0, 1.4)});
+  }
+  AF.run({id: "fig-anatomy", starts: [0, 3.2, 6.6, 9.8], rest: 12.6, T: 13.4, build, draw});
+})();
+
+
+// fig9.js
+/* Fig. 9 (theory part): why a token of step 2 gets no SFT gradient until step 1 is right (proof of Theorem 3.3,
+   Lemmas F.1 and F.2), with the invented input of Fig. 1: six of its twelve bits are +1, so at W(0) every step-1 token
+   averages to xi = 0 and writes sign(2 psi(0) - 1) = -1 (Eq. 75: all step-1 tokens write the same value). The followed
+   step-2 token has children = step-1 tokens 1 and 2 and label (-1)(+1) = -1 (Fig. 1).
+   Bars: the population descent direction -dL_t/dW_p (Eq. 54). At the start it is exactly 0 for every input, since the
+   written values are the same at every position. Once step 1 is written correctly (and for teacher forcing from the
+   start), for parity with uniform attention over 4 positions: E[gamma] = 1/(k-1) at the children and 0 elsewhere, so the
+   direction is +1/(8(k-1)) at each child and -1/(8(k-1)) at each other position: equal and opposite. */
+(() => {
+  const {set, mk, txt, rich, ease, rgb, caps, note, stagger} = AF, P = PAL;
+  const XS = [80, 140, 200, 260], CY = 70, CW = 44, CH = 28, TOK = 430, BASE = 222;
+  const OWN0 = [-1, -1, -1, -1], TRUE = [-1, +1, +1, -1];
+  const v = a => a > 0 ? "+1" : "−1";
+  let el;
+
+  function build(root) {
+    el = {cells: [], v0: [], v1: [], arcs: [], bars: []};
+    el.head = [caps(root, "STEP 1, AS THE MODEL WRITES IT", 40, 24, P.MID, "start"), caps(root, "STEP 1, FED BY TEACHER FORCING", 40, 24, rgb(P.GRN), "start")];
+    // attention arcs from the step-2 token to the four step-1 tokens: uniform, 1/4 each
+    XS.forEach(x => {
+      const h = 12 + (TOK - x) * 0.04;
+      el.arcs.push(mk(root, "path", {d: `M${TOK} ${CY - CH / 2}C${TOK} ${CY - CH / 2 - h} ${x} ${CY - CH / 2 - h} ${x} ${CY - CH / 2}`, fill: "none", stroke: "#b9bec6", "stroke-width": 1.2}));
+    });
+    XS.forEach((x, i) => {
+      const r = mk(root, "rect", {x: x - CW / 2, y: CY - CH / 2, width: CW, height: CH, rx: 5, "stroke-width": 1.3});
+      el.cells.push(r);
+      el.v0.push(txt(root, v(OWN0[i]), {x, y: CY + 5, "text-anchor": "middle", "font-size": 12.5, "font-weight": 700, fill: P.INK}));
+      el.v1.push(txt(root, v(TRUE[i]), {x, y: CY + 5, "text-anchor": "middle", "font-size": 12.5, "font-weight": 700, fill: rgb(P.BLUE)}));
+    });
+    el.kids = mk(root, "g");
+    [0, 1].forEach(i => txt(el.kids, "child", {x: XS[i], y: CY + 30, "text-anchor": "middle", "font-size": 10.5, "font-weight": 700, fill: rgb(P.BLUE)}));
+    // the followed token of step 2 and its fixed label
+    el.tok = mk(root, "g");
+    mk(el.tok, "rect", {x: TOK - CW / 2, y: CY - CH / 2, width: CW, height: CH, rx: 5, fill: "#fff", stroke: "#b9bec6", "stroke-dasharray": "3 2", "stroke-width": 1.3});
+    txt(el.tok, "step 2", {x: TOK, y: CY + 5, "text-anchor": "middle", "font-size": 11, fill: P.MID});
+    el.lab = rich(root, [["label ỹ = −1", {"font-weight": 700}], ["  fixed by the input"]], {x: TOK - CW / 2, y: CY + 34, "font-size": 11.5, fill: rgb(P.GRN)});
+    note(el.lab, "The step-2 label", "ỹ = ϕ₂ of the true values of its two children, here (−1)(+1) = −1. It is computed from x and does not change with what the model writes.", "Sec. 3.2");
+    // gradient bars, one per position
+    el.gHead = caps(root, "DESCENT DIRECTION ON EACH OF ITS SCORES", 40, 148, P.MID, "start");
+    note(el.gHead, "−∂L/∂W_p", "The population gradient of the step-2 loss on the token’s four attention scores, with the sign used for descent. While the scores are equal it equals (γ^p − Σ σ_q γ^q)/4, with γ built from the values written at step 1 and the fixed label.", "Lemma F.1, Eq. (54)");
+    mk(root, "line", {x1: 50, x2: 290, y1: BASE, y2: BASE, stroke: "#b9bec6", "stroke-width": 1});
+    XS.forEach(x => el.bars.push(mk(root, "rect", {x: x - 13, width: 26, rx: 2})));
+    el.when = [
+      caps(root, "AT THE FIRST UPDATE", 340, 164, P.MID, "start"),
+      caps(root, "AT THE SECOND UPDATE", 340, 164, P.MID, "start"),
+      caps(root, "AT THE FIRST UPDATE", 340, 164, rgb(P.GRN), "start")
+    ];
+    // readout, one block per step
+    const block = (lines) => {
+      const g = mk(root, "g");
+      lines.forEach(([s, c, w], i) => txt(g, s, {x: 340, y: 186 + i * 22, "font-size": 12, "font-weight": w || 400, fill: c}));
+      return g;
+    };
+    el.read = [
+      block([["every step-1 token wrote the same value", rgb(P.RED), 700], ["so no position stands out: gradient 0", P.INK], ["sign 0: the scores stay equal", P.MID]]),
+      block([["step 1 now writes the true values", rgb(P.BLUE), 700], ["+ at the children, − elsewhere", P.INK], ["update 2 teaches step 2", P.MID]]),
+      block([["the true values are fed in", rgb(P.GRN), 700], ["the same pattern from the start", P.INK], ["update 1 teaches every step", P.MID]])
+    ];
   }
 
-  AF.run({id: "fig-map", T: 11.4, starts: [0, 3.8, 7.3], rest: 10.6, build, draw});
+  function draw(t) {
+    const E = (a, b) => ease((t - a) / (b - a));
+    const u1 = E(3.8, 4.4), u2 = E(7.2, 7.8);
+    el.cells.forEach((r, i) => {
+      const on = stagger(t, i, 0.2, 0.08, 0.4);
+      const fill = rgb(PAL.WHITE.map((x, j) => x + (P.GRN_T[j] - x) * u2));
+      const st = u2 > 0 ? rgb(P.BLUE.map((x, j) => x + (P.GRN[j] - x) * u2)) : rgb([190, 195, 203].map((x, j) => x + (P.BLUE[j] - x) * u1));
+      set(r, {fill, stroke: st, opacity: on});
+      set(el.v0[i], {opacity: on * (1 - E(3.8, 4.1))});
+      set(el.v1[i], {opacity: E(4.1, 4.4), fill: rgb(P.BLUE.map((x, j) => x + (P.GRN[j] - x) * u2))});
+    });
+    el.arcs.forEach((a, i) => set(a, {opacity: stagger(t, i, 0.8, 0.06, 0.4)}));
+    set(el.tok, {opacity: E(0.6, 1.0)});
+    set(el.kids, {opacity: E(1.0, 1.4)});
+    set(el.lab, {opacity: E(1.2, 1.6)});
+    set(el.head[0], {opacity: E(0.2, 0.6) * (1 - u2)});
+    set(el.head[1], {opacity: u2});
+    set(el.gHead, {opacity: E(1.6, 2.0)});
+    const g = E(4.6, 5.4);
+    el.bars.forEach((r, i) => {
+      const h = (i < 2 ? 1 : -1) * 46 * g, hh = Math.max(Math.abs(h), 1.5);
+      set(r, {y: h >= 0 ? BASE - hh : BASE, height: hh, fill: g < 0.02 ? "#9aa1ab" : (i < 2 ? rgb(P.BLUE) : rgb(P.RED)), opacity: E(1.8, 2.2)});
+    });
+    const win = [[1.9, 3.6], [4.8, 7.0], [7.8, 99]];
+    el.when.forEach((e, i) => set(e, {opacity: E(win[i][0], win[i][0] + 0.4) * (1 - E(win[i][1], win[i][1] + 0.3))}));
+    const rw = [[2.2, 3.6], [5.4, 7.0], [8.2, 99]];
+    el.read.forEach((e, i) => set(e, {opacity: E(rw[i][0], rw[i][0] + 0.4) * (1 - E(rw[i][1], rw[i][1] + 0.3))}));
+  }
+  AF.run({id: "fig-sft-wait", starts: [0, 3.4, 6.8], rest: 10.0, T: 10.8, build, draw});
 })();

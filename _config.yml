@@ -247,6 +247,7 @@ jekyll-minifier:
     - robots.txt
     - assets/blog/sparse-boolean/visual-summary.css
     - assets/blog/sparse-boolean/visual-summary.js
+    - assets/blog/sparse-boolean/rl-sft-summary.css
     - assets/blog/stgcn/visual-summary.css
     - assets/blog/stgcn/visual-summary.js
   uglifier_args:
