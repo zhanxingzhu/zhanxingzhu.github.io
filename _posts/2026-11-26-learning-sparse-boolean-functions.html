@@ -1,5 +1,6 @@
 ---
 layout: visual-summary
+date: 2026-11-27 00:00:00 +0000
 title: "One update or one per step: how RL and SFT teach a transformer a chain of thought"
 description: "Why RL with process rewards learns a whole chain of thought in one update while SFT on its own steps learns it one step per update, with the theorems and proofs of our ICML 2026 paper for experts."
 paper_url: https://proceedings.mlr.press/v306/lyu26d.html
@@ -7,7 +8,7 @@ summary_css: /assets/blog/sparse-boolean/rl-sft-summary.css
 ---
 
 <main>
-<div class="date"><time datetime="2026-11-26">26 November 2026</time> · ICML 2026</div>
+<div class="date"><time datetime="2026-11-27">27 November 2026</time> · ICML 2026</div>
 <h1>One update or one per step: how RL and SFT teach a transformer a chain of thought</h1>
 <p class="byline">Zhanxing Zhu · Joint work with Bochen Lyu, Yiyang Jia and Xiaohao Cai</p>
 <p class="links"><a href="https://proceedings.mlr.press/v306/lyu26d.html">ICML paper</a><a href="https://raw.githubusercontent.com/mlresearch/v306/main/assets/lyu26d/lyu26d.pdf">PDF</a><a href="https://arxiv.org/abs/2511.17852">arXiv</a><a href="https://openreview.net/forum?id=UrKNw5Xo9x">OpenReview</a></p>
@@ -106,7 +107,7 @@ summary_css: /assets/blog/sparse-boolean/rl-sft-summary.css
 <figcaption><strong>Figure 4.</strong> Illustration: one token’s attention drawn on the probability simplex, with the positions it should ignore merged into one corner, since they keep equal scores. The values on the path are computed from Theorem 4.1 of the paper (parity, RL) for a token that sees 20 positions.</figcaption>
 </figure>
 
-<h2>5. All at once, or one step at a time</h2>
+<h2 id="training-signals">5. All at once, or one step at a time</h2>
 <p class="ask">In which order does each kind of feedback teach the steps?</p>
 <p>Given feedback on every step, RL and SFT both meet the separation condition, for parity, AND and OR alike. What differs is how many steps meet it at each update (<a href="#fig-order">Fig. 5</a>).</p>
 <figure class="anim" id="fig-order">
@@ -129,7 +130,7 @@ summary_css: /assets/blog/sparse-boolean/rl-sft-summary.css
 <p class="ask">Does a trained transformer follow the theory under RL?</p>
 <p>We trained the transformer on parity of 16 bits out of 20, a chain of four steps, with 50,000 training samples. At initialisation, the sign of the RL policy gradient already matches the target attention in steps 1, 2 and 3, and step 4 has nothing to learn (<a href="#fig-rl-exp">Fig. 6</a>).</p>
 <figure class="anim" id="fig-rl-exp">
-<div class="anim-stage"><svg viewBox="0 0 680 350" role="img" aria-label="Figure 5 of the paper: on the left the target attention, on the right the sign of the policy gradient at initialisation. The positive entries of the gradient fall exactly on the target positions, for the blocks of steps 1, 2 and 3."><image href="{{ '/assets/blog/sparse-boolean/paper-fig5.png' | relative_url }}" x="135.8" y="44" width="408.4" height="296"/></svg></div>
+<div class="anim-stage"><svg viewBox="0 0 680 350" role="img" aria-label="Figure 5 of the paper: on the left the target attention, on the right the sign of the policy gradient at initialisation. The positive entries of the gradient fall exactly on the target positions, for the blocks of steps 1, 2 and 3."><image href="{{ '/assets/blog/sparse-boolean/paper-fig5.png' | relative_url | bust_file_cache }}" x="135.8" y="44" width="408.4" height="296"/></svg></div>
 <div class="anim-bar">
 <button type="button" class="anim-step"><span class="n">1</span>The target</button>
 <button type="button" class="anim-step"><span class="n">2</span>RL’s first gradient</button>
@@ -148,7 +149,7 @@ summary_css: /assets/blog/sparse-boolean/rl-sft-summary.css
 <p class="ask">And under SFT on the model’s own steps?</p>
 <p>On the same task, the SFT gradient is non-zero for one step at a time, in order: step 1 at the first update, step 2 at the second, step 3 at the third (<a href="#fig-sft-exp">Fig. 7</a>).</p>
 <figure class="anim" id="fig-sft-exp">
-<div class="anim-stage"><svg viewBox="0 0 680 346" role="img" aria-label="Figure 6 of the paper: three panels with the sign of the SFT gradient at updates s = 0, 1 and 2. In each panel only one block is non-zero: step 1, then step 2, then step 3."><image href="{{ '/assets/blog/sparse-boolean/paper-fig6.png' | relative_url }}" x="118.5" y="44" width="443" height="296"/></svg></div>
+<div class="anim-stage"><svg viewBox="0 0 680 346" role="img" aria-label="Figure 6 of the paper: three panels with the sign of the SFT gradient at updates s = 0, 1 and 2. In each panel only one block is non-zero: step 1, then step 2, then step 3."><image href="{{ '/assets/blog/sparse-boolean/paper-fig6.png' | relative_url | bust_file_cache }}" x="118.5" y="44" width="443" height="296"/></svg></div>
 <div class="anim-bar">
 <button type="button" class="anim-step"><span class="n">1</span>Update 1</button>
 <button type="button" class="anim-step"><span class="n">2</span>Update 2</button>
