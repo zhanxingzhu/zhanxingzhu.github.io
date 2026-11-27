@@ -290,7 +290,29 @@
   [data-reveal-at="4"] { --reveal-delay: 2.9s; }
 }
 
+.stgcn-cover-graph {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
 @media (prefers-reduced-motion: no-preference) {
+  .training-cover.cover-in-view {
+    .stgcn-edges { animation: stgcn-connect 1.6s ease-out both; }
+    .stgcn-frame-next { --frame-offset: 13px; animation: stgcn-forecast 1.3s 1.65s ease-out both; }
+    .stgcn-frame-later { --frame-offset: 26px; animation: stgcn-forecast 1.3s 2.1s ease-out both; }
+  }
+
+  @keyframes stgcn-connect {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes stgcn-forecast {
+    from { transform: translate(calc(0px - var(--frame-offset)), var(--frame-offset)); opacity: 0; }
+    to { transform: translate(0, 0); opacity: 1; }
+  }
+
   .training-cover.cover-in-view [data-reveal-at] {
     animation: cover-training-signal 1ms var(--reveal-delay, 0.45s) both;
   }

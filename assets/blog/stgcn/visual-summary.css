@@ -1,0 +1,97 @@
+/* The shared visual-summary stylesheet supplies typography, figures, and playback controls. */
+.visual-summary {
+  --controls-bottom: calc(3.25 * var(--unit) + env(safe-area-inset-bottom));
+}
+
+.visual-summary .ask {
+  margin-top: calc(-0.45 * var(--unit));
+}
+
+.visual-summary .speed {
+  bottom: var(--controls-bottom);
+}
+
+.visual-summary .theme {
+  position: fixed;
+  right: 14px;
+  bottom: calc(var(--controls-bottom) + 38px);
+  z-index: 5;
+  padding: 7px 11px;
+  border: 1px solid #d5d9df;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 12px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.visual-summary .theme:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.visual-summary.night {
+  --accent: #e37d6e;
+  --accent-wash: #3b2420;
+  --text: #c6c9ce;
+  --text-primary: #ededee;
+  --text-secondary: #a4a8af;
+  --text-tertiary: #80858d;
+  color-scheme: dark;
+  background: #141414;
+}
+
+.visual-summary.night .anim-stage > svg,
+.visual-summary.night .key i {
+  filter: invert(0.92) hue-rotate(180deg);
+}
+
+.visual-summary.night .anim-step,
+.visual-summary.night .anim-play,
+.visual-summary.night .links a {
+  background: #1f2226;
+  border-color: #3a3f46;
+}
+
+.visual-summary.night .links a:hover {
+  background: #2a2e33;
+}
+
+.visual-summary.night .anim-step .n {
+  background: #2e3238;
+}
+
+.visual-summary.night .anim-step.on {
+  border-color: var(--accent);
+  background: linear-gradient(to right, var(--accent-wash) var(--p), #1f2226 var(--p));
+}
+
+.visual-summary.night .anim-step.on .n {
+  background: var(--accent);
+  color: #141414;
+}
+
+.visual-summary.night .speed-opts button[aria-pressed="true"] {
+  color: #141414;
+}
+
+.visual-summary.night .note {
+  border-top-color: #2e3238;
+}
+
+.visual-summary.night .speed,
+.visual-summary.night .theme,
+.visual-summary.night .note-card {
+  background: rgba(31, 34, 38, 0.97);
+  border-color: #3a3f46;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
+}
+
+@media (max-width: 575.98px) {
+  .visual-summary {
+    --controls-bottom: calc(5.25rem + env(safe-area-inset-bottom));
+  }
+}

@@ -1,0 +1,29 @@
+<svg class="stgcn-cover-graph" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 348 250" aria-hidden="true" focusable="false">
+  <!-- Future frames emerge from the observed graph, as in Figure 1. -->
+  <g fill="#f6ebe8" stroke="#b63629" stroke-width="2.5" stroke-dasharray="7 5">
+    <rect class="stgcn-frame-later" x="35" y="8" width="304" height="204" rx="6"/>
+    <rect class="stgcn-frame-next" x="22" y="21" width="304" height="204" rx="6"/>
+  </g>
+  <rect x="9" y="34" width="304" height="204" rx="6" fill="#fff" stroke="#9faebb" stroke-width="2.5"/>
+  <g transform="translate(11 36)">
+    <g fill="none" stroke="#d7dce0" stroke-width="4.5">
+      <ellipse cx="150" cy="100" rx="112" ry="70"/>
+      <path d="M0 100H300 M150 4V198 M196 198L228 150L268 62L292 6"/>
+    </g>
+    <!-- The 22 links are the figure's Gaussian-distance graph, grouped by weight. -->
+    <g class="stgcn-edges" fill="none" stroke="#5688b9" stroke-linecap="round">
+      <path stroke-width="2" d="M247 135L169 169L218 100 M45 76L112 34 M112 34L150 100 M12 100H92 M150 100V188"/>
+      <path stroke-width="3" d="M247 65V135 M169 169L150 100 M64 145L45 76 M64 145L12 100 M112 34L92 100 M218 100H290 M218 100H150"/>
+      <path stroke-width="4" d="M247 65L290 100L247 135 M64 145L92 100L45 76 M92 100H150"/>
+      <path stroke-width="5" d="M247 65L218 100L247 135 M169 169L150 188 M45 76L12 100"/>
+    </g>
+    <g fill="#2468b0" stroke="#fff" stroke-width="2.5">
+      <circle cx="247" cy="65" r="7"/><circle cx="247" cy="135" r="7"/>
+      <circle cx="169" cy="169" r="7"/><circle cx="64" cy="145" r="7"/>
+      <circle cx="45" cy="76" r="7"/><circle cx="112" cy="34" r="7"/>
+      <circle cx="12" cy="100" r="7"/><circle cx="92" cy="100" r="7"/>
+      <circle cx="218" cy="100" r="7"/><circle cx="290" cy="100" r="7"/>
+      <circle cx="150" cy="100" r="7"/><circle cx="150" cy="188" r="7"/>
+    </g>
+  </g>
+</svg>

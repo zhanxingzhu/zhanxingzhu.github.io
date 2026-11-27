@@ -16,7 +16,7 @@ keywords: machine learning # add your own keywords or leave empty
 lang: en # the language of your site (for example: en, fr, cn, ru, etc.)
 icon: ⚛️ # the emoji used as the favicon (alternatively, provide image name in /assets/img/)
 
-url: https://zhanxingzhu.github.io/ # the base hostname & protocol for your site
+url: https://zhanxingzhu.github.io # the base hostname & protocol for your site
 baseurl: #/al-folio # the subpath of your site, e.g. /blog/. Leave blank for root
 last_updated: true # set to true if you want to display last updated in the footer
 impressum_path: # set to path to include impressum link in the footer, use the same path as permalink in a page, helps to conform with EU GDPR
@@ -243,7 +243,12 @@ sass:
 # -----------------------------------------------------------------------------
 
 jekyll-minifier:
-  exclude: ["robots.txt", "assets/blog/sparse-boolean/visual-summary.css", "assets/blog/sparse-boolean/visual-summary.js"]
+  exclude:
+    - robots.txt
+    - assets/blog/sparse-boolean/visual-summary.css
+    - assets/blog/sparse-boolean/visual-summary.js
+    - assets/blog/stgcn/visual-summary.css
+    - assets/blog/stgcn/visual-summary.js
   uglifier_args:
     harmony: true
 

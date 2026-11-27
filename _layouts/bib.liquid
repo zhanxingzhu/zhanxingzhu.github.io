@@ -2,9 +2,10 @@
 ---
 <div class="row">
   {% if site.enable_publication_thumbnails %}
-    {% assign has_tree_cover = false %}
-    {% if entry.blog and entry.blog_figure == 'training-signals' %}{% assign has_tree_cover = true %}{% endif %}
-    <div class="col col-sm-2 abbr{% if has_tree_cover %} abbr-with-cover{% endif %}">
+    {% assign cover_figures = 'training-signals,fig-graph' | split: ',' %}
+    {% assign has_blog_cover = false %}
+    {% if entry.blog and cover_figures contains entry.blog_figure %}{% assign has_blog_cover = true %}{% endif %}
+    <div class="col col-sm-2 abbr{% if has_blog_cover %} abbr-with-cover{% endif %}">
       {%- if entry.abbr -%}
         {%- if site.data.venues[entry.abbr] -%}
           {% assign venue_style = null %}
@@ -27,7 +28,12 @@
           <abbr class="badge rounded w-100">{{ entry.abbr }}</abbr>
         {% endif %}
       {% endif %}
-      {% if has_tree_cover %}
+      {% if has_blog_cover and entry.blog_figure == 'fig-graph' %}
+        <a class="training-cover" data-training-cover href="{{ entry.blog | relative_url }}#{{ entry.blog_figure }}"
+           aria-label="View the STGCN animation showing how a sensor network becomes a graph time series">
+          {% include blog/stgcn-graph.svg %}
+        </a>
+      {% elsif has_blog_cover %}
         <a class="training-cover" data-training-cover href="{{ entry.blog | relative_url }}#{{ entry.blog_figure }}"
            aria-label="View the blog animation comparing process-reward RL and supervised fine-tuning without teacher forcing">
           {% include blog/learning-trees.liquid compact=true %}

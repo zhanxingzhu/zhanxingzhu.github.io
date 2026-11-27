@@ -1,0 +1,257 @@
+---
+layout: visual-summary
+title: "Learning dynamics on a graph: how STGCN forecasts many coupled time series at once"
+description: How our IJCAI 2018 paper used graph and temporal convolutions for multivariate time series forecasting, and how the idea developed over the next eight years.
+date: 2026-11-26 20:00:00 +0000
+paper_url: https://www.ijcai.org/proceedings/2018/505
+summary_js: /assets/blog/stgcn/visual-summary.js
+summary_css: /assets/blog/stgcn/visual-summary.css
+---
+
+<main>
+<div class="date"><time datetime="2026-11-26">26 November 2026</time></div>
+<h1>Learning dynamics on a graph: how STGCN forecasts many coupled time series at once</h1>
+<p class="byline">Zhanxing Zhu · Joint work with Bing Yu and Haoteng Yin (IJCAI 2018)</p>
+<p class="links"><a href="https://arxiv.org/abs/1709.04875">arXiv</a><a href="https://arxiv.org/pdf/1709.04875">PDF</a><a href="https://www.ijcai.org/proceedings/2018/505">IJCAI proceedings</a><a href="https://github.com/VeritasYin/STGCN_IJCAI-18">Code</a><a href="https://github.com/hazdzz/STGCN">PyTorch port</a></p>
+
+<p>Many real signals are measured at points that are linked to each other: sensors on roads, stations in a city, electrodes on a scalp. The right object is then a graph whose every node carries a time series. In our IJCAI 2018 paper, we introduced the Spatio-Temporal Graph Convolutional Network (STGCN) for forecasting these coupled time series. To our knowledge, it was the first model for this problem built entirely from convolutions over the graph and over time. We tested it on road sensors. Its sandwich block became a standard building block of graph neural networks for time series<a class="cite" href="#ref-7">[7]</a>, and the paper is among the most cited in that field.</p>
+
+<p>The figures below build the idea one piece at a time. Colour means the same thing in all of them:</p>
+
+<div class="key">
+<span><i style="background:#2468b0"></i>space: the graph, its sensors and edges, the graph convolution</span>
+<span><i style="background:#a86e08"></i>time: the time axis, past frames, the temporal gated convolution</span>
+<span><i style="background:#b63629"></i>STGCN itself and what it predicts</span>
+<span><i style="background:#347656"></i>the field that grew from it</span>
+<span><i style="background:#e5e7ec"></i>earlier methods, baselines, and what is unknown</span>
+</div>
+
+<p class="hint">Labels followed by a small dot <b>•</b> and terms with a dotted underline carry a note. Hover over them, or tap. Bars and nodes without a dot carry notes as well.</p>
+
+<h2>1. A network of time series</h2>
+<p class="ask">What is forecast, and why draw it as a graph?</p>
+
+<p>Each sensor reports a speed every five minutes, and nearby sensors move together. We treat the readings at one moment as a signal on a graph. Stacking these signals in time lets us forecast the next few frames (<a href="#fig-graph">Fig. 1</a>).</p>
+
+<figure class="anim" id="fig-graph">
+<div class="anim-stage"><svg viewBox="0 0 680 330" role="img" aria-label="A road map with twelve speed sensors becomes a weighted graph, then a stack of twelve past frames along a time axis, followed by three empty frames to predict"></svg></div>
+<div class="anim-bar">
+<button type="button" class="anim-step"><span class="n">1</span>The map</button>
+<button type="button" class="anim-step"><span class="n">2</span>Edges by distance</button>
+<button type="button" class="anim-step"><span class="n">3</span>One frame every 5 minutes</button>
+<button type="button" class="anim-step"><span class="n">4</span>The frames to predict</button>
+<button type="button" class="anim-play" aria-label="Pause"></button>
+</div>
+<div class="anim-cap">
+<p><strong>The map.</strong> Traffic flows along the roads, and each sensor (a node) turns the cars passing it into one number, the average speed in km/h. The twelve readings at time <i>t</i> form the vector <i>v<sub>t</sub></i>.</p>
+<p hidden><strong>Edges by distance.</strong> Sensors close to each other are joined by an edge whose weight falls with distance, and pairs whose weight would drop below a threshold get none. The weights form the matrix <i>W</i>.</p>
+<p hidden><strong>One frame every 5 minutes.</strong> The graph stays fixed while the readings change, so the history is a stack of frames along a time axis. The model reads the last <i>M</i> = 12 frames, one hour.</p>
+<p hidden><strong>The frames to predict.</strong> The task is to fill the next frames, here <i>H</i> = 3, a 15-minute forecast, for every sensor at once. The paper also predicts 6 and 9 steps ahead.</p>
+</div>
+<figcaption><strong>Figure 1.</strong> The forecasting problem of the paper (Eq. 1 and Eq. 10). The map, its sensors and their readings are illustrative, not a real data set; the edges follow Eq. 10 with distances in invented units. Edge width shows the weight <i>w<sub>ij</sub></i>.</figcaption>
+</figure>
+
+<h2>2. Where earlier models fall short</h2>
+<p class="ask">What do per-series models, grid CNNs and RNNs miss?</p>
+
+<p>Before this paper, forecasters either ignored the network, forced it onto a grid, or read time with recurrent chains. STGCN keeps the graph as it is and reads time with convolutions instead, building on spectral graph convolution<a class="cite" href="#ref-1">[1]</a><a class="cite" href="#ref-2">[2]</a> and convolutional sequence models<a class="cite" href="#ref-3">[3]</a> (<a href="#fig-gap">Fig. 2</a>).</p>
+
+<figure class="anim" id="fig-gap">
+<div class="anim-stage"><svg viewBox="0 0 680 300" role="img" aria-label="Four panels: a lone time series, a square grid laid over irregular sensors, a recurrent chain passing a token step by step, and STGCN's graph next to a convolution window on the time axis"></svg></div>
+<div class="anim-bar">
+<button type="button" class="anim-step"><span class="n">1</span>One series at a time</button>
+<button type="button" class="anim-step"><span class="n">2</span>Grids, not graphs</button>
+<button type="button" class="anim-step"><span class="n">3</span>Chains are slow</button>
+<button type="button" class="anim-step"><span class="n">4</span>What STGCN keeps</button>
+<button type="button" class="anim-play" aria-label="Pause"></button>
+</div>
+<div class="anim-cap">
+<p><strong>One series at a time.</strong> Classical forecasters such as ARIMA and the historical average extend each sensor's own past and never look at its neighbours.</p>
+<p hidden><strong>Grids, not graphs.</strong> A standard convolution slides a square kernel over a regular grid. Road sensors do not sit on one, so most of them fall between the cells.</p>
+<p hidden><strong>Chains are slow.</strong> Recurrent models such as FC-LSTM and graph-convolutional GRUs<a class="cite" href="#ref-4">[4]</a> pass a state through the steps one by one, so training is sequential and errors build up step by step.</p>
+<p hidden><strong>What STGCN keeps.</strong> The graph as it is, and a convolution along time, so both directions are read in parallel. Fig. 3 opens the graph side and Fig. 4 the time side.</p>
+</div>
+<figcaption><strong>Figure 2.</strong> The gaps named in Section 1 of the paper, drawn as schematics. The sensor layout is the illustrative map of Fig. 1.</figcaption>
+</figure>
+
+<h2>3. Convolution over the graph</h2>
+<p class="ask">How does a sensor read its neighbours?</p>
+
+<p>A graph has no left and right, so we define our filter through the graph Laplacian and approximate it with polynomials, after Defferrard et al.<a class="cite" href="#ref-1">[1]</a> and Kipf and Welling<a class="cite" href="#ref-2">[2]</a>. In practice a node mixes its own value with those of nodes a few edges away (<a href="#fig-spatial">Fig. 3</a>).</p>
+
+<figure class="anim" id="fig-spatial">
+<div class="anim-stage"><svg viewBox="0 0 680 320" role="img" aria-label="On the road map, one node gathers values from its neighbours one hop and then two hops away; a first-order layer reaches one hop and two stacked layers reach two; the same kernel runs on all twelve frames"></svg></div>
+<div class="anim-bar">
+<button type="button" class="anim-step"><span class="n">1</span>A kernel on a graph</button>
+<button type="button" class="anim-step"><span class="n">2</span>Hops k = 0, 1, 2</button>
+<button type="button" class="anim-step"><span class="n">3</span>The one-hop shortcut</button>
+<button type="button" class="anim-step"><span class="n">4</span>Every frame, every channel</button>
+<button type="button" class="anim-play" aria-label="Pause"></button>
+</div>
+<div class="anim-cap">
+<p><strong>A kernel on a graph.</strong> The output at the ringed node is a weighted sum of Chebyshev polynomials <i>T<sub>k</sub></i> of the rescaled Laplacian, each with its own learned weight <i>θ<sub>k</sub></i> (Eq. 3).</p>
+<p hidden><strong>Hops k = 0, 1, 2.</strong> The term of order <i>k</i> reaches nodes <i>k</i> edges away. With <i>K</i> = 3 the kernel sees two hops; the three nodes outside stay unread.</p>
+<p hidden><strong>The one-hop shortcut.</strong> The first-order form keeps one weight and the self-loop graph <i>W̃</i> (Eq. 5), so one layer reaches one hop. Stacking a second layer reaches two, like a wider kernel.</p>
+<p hidden><strong>Every frame, every channel.</strong> The same kernel runs on all <i>M</i> frames in parallel, and maps <i>C<sub>i</sub></i> input channels to <i>C<sub>o</sub></i> output channels per node (Eq. 6).</p>
+</div>
+<figcaption><strong>Figure 3.</strong> Spatial graph convolution (Section 3.2 of the paper) on the illustrative map of Fig. 1. The ringed node, its hop rings and the flowing dots are schematic; the hop counts follow that map's edges.</figcaption>
+</figure>
+
+<h2>4. Convolution over time, with a gate</h2>
+<p class="ask">How is the time axis read without recurrence?</p>
+
+<p>Along the time axis, we use a plain one-dimensional convolution with a gate, the gated linear unit of Gehring et al.<a class="cite" href="#ref-3">[3]</a>. Every output depends only on a short window of the past, so all positions are computed at once (<a href="#fig-temporal">Fig. 4</a>).</p>
+
+<figure class="anim" id="fig-temporal">
+<div class="anim-stage"><svg viewBox="0 0 680 300" role="img" aria-label="A width-three window slides over one sensor's twelve readings and produces ten outputs, split into P and Q; a sigmoid gate on Q scales P; the same is done for every sensor"></svg></div>
+<div class="anim-bar">
+<button type="button" class="anim-step"><span class="n">1</span>A causal window</button>
+<button type="button" class="anim-step"><span class="n">2</span>Two halves</button>
+<button type="button" class="anim-step"><span class="n">3</span>The gate</button>
+<button type="button" class="anim-step"><span class="n">4</span>All nodes, all at once</button>
+<button type="button" class="anim-play" aria-label="Pause"></button>
+</div>
+<div class="anim-cap">
+<p><strong>A causal window.</strong> A window of width <i>K<sub>t</sub></i> = 3 slides along one sensor's 12 readings and writes one output for each position it fits, with no padding. Two positions are lost.</p>
+<p hidden><strong>Two halves.</strong> The convolution produces twice the channels it needs, 2<i>C<sub>o</sub></i>, and splits them into two halves, <i>P</i> and <i>Q</i>.</p>
+<p hidden><strong>The gate.</strong> A sigmoid turns <i>Q</i> into gates between 0 and 1, and each gate scales its <i>P</i>: the output is <i>P</i> ⊙ σ(<i>Q</i>) (Eq. 7).</p>
+<p hidden><strong>All nodes, all at once.</strong> The same kernel runs on every sensor, and every position is computed together, not one after another. A residual connection carries the input past the layer.</p>
+</div>
+<figcaption><strong>Figure 4.</strong> Temporal gated convolution (Section 3.3 of the paper). Cell values, gate openings and the shading of cells are invented for illustration; the lengths 12 and 10 follow from <i>M</i> = 12 and <i>K<sub>t</sub></i> = 3.</figcaption>
+</figure>
+
+<h2>5. The sandwich block and the full network</h2>
+<p class="ask">How do the two convolutions fit together?</p>
+
+<p>The ST-Conv block puts one graph convolution between two temporal ones, and the model stacks two such blocks before an output layer. Each temporal layer shortens the stack of frames by two, so twelve frames come out as one forecast (<a href="#fig-block">Fig. 5</a>).</p>
+
+<figure class="anim" id="fig-block">
+<div class="anim-stage"><svg viewBox="0 0 680 340" role="img" aria-label="A stack of twelve frame cards passes through a temporal layer, a graph layer and another temporal layer, then a second block and an output layer, shrinking to one predicted frame"></svg></div>
+<div class="anim-bar">
+<button type="button" class="anim-step"><span class="n">1</span>Input: 12 frames</button>
+<button type="button" class="anim-step"><span class="n">2</span>Temporal gated conv</button>
+<button type="button" class="anim-step"><span class="n">3</span>Spatial graph conv</button>
+<button type="button" class="anim-step"><span class="n">4</span>Temporal again</button>
+<button type="button" class="anim-step"><span class="n">5</span>Block 2 and output</button>
+<button type="button" class="anim-play" aria-label="Pause"></button>
+</div>
+<div class="anim-cap">
+<p><strong>Input: 12 frames.</strong> One card per 5-minute frame, each holding the readings of all <i>n</i> sensors, one channel each (speed).</p>
+<p hidden><strong>Temporal gated conv.</strong> The layer of Fig. 4 reads every sensor's sequence: 12 frames become 10, and each frame now has 64 channels.</p>
+<p hidden><strong>Spatial graph conv.</strong> The layer of Fig. 3 mixes neighbours within each frame, all 10 frames in parallel, and squeezes the channels to 16, a bottleneck.</p>
+<p hidden><strong>Temporal again.</strong> A second gated layer takes the frames from 10 to 8 and the channels back to 64, followed by layer normalisation. These three layers are one ST-Conv block (Eq. 8).</p>
+<p hidden><strong>Block 2 and output.</strong> A second block takes 8 frames to 4. The output layer's temporal convolution maps them to one step, and a fully connected layer gives the forecast <i>v̂</i>, trained with an L2 loss (Eq. 9).</p>
+</div>
+<figcaption><strong>Figure 5.</strong> The STGCN architecture (Section 3.4 and Fig. 2 of the paper), drawn as our own schematic. Frame counts follow from <i>M</i> = 12 and <i>K<sub>t</sub></i> = 3; card heights stand for channel counts and are not to scale. The map on the front card is the illustrative one of Fig. 1.</figcaption>
+</figure>
+
+<h2>6. Accuracy on 228 and 1,026 sensors</h2>
+<p class="ask">Does it beat the methods it replaces, at every horizon?</p>
+
+<p>On the California highway data (PeMSD7), both STGCN variants have the lowest error at all three horizons, and the gap grows with the horizon (<a href="#fig-results">Fig. 6</a>).</p>
+
+<figure class="anim" id="fig-results">
+<div class="anim-stage"><svg viewBox="0 0 680 320" role="img" aria-label="Bars of mean absolute error for eight methods on PeMSD7, at 15, 30 and 45 minutes on 228 sensors and at 45 minutes on 1,026 sensors; the two STGCN bars are the lowest each time"></svg></div>
+<div class="anim-bar">
+<button type="button" class="anim-step"><span class="n">1</span>15 min ahead</button>
+<button type="button" class="anim-step"><span class="n">2</span>30 min</button>
+<button type="button" class="anim-step"><span class="n">3</span>45 min</button>
+<button type="button" class="anim-step"><span class="n">4</span>1,026 sensors, 45 min</button>
+<button type="button" class="anim-play" aria-label="Pause"></button>
+</div>
+<div class="anim-cap">
+<p><strong>15 min ahead.</strong> On PeMSD7(M), 228 sensors, three steps ahead. The two STGCN bars are the lowest; GCGRU and the linear LSVR come closest.</p>
+<p hidden><strong>30 min.</strong> The same methods six steps ahead. Every method's error grows, and the two STGCN bars stay the lowest.</p>
+<p hidden><strong>45 min.</strong> Nine steps ahead the classical models have fallen well behind, and STGCN(Cheb) leads GCGRU by 0.44 in MAE.</p>
+<p hidden><strong>1,026 sensors, 45 min.</strong> On the larger graph, PeMSD7(L), the order holds. GCGRU had to be trained with half the batch size to fit in GPU memory.</p>
+</div>
+<figcaption><strong>Figure 6.</strong> Drawn from Table 2 of the paper: mean absolute error (MAE) per method; hover a bar for its MAPE and RMSE. On the Beijing data set <span data-note-title="BJER4 (Table 1)" data-note="On 12 sensors of Beijing's 4th ring road, STGCN(Cheb) has MAE 3.78 / 4.45 / 5.03 at 15 / 30 / 45 min, against 3.84 / 4.62 / 5.32 for GCGRU and 4.24 / 4.74 / 5.22 for FC-LSTM.">BJER4</span> (Table 1) the order is the same. The paper reports STGCN best on all three metrics with <span data-note-title="Significance" data-note="Two-tailed t-test with alpha = 0.01, P &lt; 0.01, as stated in Section 4.4 of the paper. The paper does not give spreads over runs.">statistical significance</span>. GCGRU follows Li et al.<a class="cite" href="#ref-4">[4]</a>.</figcaption>
+</figure>
+
+<h2>7. Training cost</h2>
+<p class="ask">What does the convolutional design buy in time and size?</p>
+
+<p>Because no step waits for the one before, training runs in parallel. We measured the full training time against GCGRU on both PeMSD7 graphs (<a href="#fig-cost">Fig. 7</a>).</p>
+
+<figure class="anim" id="fig-cost">
+<div class="anim-stage"><svg viewBox="0 0 680 280" role="img" aria-label="Training-time bars racing: on both data sets the two STGCN bars finish long before GCGRU's; then STGCN's parameter count"></svg></div>
+<div class="anim-bar">
+<button type="button" class="anim-step"><span class="n">1</span>A race on PeMSD7(M)</button>
+<button type="button" class="anim-step"><span class="n">2</span>PeMSD7(L)</button>
+<button type="button" class="anim-step"><span class="n">3</span>Parameters</button>
+<button type="button" class="anim-play" aria-label="Pause"></button>
+</div>
+<div class="anim-cap">
+<p><strong>A race on PeMSD7(M).</strong> The bars fill at the same rate, so their lengths are the training times. Both STGCN variants finish in about 272 s; GCGRU needs 3,824.54 s, which the paper calls a 14 times acceleration.</p>
+<p hidden><strong>PeMSD7(L).</strong> On 1,026 sensors the gap stays above tenfold, even though GCGRU ran with half the batch size. Here the first-order variant is about 20% faster than the Chebyshev one.</p>
+<p hidden><strong>Parameters.</strong> STGCN has 4.54 × 10<sup>5</sup> parameters. The paper puts this at about two thirds of GCGRU and over 95% fewer than FC-LSTM, without giving their counts.</p>
+</div>
+<figcaption><strong>Figure 7.</strong> Drawn from Table 3 and Section 4.4 of the paper. Each data set has its own time axis. No bars are drawn for the parameters of GCGRU and FC-LSTM because the paper gives only ratios.</figcaption>
+</figure>
+
+<h2>8. Eight years of citations</h2>
+<p class="ask">How widely has the idea been taken up?</p>
+
+<p>Citations of the paper have grown every year since it appeared, and the official code is still maintained. The counts differ between databases, so the figure shows them side by side (<a href="#fig-citations">Fig. 8</a>).</p>
+
+<figure class="anim" id="fig-citations">
+<div class="anim-stage"><svg viewBox="0 0 680 300" role="img" aria-label="Citations per year from 2018 to 2026 rising from 15 to 1,948, then the total counts of four databases and the code repositories"></svg></div>
+<div class="anim-bar">
+<button type="button" class="anim-step"><span class="n">1</span>2018–2020</button>
+<button type="button" class="anim-step"><span class="n">2</span>2021–2023</button>
+<button type="button" class="anim-step"><span class="n">3</span>2024–2026</button>
+<button type="button" class="anim-step"><span class="n">4</span>Across databases</button>
+<button type="button" class="anim-play" aria-label="Pause"></button>
+</div>
+<div class="anim-cap">
+<p><strong>2018–2020.</strong> Citing works per year, as counted by OpenAlex. Uptake started slowly after the IJCAI paper and then took off.</p>
+<p hidden><strong>2021–2023.</strong> The yearly count keeps rising, to almost a thousand in 2023.</p>
+<p hidden><strong>2024–2026.</strong> Still rising: 1,948 citing works in 2026, counted up to 26 November, with five weeks of the year left.</p>
+<p hidden><strong>Across databases.</strong> Totals depend on what each database indexes. OpenAlex counts most, Crossref fewest; the code repositories show use beyond citation.</p>
+</div>
+<figcaption><strong>Figure 8.</strong> Not from the paper: data from the OpenAlex, Semantic Scholar, Crossref and GitHub APIs, retrieved on 26 November 2026. The 2026 bar is a partial year.</figcaption>
+</figure>
+
+<h2>9. The family it started</h2>
+<p class="ask">What grew from the sandwich block, and where did it travel?</p>
+
+<p>Later models kept the pairing of graph convolution and temporal convolution and changed one part at a time: a learned graph<a class="cite" href="#ref-5">[5]</a>, attention, continuous time. The decisive step for the general case was MTGNN<a class="cite" href="#ref-6">[6]</a>, which learns the graph from the series themselves, so no map is needed (<a href="#fig-lineage">Fig. 9</a>).</p>
+
+<figure class="anim" id="fig-lineage">
+<div class="anim-stage"><svg viewBox="0 0 680 350" role="img" aria-label="A timeline from 2018 to 2026 with STGCN at the left, follow-up models above the line and applications, tools and surveys below"></svg></div>
+<div class="anim-bar">
+<button type="button" class="anim-step"><span class="n">1</span>The first wave</button>
+<button type="button" class="anim-step"><span class="n">2</span>Any coupled series</button>
+<button type="button" class="anim-step"><span class="n">3</span>Continuous time</button>
+<button type="button" class="anim-step"><span class="n">4</span>Beyond traffic</button>
+<button type="button" class="anim-play" aria-label="Pause"></button>
+</div>
+<div class="anim-cap">
+<p><strong>The first wave.</strong> 2018 to 2019. DCRNN<a class="cite" href="#ref-4">[4]</a> appeared alongside STGCN as a recurrent alternative. Graph WaveNet<a class="cite" href="#ref-5">[5]</a> kept the convolutional design and learned extra edges; ASTGCN added attention.</p>
+<p hidden><strong>Any coupled series.</strong> In 2020 MTGNN<a class="cite" href="#ref-6">[6]</a> learned the graph from the data, so any set of related series qualifies. STSGCN, GMAN and AGCRN reworked the block in other ways.</p>
+<p hidden><strong>Continuous time.</strong> 2021 to 2022. STGODE and STG-NCDE replace the stacked layers with differential equations over the graph.</p>
+<p hidden><strong>Beyond traffic.</strong> The same block reached air quality, EEG and dengue<a class="cite" href="#ref-9">[9]</a>, a standard library layer, two surveys<a class="cite" href="#ref-7">[7]</a><a class="cite" href="#ref-8">[8]</a> and a 2026 study of its own depth<a class="cite" href="#ref-10">[10]</a>.</p>
+</div>
+<figcaption><strong>Figure 9.</strong> A selection of follow-up work, placed by year of publication; DCRNN is a contemporary, not a descendant. Citation counts in the notes are from OpenAlex, 26 November 2026. The selection is ours and is not exhaustive.</figcaption>
+</figure>
+
+<p>In the paper, we reported that STGCN outperformed the state of the art on two real-world data sets while achieving “faster training, easier convergences, and fewer parameters”, and that the framework “can be applied into more general spatio-temporal structured sequence forecasting scenarios, such as evolving of social networks, and preference prediction in recommendation systems”. The field did exactly that, and the block now reads air-quality stations, EEG electrodes and dengue counts that never stood beside a road<a class="cite" href="#ref-9">[9]</a>.</p>
+
+<h2>References</h2>
+<ol class="refs">
+<li id="ref-1">Defferrard et al. Convolutional neural networks on graphs with fast localized spectral filtering. NIPS 2016.</li>
+<li id="ref-2">Kipf and Welling. Semi-supervised classification with graph convolutional networks. 2016.</li>
+<li id="ref-3">Gehring et al. Convolutional sequence to sequence learning. 2017.</li>
+<li id="ref-4">Li et al. Diffusion convolutional recurrent neural network: Data-driven traffic forecasting. ICLR 2018.</li>
+<li id="ref-5">Wu et al. Graph WaveNet for deep spatial-temporal graph modeling. IJCAI 2019.</li>
+<li id="ref-6">Wu et al. Connecting the dots: Multivariate time series forecasting with graph neural networks. KDD 2020.</li>
+<li id="ref-7">Jin et al. A survey on graph neural networks for time series: Forecasting, classification, imputation, and anomaly detection. TPAMI 2024.</li>
+<li id="ref-8">Corradini et al. A systematic literature review of spatio-temporal graph neural network models for time series forecasting and classification. Neural Networks 2025.</li>
+<li id="ref-9">Siabi et al. Innovative application of a traffic-prediction spatio-temporal graph convolutional network for dengue disease forecasting. Scientific Reports 2026.</li>
+<li id="ref-10">Lone et al. Efficient traffic prediction at scale: A systematic study of STGCN architectural depth. 2026.</li>
+</ol>
+
+<p class="note">Bing Yu, Haoteng Yin and I presented <a href="https://www.ijcai.org/proceedings/2018/505">“Spatio-Temporal Graph Convolutional Networks: A Deep Learning Framework for Traffic Forecasting”</a> at IJCAI 2018. Figures 1–5 use an illustrative road map and invented readings to explain the method. Figures 6 and 7 plot results from Tables 2 and 3 of our paper. Figure 8 uses citation databases and GitHub, and Figure 9 draws on the follow-up studies named in the timeline.</p>
+</main>
+<div class="speed" role="group" aria-label="Animation speed"><span class="speed-opts"><button type="button" data-v="0.7">0.7×</button><button type="button" data-v="1" aria-pressed="true">1×</button><button type="button" data-v="1.5">1.5×</button><button type="button" data-v="2">2×</button></span><button type="button" class="speed-now" aria-label="Animation speed">Speed 1×</button></div>
+<button type="button" class="theme" aria-label="Colour theme">◐ Auto</button>
